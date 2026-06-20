@@ -1,0 +1,57 @@
+{
+  "name": "@sergekostenchuk/ui-ux-agent-skill-system",
+  "version": "0.1.0",
+  "description": "Vendor-neutral UI/UX agent skill system with Codex, Claude, Gemini, Qwen, Copilot, GLM, Kimi, and generic agent adapters.",
+  "license": "Apache-2.0",
+  "author": "Sergey Kostenchuk",
+  "homepage": "https://github.com/sergekostenchuk/ui-ux-agent-skill-system#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergekostenchuk/ui-ux-agent-skill-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sergekostenchuk/ui-ux-agent-skill-system/issues"
+  },
+  "bin": {
+    "uiux-skills": "bin/uiux-skills.js"
+  },
+  "files": [
+    "adapters/",
+    "bin/",
+    "core/",
+    "dist/",
+    "docs/",
+    "evals/",
+    "reports/package-validation.md",
+    "scripts/",
+    "FEATURE-PREPARATION.md",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "SECURITY.md",
+    "TASK-PLAN.md"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "skills",
+    "ui",
+    "ux",
+    "codex",
+    "claude",
+    "gemini",
+    "qwen",
+    "figma",
+    "seo",
+    "llm"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build:adapters": "python3 scripts/build_adapters.py . --out dist",
+    "lint": "python3 scripts/lint_publication_package.py .",
+    "prepack": "python3 scripts/lint_publication_package.py ."
+  }
+}
+

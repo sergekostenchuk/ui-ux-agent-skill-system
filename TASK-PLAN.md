@@ -24,6 +24,7 @@ scope_in:
 - `evals`
 - `scripts`
 - `dist` generated projections
+- npm package metadata and installer CLI
 scope_out:
 - live vendor CLI tests
 constraints:
@@ -65,6 +66,7 @@ rollback_policy:
 | T-004 | Add docs, security, evals, scripts | done | implementer |
 | T-005 | Build runtime projections | done | tester |
 | T-006 | Validate package | done | tester |
+| T-007 | Add npm distribution layer | done | implementer |
 
 ## Task Blocks
 
@@ -175,6 +177,30 @@ commands_run:
 artifact_locations:
 - `reports/`
 
+### T-007
+
+task_id: T-007
+title: Add npm distribution layer
+status: done
+owner_role: implementer
+dependencies:
+- T-006
+acceptance_criteria:
+- package metadata exists
+- `uiux-skills` CLI can list targets
+- npm dry-run packaging works
+- npm publication blocker is explicit if auth is missing
+artifact_locations:
+- `package.json`
+- `bin/uiux-skills.js`
+- `docs/npm.md`
+commands_run:
+- `node bin/uiux-skills.js list`
+- `node bin/uiux-skills.js path`
+- `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`
+- `node bin/uiux-skills.js install generic-agent --dest /tmp/uiux-skills-npm-test/generic --dry-run`
+- `npm pack --dry-run`
+
 ## Active Alarms
 
 feature_active_alarms:
@@ -199,3 +225,13 @@ published_at: 2026-06-20
 - Standalone git repository initialized.
 - GitHub remote created.
 - Initial package committed and pushed.
+
+## npm Publication
+
+package_name: `@sergekostenchuk/ui-ux-agent-skill-system`
+npm_status: prepared_not_published
+npm_blocker: local npm session is not authenticated; `npm whoami` returns E401.
+npm_pack_dry_run: passed
+npm_tarball_size: 3.2 MB
+npm_unpacked_size: 19.5 MB
+npm_total_files: 1914

@@ -9,6 +9,31 @@ python3 scripts/build_adapters.py . --out dist
 python3 scripts/lint_publication_package.py .
 ```
 
+## npm / npx
+
+After npm publication:
+
+```bash
+npm install -g @sergekostenchuk/ui-ux-agent-skill-system
+uiux-skills install codex
+```
+
+Or:
+
+```bash
+npx @sergekostenchuk/ui-ux-agent-skill-system install codex
+```
+
+More targets:
+
+```bash
+uiux-skills install qwen-code
+uiux-skills install copilot-vscode
+uiux-skills install claude --dest ~/.claude/skills
+uiux-skills install gemini-cli --dest ~/.gemini/extensions/ui-ux-agent-skill-system
+uiux-skills install generic-agent
+```
+
 ## Codex
 
 Copy generated skills:
@@ -82,4 +107,3 @@ FIGMA_ACCESS_TOKEN=redacted
 ```
 
 Never commit real values.
-

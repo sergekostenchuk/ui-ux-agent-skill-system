@@ -120,6 +120,33 @@ See [docs/vendor-compatibility.md](docs/vendor-compatibility.md).
 
 ## Install
 
+### npm / npx
+
+After npm publication, the fastest install path is:
+
+```bash
+npm install -g @sergekostenchuk/ui-ux-agent-skill-system
+uiux-skills list
+uiux-skills install codex
+```
+
+Or with `npx`:
+
+```bash
+npx @sergekostenchuk/ui-ux-agent-skill-system install codex
+```
+
+Other targets:
+
+```bash
+uiux-skills install qwen-code
+uiux-skills install copilot-vscode
+uiux-skills install claude --dest ~/.claude/skills
+uiux-skills install gemini-cli --dest ~/.gemini/extensions/ui-ux-agent-skill-system
+```
+
+See [docs/npm.md](docs/npm.md).
+
 ### Codex
 
 ```bash
@@ -366,7 +393,9 @@ python3 scripts/build_adapters.py . --out dist
 Validate the package:
 
 ```bash
+node bin/uiux-skills.js list
 python3 scripts/lint_publication_package.py .
+npm pack --dry-run
 python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json >/dev/null
 ```
 
