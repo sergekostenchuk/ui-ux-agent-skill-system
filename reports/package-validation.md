@@ -35,3 +35,4 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - `.env.example` contains redacted examples only.
 - The current license is Apache-2.0.
 - `dist/` is generated but intentionally included in the GitHub publication package so users can install prebuilt runtime projections.
+- Public repository: https://github.com/sergekostenchuk/ui-ux-agent-skill-system

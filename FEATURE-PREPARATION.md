@@ -2,7 +2,7 @@
 
 feature_id: F-UIUX-PUBLICATION-001
 feature_title: Vendor-neutral UI/UX Agent Skill System package
-status: in_progress
+status: complete
 date: 2026-06-20
 
 ## Problem And Goal
@@ -14,6 +14,7 @@ date: 2026-06-20
 - [x] Add deterministic validation.
 - [x] Switch license to Apache-2.0.
 - [x] Include detailed README with three user journeys.
+- [x] Publish public GitHub repository.
 
 ## Scope In
 
@@ -41,3 +42,4 @@ date: 2026-06-20
 - [x] Runtime adapter build completes.
 - [x] Linter passes after `dist` generation.
 - [x] Gemini extension JSON parses.
+- [x] Public repository created: https://github.com/sergekostenchuk/ui-ux-agent-skill-system

@@ -3,7 +3,7 @@
 plan_id: uiux-agent-skill-system-publication-2026-06-20
 plan_version: 0.1.0
 canonical_source: TASK-PLAN.md
-status: in_progress
+status: done
 owner_role: docs_sync
 created_at: 2026-06-20
 updated_at: 2026-06-20
@@ -187,8 +187,15 @@ feature_active_alarms:
 - Repository visibility: public, because publication under an open-source license was requested.
 - Include `dist/`: yes, prebuilt runtime projections should be published alongside canonical `core`.
 
-## Remaining Work
+## Publication
 
-- Initialize standalone git repository for the publication package.
-- Create or attach GitHub remote.
-- Commit and push.
+repository_url: https://github.com/sergekostenchuk/ui-ux-agent-skill-system
+published_branch: main
+initial_commit: 5f0e3ba
+published_at: 2026-06-20
+
+### Completed Work
+
+- Standalone git repository initialized.
+- GitHub remote created.
+- Initial package committed and pushed.

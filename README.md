@@ -2,6 +2,8 @@
 
 Vendor-neutral UI/UX skill cluster for AI coding and design agents.
 
+Repository: https://github.com/sergekostenchuk/ui-ux-agent-skill-system
+
 This repository is not a loose prompt collection. It is a portable agent skill system with a central orchestrator, specialist skills, runtime adapters, deterministic checks, and realistic eval prompts.
 
 ## What It Does
@@ -380,4 +382,3 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
-
