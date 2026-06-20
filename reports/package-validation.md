@@ -23,6 +23,7 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`: passed.
 - `node bin/uiux-skills.js install generic-agent --dest /tmp/uiux-skills-npm-test/generic --dry-run`: passed.
 - `npm pack --dry-run`: passed.
+- `npm publish --access public`: blocked by npm 2FA policy; the provided token authenticated but does not allow package publication under the account's current security settings.
 - Gemini extension JSON parse: passed.
 
 ## Generated Adapter Outputs
@@ -44,5 +45,5 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - `dist/` is generated but intentionally included in the GitHub publication package so users can install prebuilt runtime projections.
 - Public repository: https://github.com/sergekostenchuk/ui-ux-agent-skill-system
 - npm package name prepared: `@sergekostenchuk/ui-ux-agent-skill-system`.
-- npm publication is not complete because local npm auth is missing: `npm whoami` returns E401.
+- npm publication is not complete because npm requires two-factor authentication or a granular/automation token with publish permission and 2FA bypass enabled.
 - npm dry-run tarball: 3.2 MB packed, 19.5 MB unpacked, 1914 files.

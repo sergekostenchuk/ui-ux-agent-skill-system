@@ -229,8 +229,8 @@ published_at: 2026-06-20
 ## npm Publication
 
 package_name: `@sergekostenchuk/ui-ux-agent-skill-system`
-npm_status: prepared_not_published
-npm_blocker: local npm session is not authenticated; `npm whoami` returns E401.
+npm_status: prepared_publish_blocked_by_2fa_policy
+npm_blocker: npm token authenticated successfully, but registry rejected `npm publish --access public` because the account requires two-factor authentication or a granular/automation token with publish permission and 2FA bypass enabled.
 npm_pack_dry_run: passed
 npm_tarball_size: 3.2 MB
 npm_unpacked_size: 19.5 MB

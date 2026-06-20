@@ -65,3 +65,10 @@ npm publish --access public
 ```
 
 The package is scoped. Public publication requires `--access public`.
+
+If the npm account has two-factor authentication enabled, publish requires either:
+
+- an interactive publish with a current OTP; or
+- a granular/automation token that has package publish permission and 2FA bypass enabled.
+
+Do not commit npm tokens into this repository. Use temporary environment variables, local npm login, or a short-lived CI secret.
