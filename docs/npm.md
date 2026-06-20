@@ -66,6 +66,9 @@ npm publish --access public
 
 The package is scoped. Public publication requires `--access public`.
 
+The authenticated npm account must own or belong to the package scope. For example, publishing
+`@sergekostenchuk/ui-ux-agent-skill-system` requires access to the npm scope `@sergekostenchuk`.
+
 If the npm account has two-factor authentication enabled, publish requires either:
 
 - an interactive publish with a current OTP; or

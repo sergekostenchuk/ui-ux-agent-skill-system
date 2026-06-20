@@ -229,8 +229,8 @@ published_at: 2026-06-20
 ## npm Publication
 
 package_name: `@sergekostenchuk/ui-ux-agent-skill-system`
-npm_status: prepared_publish_blocked_by_2fa_policy
-npm_blocker: npm token authenticated successfully, but registry rejected `npm publish --access public` because the account requires two-factor authentication or a granular/automation token with publish permission and 2FA bypass enabled.
+npm_status: prepared_publish_blocked_by_scope
+npm_blocker: npm token authenticated successfully as user `mlllm`, but registry rejected `@sergekostenchuk/ui-ux-agent-skill-system` because the `@sergekostenchuk` npm scope is not available to that account.
 npm_pack_dry_run: passed
 npm_tarball_size: 3.2 MB
 npm_unpacked_size: 19.5 MB
