@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI UX LLM Product Architect"
+  short_description: "Design UX flows for humans and agents"
+  default_prompt: "Use $ui-ux-llm-product-architect to design or audit this product UI for users, accessibility, and AI-agent readability."

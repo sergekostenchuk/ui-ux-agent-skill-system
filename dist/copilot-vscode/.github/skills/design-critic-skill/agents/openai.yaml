@@ -1,0 +1,6 @@
+interface:
+  display_name: "Design Critic Skill"
+  short_description: "Visual quality and anti-slop critique specialist"
+  default_prompt: "Use $design-critic-skill for screenshot, Figma, or UI visual critique focused on hierarchy, spacing, typography, consistency, contrast risk, brand fit, polish, and anti-slop patterns. Keep critique evidence-labeled and actionable."
+policy:
+  allow_implicit_invocation: true

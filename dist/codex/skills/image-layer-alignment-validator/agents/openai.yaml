@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image Layer Alignment Validator"
+  short_description: "Check base/reveal image layer alignment"
+  default_prompt: "Use $image-layer-alignment-validator to compare these base and reveal images and produce an alignment report."

@@ -1,0 +1,14 @@
+{
+  "spacing_scale_px": [4, 8, 12, 16, 20, 24, 32, 40, 48],
+  "radius": {
+    "control": 6,
+    "card": 8,
+    "modal": 10
+  },
+  "typography": {
+    "viewport_scaled_fonts": false,
+    "letter_spacing": 0,
+    "dashboard_heading_max_px": 24
+  },
+  "state_roles": ["loading", "empty", "error", "disabled", "focus", "selected", "submitting", "success"]
+}

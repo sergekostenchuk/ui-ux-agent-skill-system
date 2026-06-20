@@ -1,0 +1,20 @@
+{
+  "skill_name": "senior-figma-orchestrator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a selected Figma frame and need to implement it in our React app without guessing tokens.",
+      "expected_output": "Routes first to figma-context-reader, then figma-design-to-code-bridge and a frontend specialist; requires Figma context evidence and local validation."
+    },
+    {
+      "id": 2,
+      "prompt": "Prod is ahead of Figma. Bring this local page back into editable Figma layers.",
+      "expected_output": "Routes to figma-code-to-canvas, checks live URL/privacy/tool availability, and avoids promising success without MCP evidence."
+    },
+    {
+      "id": 3,
+      "prompt": "Add glass and noise effects to these selected cards using tokens if possible.",
+      "expected_output": "Routes to figma-apply-effects, distinguishes supported variable bindings from runtime-gated extended effects, and requires readback."
+    }
+  ]
+}

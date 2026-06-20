@@ -1,0 +1,6 @@
+interface:
+  display_name: "Figma Canvas Editor"
+  short_description: "Edit Figma canvas nodes with scoped evidence"
+  default_prompt: "Use $figma-canvas-editor to create or update scoped Figma canvas objects while preserving design-system consistency and recording mutation evidence."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Plan V2 Orchestrator"
+  short_description: "Multi-agent task-plan governance"
+  default_prompt: "Use $task-plan-v2-orchestrator to create or refine a multi-agent TASK-PLAN v2 with feature prep, execution gates, and runtime adapters."

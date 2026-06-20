@@ -1,0 +1,30 @@
+{
+  "schema_version": "2026-06-15",
+  "skill": "marketing-site-skill",
+  "cases": [
+    {
+      "id": "b2b-landing-page",
+      "prompt": "Design a B2B landing page for a security analytics product.",
+      "expected_route": "marketing-site-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["first viewport product signal", "CTA hierarchy", "proof near claims"],
+      "fail_if": ["generic gradient-only hero", "no metadata mention"]
+    },
+    {
+      "id": "local-venue-page",
+      "prompt": "Improve a restaurant venue page for mobile bookings and trust.",
+      "expected_route": "marketing-site-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["real place media", "mobile CTA path", "location/contact clarity"],
+      "fail_if": ["stock-like vague media", "hides booking action"]
+    },
+    {
+      "id": "near-miss-private-dashboard",
+      "prompt": "Refactor our private internal analytics dashboard with filters and data tables.",
+      "expected_route": "webapp-ui-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["does not claim marketing ownership", "routes to webapp-ui-skill"],
+      "fail_if": ["suggests public page metadata work", "requires cloud upload"]
+    }
+  ]
+}

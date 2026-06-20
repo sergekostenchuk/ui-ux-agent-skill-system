@@ -1,0 +1,6 @@
+interface:
+  display_name: "UI/UX Pro Max"
+  short_description: "Searchable UI/UX design intelligence for styles, palettes, typography, UX rules, charts, and stack guidance"
+  default_prompt: "Use $ui-ux-pro-max to generate or query evidence-backed UI/UX recommendations from its local CLI/data layer, then adapt them to the user's project, stack, accessibility needs, and existing design system."
+policy:
+  allow_implicit_invocation: true

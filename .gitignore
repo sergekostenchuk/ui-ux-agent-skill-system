@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+reports/*.tmp
+reports/*-local.*
+**/__pycache__/
+**/*.pyc
+node_modules/

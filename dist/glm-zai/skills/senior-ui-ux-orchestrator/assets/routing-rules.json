@@ -1,0 +1,90 @@
+{
+  "schema_version": "2026-06-20",
+  "default_privacy_mode": "local-first",
+  "routes": [
+    {
+      "skill": "webapp-ui-skill",
+      "mode": "build-webapp",
+      "positive_signals": ["dashboard", "admin", "crm", "saas", "internal tool", "settings", "table", "filters", "workflow", "data-heavy"],
+      "negative_signals": ["landing page", "campaign", "hero section", "public product page"],
+      "must_require": ["state coverage", "responsive visual verification", "local-first privacy"]
+    },
+    {
+      "skill": "marketing-site-skill",
+      "mode": "build-marketing",
+      "positive_signals": ["landing", "product page", "brand page", "venue", "campaign", "conversion", "cta", "metadata"],
+      "negative_signals": ["admin", "internal tool", "crm", "operator dashboard"],
+      "must_require": ["first viewport signal", "metadata check", "responsive visual verification"]
+    },
+    {
+      "skill": "ux-audit-skill",
+      "mode": "audit",
+      "positive_signals": ["audit", "review this url", "screenshot audit", "accessibility", "regression", "before after"],
+      "negative_signals": [],
+      "must_require": ["evidence labels", "severity matrix", "no invented DOM evidence"]
+    },
+    {
+      "skill": "design-critic-skill",
+      "mode": "critique",
+      "positive_signals": ["critique", "visual quality", "polish", "hierarchy", "taste", "anti-slop", "spacing", "typography"],
+      "negative_signals": [],
+      "must_require": ["observable findings", "privacy classification", "fix brief"]
+    },
+    {
+      "skill": "ui-ux-pro-max",
+      "mode": "design-intelligence",
+      "positive_signals": ["design direction", "style options", "visual system", "color palette", "typography", "layout pattern", "three variants", "design intelligence", "pro max", "ui/ux pro max", "feels generic"],
+      "negative_signals": ["pure backend task", "security-only task", "copy-only edit"],
+      "must_require": ["treat as advisory", "record project constraints", "validate with product and implementation specialists"]
+    },
+    {
+      "skill": "senior-ui-ux-orchestrator",
+      "mode": "three-variant-design",
+      "positive_signals": ["three design variants", "3 design versions", "three design versions", "design versions", "three directions", "different versions", "klimovo", "multiple visual concepts", "approved briefs to stitch", "before stitch"],
+      "negative_signals": ["single small button fix", "one exact existing design to copy"],
+      "must_require": ["chair owns final directions", "use ui-ux-pro-max before stitch", "define acceptance criteria per direction"]
+    },
+    {
+      "skill": "stitch-design-bridge",
+      "mode": "stitch",
+      "positive_signals": ["stitch", "google stitch", "stitch prompt", "ai ui prototype", "generate ui variants", "render in stitch", "stitch output review"],
+      "negative_signals": ["final production implementation without review", "private data upload without approval"],
+      "must_require": ["product and UX constraints first", "use STITCH_API_KEY through environment only", "review Stitch output before Figma or code handoff"]
+    },
+    {
+      "skill": "senior-ui-ux-orchestrator",
+      "mode": "council",
+      "positive_signals": ["senior council", "consilium", "консилиум", "ux seo conflict", "figma code conflict", "stitch conflict", "large cross-skill project"],
+      "negative_signals": ["small localized edit without conflict"],
+      "must_require": ["one active chair", "apply council decision order", "record accepted tradeoffs and evidence plan"]
+    },
+    {
+      "skill": "obsidian-wiki-ingest",
+      "mode": "wiki-context",
+      "positive_signals": ["wiki", "obsidian", "llm wiki", "large project memory", "context capture", "ingest decisions", "do not lose context"],
+      "negative_signals": ["temporary scratch note", "contains secrets that cannot be sanitized"],
+      "must_require": ["sanitize secrets", "record provenance", "capture after decisions or prepared artifacts"]
+    },
+    {
+      "skill": "senior-figma-orchestrator",
+      "mode": "figma",
+      "positive_signals": ["figma", "figma mcp", "selected node", "frame", "dev mode", "variables", "component library", "code connect", "design-to-code", "code-to-canvas", "canvas edit", "figjam", "slides", "asset export", "effects", "shadow", "blur", "glow", "glass", "noise", "texture"],
+      "negative_signals": ["plain html canvas effect", "cursor trail frontend only", "image pair alignment only"],
+      "must_require": ["figma tool availability check", "privacy classification", "mutation scope before writes", "readback evidence for changes"]
+    },
+    {
+      "skill": "cursor-reveal-hero",
+      "mode": "interactive-effect",
+      "positive_signals": ["cursor reveal", "mouse trail", "hover reveal", "mask reveal", "soft cursor mask", "base/reveal compositing", "canvas compositing", "before after reveal"],
+      "negative_signals": ["selected Figma node effect", "Figma shadow", "Figma blur"],
+      "must_require": ["local asset privacy", "base/reveal alignment check when images are provided", "browser or screenshot validation when a URL exists"]
+    },
+    {
+      "skill": "image-layer-alignment-validator",
+      "mode": "image-alignment",
+      "positive_signals": ["base image", "reveal image", "two image layers", "image alignment", "misaligned reveal", "subject drift", "before/after image", "morph suitability"],
+      "negative_signals": ["single screenshot critique", "Figma variable sync"],
+      "must_require": ["local image processing", "annotated artifacts", "explicit verdict"]
+    }
+  ]
+}

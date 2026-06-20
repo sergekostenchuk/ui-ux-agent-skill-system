@@ -1,0 +1,6 @@
+interface:
+  display_name: "Figma Design To Code Bridge"
+  short_description: "Map Figma designs to local frontend implementation"
+  default_prompt: "Use $figma-design-to-code-bridge to map Figma frames, components, variables, and Code Connect context into an implementation-ready frontend handoff."
+policy:
+  allow_implicit_invocation: true

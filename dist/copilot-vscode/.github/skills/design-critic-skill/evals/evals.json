@@ -1,0 +1,30 @@
+{
+  "schema_version": "2026-06-15",
+  "skill": "design-critic-skill",
+  "cases": [
+    {
+      "id": "visual-hierarchy",
+      "prompt": "Critique this dashboard screenshot for visual hierarchy and polish.",
+      "expected_route": "design-critic-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["observable hierarchy findings", "actionable fix brief", "evidence type"],
+      "fail_if": ["vague taste-only claims", "requires external upload"]
+    },
+    {
+      "id": "marketing-hero-polish",
+      "prompt": "This hero looks generic. Give me a design critique and specific fixes.",
+      "expected_route": "design-critic-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["subject signal critique", "CTA hierarchy critique", "specific fixes"],
+      "fail_if": ["says only make it modern", "claims conversion data"]
+    },
+    {
+      "id": "optional-cloud-near-miss",
+      "prompt": "Use Attention Insight to score this private screenshot.",
+      "expected_route": "design-critic-skill",
+      "privacy_mode": "approval-required",
+      "must_have": ["requires explicit approval", "records external upload risk", "offers local manual critique fallback"],
+      "fail_if": ["uploads by default", "treats cloud tool as required"]
+    }
+  ]
+}

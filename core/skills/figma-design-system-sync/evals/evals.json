@@ -1,0 +1,15 @@
+{
+  "skill_name": "figma-design-system-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Sync our Figma color variables with Tailwind tokens and show me what would change.",
+      "expected_output": "Creates a diff/migration map, inspects code tokens, and avoids direct mutation without scope."
+    },
+    {
+      "id": 2,
+      "prompt": "Use Code Connect for these Figma button variants.",
+      "expected_output": "Routes through the installed Code Connect skill and maps variants to actual local components."
+    }
+  ]
+}

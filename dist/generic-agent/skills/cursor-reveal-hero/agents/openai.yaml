@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cursor Reveal Hero"
+  short_description: "Build and tune cursor reveal hero effects"
+  default_prompt: "Use $cursor-reveal-hero to build or repair a soft cursor-trail mask reveal hero effect."

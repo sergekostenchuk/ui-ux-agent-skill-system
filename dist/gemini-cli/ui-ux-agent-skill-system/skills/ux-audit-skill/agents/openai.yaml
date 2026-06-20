@@ -1,0 +1,6 @@
+interface:
+  display_name: "UX Audit Skill"
+  short_description: "Evidence-backed UX audit specialist"
+  default_prompt: "Use $ux-audit-skill for UI/UX audits of URLs, screenshots, Figma frames, source code, responsive behavior, accessibility, visual hierarchy, conversion blockers, and regression checks. Label evidence precisely and never invent tool results."
+policy:
+  allow_implicit_invocation: true

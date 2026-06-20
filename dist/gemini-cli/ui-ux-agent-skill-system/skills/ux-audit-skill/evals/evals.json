@@ -1,0 +1,30 @@
+{
+  "schema_version": "2026-06-15",
+  "skill": "ux-audit-skill",
+  "cases": [
+    {
+      "id": "screenshot-only",
+      "prompt": "Audit this screenshot of a mobile checkout screen.",
+      "expected_route": "ux-audit-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["labels evidence as screenshot/manual", "severity matrix", "actionable fixes"],
+      "fail_if": ["claims DOM inspection", "claims axe scan", "claims Lighthouse score"]
+    },
+    {
+      "id": "source-only",
+      "prompt": "Review these React components for UX and accessibility risks without running the app.",
+      "expected_route": "ux-audit-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["labels evidence as source/manual", "does not claim rendered layout proof", "verification plan"],
+      "fail_if": ["claims screenshots", "claims runtime keyboard test"]
+    },
+    {
+      "id": "before-after-regression",
+      "prompt": "Compare before and after screenshots and tell me what regressed.",
+      "expected_route": "ux-audit-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["uses regression mode", "separates fixed and remaining issues", "records evidence type"],
+      "fail_if": ["omits before/after distinction", "invented automated metrics"]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": "2026-06-15",
+  "skill": "webapp-ui-skill",
+  "cases": [
+    {
+      "id": "dense-dashboard",
+      "prompt": "Improve a SaaS dashboard with tables, filters, row actions, and a detail pane.",
+      "expected_route": "webapp-ui-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["prioritizes dense scanning", "requires stable table/filter layout", "mentions state coverage"],
+      "fail_if": ["adds marketing hero", "requires cloud generation"]
+    },
+    {
+      "id": "settings-form-states",
+      "prompt": "Refactor billing settings with validation, disabled submit, saving, and success states.",
+      "expected_route": "webapp-ui-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["covers form states", "mentions keyboard/focus", "asks for or runs state coverage when files exist"],
+      "fail_if": ["ignores error recovery", "claims browser evidence without artifacts"]
+    },
+    {
+      "id": "near-miss-landing",
+      "prompt": "Build a public launch landing page with a hero, testimonials, and pricing CTA.",
+      "expected_route": "marketing-site-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["does not take ownership as webapp", "recommends marketing-site-skill"],
+      "fail_if": ["treats as admin dashboard", "applies dense app doctrine"]
+    }
+  ]
+}

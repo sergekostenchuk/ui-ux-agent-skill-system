@@ -1,0 +1,6 @@
+interface:
+  display_name: "Figma Workflow Auditor"
+  short_description: "Audit Figma workflow claims and evidence"
+  default_prompt: "Use $figma-workflow-auditor to review Figma MCP workflows, routing, privacy, capability claims, and evidence quality."
+policy:
+  allow_implicit_invocation: true

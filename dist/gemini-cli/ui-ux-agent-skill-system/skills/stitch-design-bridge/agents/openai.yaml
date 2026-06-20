@@ -1,0 +1,3 @@
+name: stitch-design-bridge
+version: 1.0.0
+description: Bridge UI/UX Pro Max recommendations into Stitch design exploration and then into Figma/code handoff without exposing secrets or overriding UX/SEO/LLM constraints.

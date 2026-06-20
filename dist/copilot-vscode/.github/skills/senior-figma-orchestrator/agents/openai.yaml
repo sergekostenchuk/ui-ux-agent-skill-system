@@ -1,0 +1,6 @@
+interface:
+  display_name: "Senior Figma Orchestrator"
+  short_description: "Routes Figma MCP and canvas workflows"
+  default_prompt: "Use $senior-figma-orchestrator to route Figma design context, design-to-code, code-to-canvas, canvas editing, variables, assets, effects, and workflow audits with privacy and evidence controls."
+policy:
+  allow_implicit_invocation: true

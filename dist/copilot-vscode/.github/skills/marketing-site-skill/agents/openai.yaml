@@ -1,0 +1,6 @@
+interface:
+  display_name: "Marketing Site Skill"
+  short_description: "Landing, product, brand, and campaign page specialist"
+  default_prompt: "Use $marketing-site-skill for landing pages, product pages, brand or venue pages, conversion refactors, metadata, responsive storytelling, and public page visual verification. Keep cloud tools approval-gated."
+policy:
+  allow_implicit_invocation: true

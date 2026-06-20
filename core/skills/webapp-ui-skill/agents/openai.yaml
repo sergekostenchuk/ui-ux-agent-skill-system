@@ -1,0 +1,6 @@
+interface:
+  display_name: "Web App UI Skill"
+  short_description: "Dense product UI and dashboard specialist"
+  default_prompt: "Use $webapp-ui-skill for SaaS dashboards, admin panels, CRM screens, internal tools, state-heavy app workflows, responsive product UI, and app accessibility work. Enforce state coverage, local-first privacy, and visual verification."
+policy:
+  allow_implicit_invocation: true

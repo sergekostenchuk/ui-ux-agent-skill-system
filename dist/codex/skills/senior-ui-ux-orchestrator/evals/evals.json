@@ -1,0 +1,94 @@
+{
+  "schema_version": "2026-06-20",
+  "skill": "senior-ui-ux-orchestrator",
+  "cases": [
+    {
+      "id": "route-private-dashboard",
+      "prompt": "Refactor our private admin dashboard filters and empty states. Keep everything local.",
+      "expected_route": "webapp-ui-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["routes to webapp-ui-skill", "keeps optional cloud tools disabled", "requires state coverage"],
+      "fail_if": ["routes to marketing-site-skill", "suggests uploading private screenshots", "claims screenshots already exist"]
+    },
+    {
+      "id": "route-product-landing",
+      "prompt": "Create a landing page for a new analytics product with a strong hero and CTA.",
+      "expected_route": "marketing-site-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["routes to marketing-site-skill", "mentions first viewport signal", "mentions metadata or responsive verification"],
+      "fail_if": ["routes to webapp-ui-skill by default", "requires cloud generation"]
+    },
+    {
+      "id": "screenshot-only-audit",
+      "prompt": "Audit this screenshot for UX issues. I only have the image, no URL.",
+      "expected_route": "ux-audit-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["routes to ux-audit-skill", "labels evidence as screenshot/manual", "does not claim DOM evidence"],
+      "fail_if": ["claims Lighthouse score", "claims axe results", "claims DOM was inspected"]
+    },
+    {
+      "id": "visual-polish-critique",
+      "prompt": "This UI feels AI-generated. Critique the visual hierarchy and polish.",
+      "expected_route": "design-critic-skill",
+      "privacy_mode": "local-first",
+      "must_have": ["routes to design-critic-skill", "uses observable design criteria", "produces actionable fix brief"],
+      "fail_if": ["requires Attention Insight", "uses vague taste-only feedback"]
+    },
+    {
+      "id": "cloud-allowed-marketing-draft",
+      "prompt": "You may use v0 for draft ideas for this public landing page, but validate locally afterwards.",
+      "expected_route": "marketing-site-skill",
+      "privacy_mode": "explicit-cloud-approval",
+      "must_have": ["records external service approval", "treats cloud output as draft", "requires local validation"],
+      "fail_if": ["treats v0 output as validation evidence", "omits data-transfer note"]
+    },
+    {
+      "id": "figma-design-to-code",
+      "prompt": "I have a selected Figma frame. Read the real variables and components, then turn it into an implementation plan for our app.",
+      "expected_route": "senior-figma-orchestrator",
+      "privacy_mode": "local-first",
+      "must_have": ["routes to senior-figma-orchestrator", "uses figma-context-reader before implementation planning", "requires local visual verification after code work"],
+      "fail_if": ["routes directly to marketing-site-skill without Figma context", "claims Figma MCP ran without evidence"]
+    },
+    {
+      "id": "figma-effects-advanced",
+      "prompt": "Add glass and noise effects to selected Figma cards and bind effect tokens where supported.",
+      "expected_route": "senior-figma-orchestrator",
+      "privacy_mode": "local-first",
+      "must_have": ["routes to figma-apply-effects", "runtime-gates glass and noise", "states variable binding limits"],
+      "fail_if": ["claims Figma supports only four effects", "binds unsupported noise or glass fields"]
+    },
+    {
+      "id": "cursor-reveal-route",
+      "prompt": "Build the mouse trail masking reveal from my base and reveal images on a website hero.",
+      "expected_route": "cursor-reveal-hero",
+      "privacy_mode": "local-first",
+      "must_have": ["routes to cursor-reveal-hero", "uses image-layer-alignment-validator when two images exist", "requires browser or screenshot validation"],
+      "fail_if": ["routes to figma-apply-effects", "treats the effect as a Figma node blur"]
+    },
+    {
+      "id": "three-variant-stitch-flow",
+      "prompt": "Make three premium design versions like the Klimovo AI work, then pass the approved style briefs to Stitch for rendering.",
+      "expected_route": "senior-ui-ux-orchestrator:three-variant-design",
+      "privacy_mode": "local-first",
+      "must_have": ["chairs the three-variant workflow", "uses ui-ux-pro-max for design intelligence before Stitch", "routes approved briefs to stitch-design-bridge", "defines acceptance criteria per direction"],
+      "fail_if": ["sends a vague prompt directly to Stitch", "lets Stitch choose the final strategy alone", "skips product and SEO/LLM constraints for a public site"]
+    },
+    {
+      "id": "senior-council-conflict",
+      "prompt": "UX wants less text, SEO wants more crawlable content, Figma tokens limit the style, and Stitch produced a beautiful but inaccessible variant. Decide what wins.",
+      "expected_route": "senior-ui-ux-orchestrator:council",
+      "privacy_mode": "local-first",
+      "must_have": ["convenes the senior council", "keeps senior-ui-ux-orchestrator as chair", "uses decision order", "records accepted tradeoffs and required evidence"],
+      "fail_if": ["treats the issue as a majority vote", "lets Stitch override accessibility", "ignores SEO/LLM visible content"]
+    },
+    {
+      "id": "wiki-context-large-project",
+      "prompt": "This is a large multi-session public site project. Capture the accepted and rejected design directions into the Obsidian LLM wiki so we do not lose context.",
+      "expected_route": "obsidian-wiki-ingest",
+      "privacy_mode": "local-first",
+      "must_have": ["adds a wiki context gate", "sanitizes secrets", "captures accepted and rejected decisions with provenance"],
+      "fail_if": ["stores API keys", "captures private screenshots without approval", "uses the wiki before decisions are prepared"]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "skill_name": "figma-apply-effects",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add a brand glow to the selected Figma button without removing its existing effects.",
+      "expected_output": "Uses DROP_SHADOW glow recipe, appends to existing effects, and requires readback."
+    },
+    {
+      "id": 2,
+      "prompt": "Make this card glassy with background blur and bind the blur radius to a variable.",
+      "expected_output": "Checks fill transparency, uses BACKGROUND_BLUR, binds radius only if variable exists, and writes returned effect back."
+    },
+    {
+      "id": 3,
+      "prompt": "Add NOISE and GLASS effects and bind all their fields to variables.",
+      "expected_output": "Runtime-gates extended effects and refuses unsupported variable binding for noise/glass."
+    }
+  ]
+}

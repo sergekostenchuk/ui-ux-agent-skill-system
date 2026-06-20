@@ -1,0 +1,6 @@
+interface:
+  display_name: "Senior UI/UX Orchestrator"
+  short_description: "Main router for UI builds, audits, reviews, and validation"
+  default_prompt: "Use $senior-ui-ux-orchestrator as the main entrypoint for this UI/UX task. Route to the right specialist skill, enforce local-first privacy, and return evidence-backed implementation or audit steps."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,15 @@
+{
+  "skill_name": "figma-workflow-auditor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review this skill draft that says Figma supports only four effects and can always write to canvas.",
+      "expected_output": "Flags outdated effect claim, runtime-gates canvas writes, and recommends current-source checks."
+    },
+    {
+      "id": 2,
+      "prompt": "Audit this report claiming it synced production UI into Figma, but it has no readback or screenshots.",
+      "expected_output": "Treats the mutation as unverified and requests concrete evidence or a corrected claim."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "skill_name": "figma-design-to-code-bridge",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Turn this selected Figma CRM table view into a React implementation plan using our existing components.",
+      "expected_output": "Maps Figma elements to local components, routes to webapp-ui-skill, and requires local visual/state validation."
+    },
+    {
+      "id": 2,
+      "prompt": "We have Code Connect for buttons but not for cards. Make a handoff for this product page.",
+      "expected_output": "Uses Code Connect where available, marks gaps, routes marketing page work correctly, and avoids claiming full coverage."
+    }
+  ]
+}

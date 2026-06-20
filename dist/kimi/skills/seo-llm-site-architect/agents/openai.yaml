@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEO LLM Site Architect"
+  short_description: "Audit and build SEO/AI-ready sites"
+  default_prompt: "Use $seo-llm-site-architect to audit this site and make it SEO, LLM, and AI-agent friendly."

@@ -1,0 +1,15 @@
+{
+  "skill_name": "figma-assets-manager",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Export all selected Figma icons as SVG and create a manifest for the React app.",
+      "expected_output": "Confirms selected nodes/formats, uses Figma export only when available, and produces a source-to-output manifest."
+    },
+    {
+      "id": 2,
+      "prompt": "Download the hero photos from this private brand file and optimize them online.",
+      "expected_output": "Blocks external optimization by default, records privacy/approval requirement, and offers local preparation."
+    }
+  ]
+}

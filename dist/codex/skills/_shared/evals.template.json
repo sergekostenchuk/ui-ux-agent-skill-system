@@ -1,0 +1,16 @@
+{
+  "schema_version": "2026-06-15",
+  "case_shape": {
+    "id": "stable-case-id",
+    "prompt": "realistic user prompt",
+    "expected_route": "skill-name or manual",
+    "must_have": ["objective assertion"],
+    "fail_if": ["forbidden behavior"],
+    "privacy_mode": "local-first"
+  },
+  "grading": {
+    "pass": "all must_have assertions are satisfied and no fail_if assertion appears",
+    "manual_review_required": "subjective design quality or ambiguous routing cases",
+    "blocker": "fake evidence, unauthorized cloud upload, invalid frontmatter, or broken required script"
+  }
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cursor Reveal Hero</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <main class="scene" aria-label="Interactive reveal hero">
+      <canvas
+        class="reveal-canvas"
+        id="bioRevealCanvas"
+        data-base-src="./assets/base.png"
+        data-reveal-src="./assets/reveal.png"
+      ></canvas>
+      <div class="noise-fill" aria-hidden="true"></div>
+      <div class="glass-vignette" aria-hidden="true"></div>
+      <aside class="fx-panel" id="fxPanel" aria-label="Reveal effect controls">
+        <label>
+          <span>Radius <output data-value-for="radius">245</output></span>
+          <input type="range" min="80" max="420" step="1" value="245" data-setting="radius" />
+        </label>
+        <label>
+          <span>Feather <output data-value-for="feather">0.80</output></span>
+          <input type="range" min="0.1" max="1" step="0.01" value="0.8" data-setting="feather" />
+        </label>
+        <label>
+          <span>Fade <output data-value-for="fade">0.028</output></span>
+          <input type="range" min="0.004" max="0.09" step="0.001" value="0.028" data-setting="fade" />
+        </label>
+        <label>
+          <span>Strength <output data-value-for="strength">0.82</output></span>
+          <input type="range" min="0.1" max="1" step="0.01" value="0.82" data-setting="strength" />
+        </label>
+        <label>
+          <span>Opacity <output data-value-for="opacity">0.78</output></span>
+          <input type="range" min="0.1" max="1" step="0.01" value="0.78" data-setting="opacity" />
+        </label>
+        <label>
+          <span>Momentum <output data-value-for="lerp">0.14</output></span>
+          <input type="range" min="0.04" max="0.5" step="0.01" value="0.14" data-setting="lerp" />
+        </label>
+        <button type="button" id="clearMaskButton">Clear</button>
+      </aside>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+# Site Name
+
+> Short public description of the site, audience, and what information is authoritative here.
+
+## Core Pages
+
+- [Home](https://example.com/): Primary overview and current positioning.
+- [Products](https://example.com/products/): Canonical product or service catalog.
+- [Pricing](https://example.com/pricing/): Current pricing model, plans, limits, and terms.
+- [Documentation](https://example.com/docs/): Public docs and API guidance.
+- [Support](https://example.com/support/): Support paths, contact options, and policies.
+
+## Policies
+
+- [Terms](https://example.com/terms/): Terms of service.
+- [Privacy](https://example.com/privacy/): Privacy policy.
+- [Security](https://example.com/security/): Security posture and disclosure path.
+
+## Optional
+
+- [Changelog](https://example.com/changelog/): Product changes and release dates.
+- [API Reference](https://example.com/api/): Public API reference or OpenAPI documentation.

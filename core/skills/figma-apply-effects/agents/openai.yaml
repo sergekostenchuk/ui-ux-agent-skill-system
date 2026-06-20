@@ -1,0 +1,6 @@
+interface:
+  display_name: "Figma Apply Effects"
+  short_description: "Apply Figma shadows, blurs, glass, noise, and effects"
+  default_prompt: "Use $figma-apply-effects to add, remove, audit, style, or bind Figma Effects with current compatibility checks and readback evidence."
+policy:
+  allow_implicit_invocation: true

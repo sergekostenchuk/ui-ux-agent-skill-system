@@ -1,0 +1,15 @@
+{
+  "skill_name": "figma-canvas-editor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "In the selected Figma frame, add a compact settings panel using existing components and auto layout.",
+      "expected_output": "Requires selected node evidence, uses native Figma structures, reads back after mutation, and reports scope."
+    },
+    {
+      "id": 2,
+      "prompt": "Delete all old variants in this component set.",
+      "expected_output": "Requires explicit destructive scope and rollback/duplicate strategy before deletion."
+    }
+  ]
+}

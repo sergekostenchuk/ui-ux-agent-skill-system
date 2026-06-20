@@ -1,0 +1,15 @@
+{
+  "skill_name": "figma-context-reader",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Read this selected Figma dashboard frame and give me the real components, tokens, layout constraints, and implementation notes.",
+      "expected_output": "Produces a read-only context brief, labels Figma metadata versus inference, and avoids claiming runtime evidence."
+    },
+    {
+      "id": 2,
+      "prompt": "I only have a screenshot from Figma, no MCP connection. Summarize what can and cannot be known.",
+      "expected_output": "Uses screenshot/manual evidence only and clearly marks missing Figma metadata."
+    }
+  ]
+}
