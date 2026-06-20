@@ -122,10 +122,10 @@ See [docs/vendor-compatibility.md](docs/vendor-compatibility.md).
 
 ### npm / npx
 
-After npm publication, the fastest install path is:
+The fastest install path is:
 
 ```bash
-npm install -g @sergekostenchuk/ui-ux-agent-skill-system
+npm install -g @mlllm/ui-ux-agent-skill-system
 uiux-skills list
 uiux-skills install codex
 ```
@@ -133,7 +133,7 @@ uiux-skills install codex
 Or with `npx`:
 
 ```bash
-npx @sergekostenchuk/ui-ux-agent-skill-system install codex
+npx @mlllm/ui-ux-agent-skill-system install codex
 ```
 
 Other targets:

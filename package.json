@@ -1,5 +1,5 @@
 {
-  "name": "@sergekostenchuk/ui-ux-agent-skill-system",
+  "name": "@mlllm/ui-ux-agent-skill-system",
   "version": "0.1.0",
   "description": "Vendor-neutral UI/UX agent skill system with Codex, Claude, Gemini, Qwen, Copilot, GLM, Kimi, and generic agent adapters.",
   "license": "Apache-2.0",
@@ -54,4 +54,3 @@
     "prepack": "python3 scripts/lint_publication_package.py ."
   }
 }
-

@@ -3,7 +3,7 @@
 This package can be distributed through npm as:
 
 ```text
-@sergekostenchuk/ui-ux-agent-skill-system
+@mlllm/ui-ux-agent-skill-system
 ```
 
 The npm package includes:
@@ -18,37 +18,37 @@ The npm package includes:
 Install Codex skills:
 
 ```bash
-npx @sergekostenchuk/ui-ux-agent-skill-system install codex
+npx @mlllm/ui-ux-agent-skill-system install codex
 ```
 
 Install Qwen Code skills into the current project:
 
 ```bash
-npx @sergekostenchuk/ui-ux-agent-skill-system install qwen-code
+npx @mlllm/ui-ux-agent-skill-system install qwen-code
 ```
 
 Install VS Code/Copilot project skills:
 
 ```bash
-npx @sergekostenchuk/ui-ux-agent-skill-system install copilot-vscode
+npx @mlllm/ui-ux-agent-skill-system install copilot-vscode
 ```
 
 Install Claude skills:
 
 ```bash
-npx @sergekostenchuk/ui-ux-agent-skill-system install claude --dest ~/.claude/skills
+npx @mlllm/ui-ux-agent-skill-system install claude --dest ~/.claude/skills
 ```
 
 Install Gemini CLI extension:
 
 ```bash
-npx @sergekostenchuk/ui-ux-agent-skill-system install gemini-cli --dest ~/.gemini/extensions/ui-ux-agent-skill-system
+npx @mlllm/ui-ux-agent-skill-system install gemini-cli --dest ~/.gemini/extensions/ui-ux-agent-skill-system
 ```
 
 ## Global Install
 
 ```bash
-npm install -g @sergekostenchuk/ui-ux-agent-skill-system
+npm install -g @mlllm/ui-ux-agent-skill-system
 uiux-skills list
 uiux-skills install codex
 ```
@@ -67,6 +67,7 @@ npm publish --access public
 The package is scoped. Public publication requires `--access public`.
 
 The authenticated npm account must own or belong to the package scope. For example, publishing
+`@mlllm/ui-ux-agent-skill-system` requires access to the npm scope `@mlllm`. Publishing under
 `@sergekostenchuk/ui-ux-agent-skill-system` requires access to the npm scope `@sergekostenchuk`.
 
 If the npm account has two-factor authentication enabled, publish requires either:

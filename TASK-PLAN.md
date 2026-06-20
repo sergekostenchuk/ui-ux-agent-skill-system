@@ -228,9 +228,12 @@ published_at: 2026-06-20
 
 ## npm Publication
 
-package_name: `@sergekostenchuk/ui-ux-agent-skill-system`
-npm_status: prepared_publish_blocked_by_scope
-npm_blocker: npm token authenticated successfully as user `mlllm`, but registry rejected `@sergekostenchuk/ui-ux-agent-skill-system` because the `@sergekostenchuk` npm scope is not available to that account.
+package_name: `@mlllm/ui-ux-agent-skill-system`
+npm_status: published
+npm_url: https://www.npmjs.com/package/@mlllm/ui-ux-agent-skill-system
+npm_version: 0.1.0
+npm_published_at: 2026-06-20
+npm_blocker: none; previous `@sergekostenchuk` target requires separate npm scope access.
 npm_pack_dry_run: passed
 npm_tarball_size: 3.2 MB
 npm_unpacked_size: 19.5 MB

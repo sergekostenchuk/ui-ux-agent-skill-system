@@ -25,6 +25,10 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - `npm pack --dry-run`: passed.
 - `npm publish --access public`: blocked by npm 2FA policy; the provided token authenticated but does not allow package publication under the account's current security settings.
 - `npm publish --access public` with a new token: authenticated as `mlllm`, then blocked because the npm scope `@sergekostenchuk` is not available to that account.
+- `npm publish --access public` as `@mlllm/ui-ux-agent-skill-system@0.1.0`: passed.
+- `npm access set status=public @mlllm/ui-ux-agent-skill-system`: passed.
+- `npm view @mlllm/ui-ux-agent-skill-system name version dist-tags.latest license bin repository.url`: passed.
+- `npm exec --yes --package @mlllm/ui-ux-agent-skill-system -- uiux-skills list`: passed.
 - Gemini extension JSON parse: passed.
 
 ## Generated Adapter Outputs
@@ -45,6 +49,7 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - The current license is Apache-2.0.
 - `dist/` is generated but intentionally included in the GitHub publication package so users can install prebuilt runtime projections.
 - Public repository: https://github.com/sergekostenchuk/ui-ux-agent-skill-system
-- npm package name prepared: `@sergekostenchuk/ui-ux-agent-skill-system`.
-- npm publication is not complete because the authenticated npm user does not own or belong to the `@sergekostenchuk` npm scope.
+- npm package name prepared: `@mlllm/ui-ux-agent-skill-system`.
+- npm package published: https://www.npmjs.com/package/@mlllm/ui-ux-agent-skill-system
+- npm publication target changed to the authenticated npm user's scope after npm rejected the unavailable `@sergekostenchuk` scope.
 - npm dry-run tarball: 3.2 MB packed, 19.5 MB unpacked, 1914 files.

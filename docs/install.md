@@ -11,17 +11,17 @@ python3 scripts/lint_publication_package.py .
 
 ## npm / npx
 
-After npm publication:
+Install from npm:
 
 ```bash
-npm install -g @sergekostenchuk/ui-ux-agent-skill-system
+npm install -g @mlllm/ui-ux-agent-skill-system
 uiux-skills install codex
 ```
 
 Or:
 
 ```bash
-npx @sergekostenchuk/ui-ux-agent-skill-system install codex
+npx @mlllm/ui-ux-agent-skill-system install codex
 ```
 
 More targets:
