@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Added negative evidence-validator fixture coverage to CI.
+- Added eval contract coverage checks for top-level route and acceptance constraints.
+- Added README status badges for CI, npm, and license.
+- Added a manual GitHub Actions release workflow for npm publication through a protected `NPM_TOKEN` secret.
+- Documented npm token rotation expectations after any chat/log exposure.
+
 ## 0.2.0 - 2026-06-21
 
 - Added mechanical evidence report validation for `Ran`, `Skipped`, `Planned`, and `Manual` sections.

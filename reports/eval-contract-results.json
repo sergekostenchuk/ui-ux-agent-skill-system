@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "summary": {
+    "cases": 4,
+    "coverage": {
+      "accessibility": true,
+      "validation": true,
+      "privacy": true,
+      "truthful_content": true
+    }
+  },
+  "errors": []
+}

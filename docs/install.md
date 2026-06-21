@@ -15,8 +15,9 @@ GitHub Actions runs only credential-free checks. Before opening a pull request o
 
 ```bash
 npm run lint
-npm run validate:evidence
+npm run test:evidence
 npm run eval
+npm run check:eval-contracts
 npm run build:adapters
 git diff --exit-code dist
 npm run check:dist

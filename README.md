@@ -1,5 +1,9 @@
 # UI/UX Agent Skill System
 
+[![CI](https://github.com/sergekostenchuk/ui-ux-agent-skill-system/actions/workflows/ci.yml/badge.svg)](https://github.com/sergekostenchuk/ui-ux-agent-skill-system/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@mlllm/ui-ux-agent-skill-system.svg)](https://www.npmjs.com/package/@mlllm/ui-ux-agent-skill-system)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+
 Vendor-neutral core UI/UX skill cluster for AI coding and design agents, with optional vendor-specific adapters and integrations.
 
 Repository: https://github.com/sergekostenchuk/ui-ux-agent-skill-system

@@ -18,6 +18,10 @@ Do not commit:
 
 Examples must use redacted placeholders such as `STITCH_API_KEY=redacted`.
 
+If a real token, OTP, or recovery code is pasted into a chat, issue, terminal log,
+or report, treat it as exposed. Revoke the token in the vendor console and create
+a replacement before using that integration again.
+
 ## External Services
 
 Skills in this system may mention Figma MCP, Stitch, browser automation, and other optional services. These are approval-gated:
@@ -31,4 +35,3 @@ Skills in this system may mention Figma MCP, Stitch, browser automation, and oth
 ## Reporting A Vulnerability
 
 For now, report security issues directly to the repository owner through a private channel. Do not open public issues containing secrets, tokens, private URLs, screenshots, or customer data.
-

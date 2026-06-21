@@ -37,6 +37,16 @@ npm publish --access public # with temporary userconfig; token redacted
 npm view @mlllm/ui-ux-agent-skill-system name version dist-tags.latest license bin repository.url
 npm install --ignore-scripts @mlllm/ui-ux-agent-skill-system@0.2.0 # in temporary directory
 ./node_modules/.bin/uiux-skills list # in temporary directory
+npm run test:evidence
+npm run check:eval-contracts
+npm run lint
+npm run eval
+npm run check:freshness
+npm run build:adapters
+git diff --exit-code dist
+npm run check:dist
+npm pack --dry-run
+rg -n "npm_[A-Za-z0-9]{10,}|[a-f0-9]{64}" . || true
 node bin/uiux-skills.js list
 npm pack --dry-run
 python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json
@@ -66,6 +76,12 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - `npm publish --access public` for `@mlllm/ui-ux-agent-skill-system@0.2.0`: passed.
 - Registry verification: `name=@mlllm/ui-ux-agent-skill-system`, `version=0.2.0`, `dist-tags.latest=0.2.0`, `license=Apache-2.0`, `bin.uiux-skills=bin/uiux-skills.js`.
 - Clean temporary install of `@mlllm/ui-ux-agent-skill-system@0.2.0`: passed; `.bin/uiux-skills list` printed all runtime targets.
+- Negative evidence fixtures: passed; valid fixture accepted, missing-artifact fixture rejected, planned-only fixture rejected when `--require-ran` is set.
+- Eval contract coverage: passed for 4 top-level cases across accessibility, privacy, truthful content, and validation coverage.
+- CI workflow now runs `npm run test:evidence`, `npm run eval`, and `npm run check:eval-contracts`.
+- Manual `Release` workflow added with `workflow_dispatch`, version match check, duplicate npm version guard, validation gates, and `NPM_TOKEN` secret publish.
+- README badges added for CI, npm version, and Apache-2.0 license.
+- Exact npm token and 2FA/recovery-code strings used during manual publish were not found in repository files after the hardening update.
 - `node bin/uiux-skills.js list`: passed.
 - `node bin/uiux-skills.js path`: passed.
 - `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`: passed.

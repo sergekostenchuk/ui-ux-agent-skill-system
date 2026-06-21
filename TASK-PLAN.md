@@ -160,6 +160,11 @@ rollback_policy:
 | T-013 | Clarify vendor-neutral core wording | done | docs_sync |
 | T-014 | Prepare npm 0.2.0 release gate | done | docs_sync |
 | T-015 | Sync hardening decisions to Obsidian LLM Wiki | done | docs_sync |
+| T-016 | Add negative evidence fixtures to CI | done | docs_sync |
+| T-017 | Add README quality badges | done | docs_sync |
+| T-018 | Add manual release workflow and docs | done | docs_sync |
+| T-019 | Add eval contract coverage gate | done | docs_sync |
+| T-020 | Tag GitHub release for npm 0.2.0 | ready | planner |
 
 ## Task Blocks
 
@@ -1230,10 +1235,157 @@ published_at: 2026-06-20
 package_name: `@mlllm/ui-ux-agent-skill-system`
 npm_status: published
 npm_url: https://www.npmjs.com/package/@mlllm/ui-ux-agent-skill-system
-npm_version: 0.1.0
-npm_published_at: 2026-06-20
+npm_version: 0.2.0
+npm_published_at: 2026-06-21
 npm_blocker: none; previous `@sergekostenchuk` target requires separate npm scope access.
 npm_pack_dry_run: passed
 npm_tarball_size: 3.2 MB
-npm_unpacked_size: 19.5 MB
-npm_total_files: 1914
+npm_unpacked_size: 19.6 MB
+npm_total_files: 1928
+
+### T-016
+
+task_id: T-016
+title: Add negative evidence fixtures to CI
+rationale: CI must prove the evidence validator rejects bad reports, not only that it accepts a valid report.
+priority: P1
+status: done
+dependencies:
+- T-008
+blocked_by: none
+unblocks: none
+task_size: S
+goal: Run positive and negative evidence-validator fixtures in CI.
+scope_in:
+- negative fixture runner
+- CI evidence step
+- local validation docs
+scope_out:
+- changing the evidence report syntax
+changed_subsystems:
+- CI
+- validators
+- docs
+commands_run:
+- `npm run test:evidence`
+- `python3 scripts/lint_publication_package.py .`
+artifact_locations:
+- `scripts/test_evidence_validator.py`
+- `.github/workflows/ci.yml`
+- `package.json`
+- `docs/install.md`
+owner_role: docs_sync
+active_alarm_ids: []
+resolved_alarm_ids: []
+
+### T-017
+
+task_id: T-017
+title: Add README quality badges
+rationale: CI, npm publication, and license status should be visible from the repository front page.
+priority: P3
+status: done
+dependencies:
+- T-010
+- T-014
+blocked_by: none
+unblocks: none
+task_size: XS
+goal: Add CI, npm, and Apache-2.0 badges to README.
+commands_run:
+- `python3 scripts/lint_publication_package.py .`
+artifact_locations:
+- `README.md`
+owner_role: docs_sync
+active_alarm_ids: []
+resolved_alarm_ids: []
+
+### T-018
+
+task_id: T-018
+title: Add manual release workflow and docs
+rationale: npm release should be repeatable without making every push publishable.
+priority: P1
+status: done
+dependencies:
+- T-010
+- T-014
+blocked_by: none
+unblocks: none
+task_size: S
+goal: Add a `workflow_dispatch` release job that gates npm publish behind validation and a protected `NPM_TOKEN` secret.
+scope_in:
+- GitHub Actions release workflow
+- release documentation
+- token hygiene guidance
+scope_out:
+- automatic publish on every push
+- committing secrets
+commands_run:
+- `npm pack --dry-run`
+- `rg -n "npm_[A-Za-z0-9]{10,}|[a-f0-9]{64}|_authToken" . || true`
+artifact_locations:
+- `.github/workflows/release.yml`
+- `docs/release.md`
+- `docs/npm.md`
+- `SECURITY.md`
+owner_role: docs_sync
+active_alarm_ids: []
+resolved_alarm_ids: []
+
+### T-019
+
+task_id: T-019
+title: Add eval contract coverage gate
+rationale: Route checking is useful but not sufficient; top-level evals should also carry explicit acceptance and rejection constraints.
+priority: P2
+status: done
+dependencies:
+- T-009
+blocked_by: none
+unblocks: none
+task_size: S
+goal: Add a deterministic contract gate for top-level eval coverage.
+scope_in:
+- eval contract checker
+- CI eval contract step
+- eval limitation documentation
+scope_out:
+- claiming full UI visual-quality evaluation in CI
+commands_run:
+- `npm run eval`
+- `npm run check:eval-contracts`
+artifact_locations:
+- `scripts/check_eval_contracts.py`
+- `.github/workflows/ci.yml`
+- `package.json`
+- `reports/eval-contract-results.json`
+owner_role: docs_sync
+active_alarm_ids: []
+resolved_alarm_ids: []
+
+### T-020
+
+task_id: T-020
+title: Tag GitHub release for npm 0.2.0
+rationale: npm `0.2.0` should be connected to the exact commit used to publish the tarball.
+priority: P2
+status: ready
+dependencies:
+- T-014
+blocked_by: none
+unblocks: none
+task_size: XS
+goal: Create Git tag and GitHub Release `v0.2.0` targeting the published package commit `f13bce0`.
+scope_in:
+- git tag
+- GitHub Release notes
+scope_out:
+- changing npm `0.2.0`
+commands_planned:
+- `gh release create v0.2.0 --target f13bce0 --title "v0.2.0" --notes "..."`
+commands_run: []
+artifact_locations: []
+owner_role: planner
+active_alarm_ids: []
+resolved_alarm_ids: []

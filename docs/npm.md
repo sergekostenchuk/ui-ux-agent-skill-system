@@ -57,7 +57,11 @@ uiux-skills install codex
 
 ## Publish
 
-Before publishing:
+Manual shell publishing is still possible, but the preferred path is the `Release`
+GitHub Actions workflow. It runs the full credential-free validation gate, then
+publishes only when manually dispatched with a protected `NPM_TOKEN` secret.
+
+Before publishing from a shell:
 
 ```bash
 npm login
@@ -78,3 +82,6 @@ If the npm account has two-factor authentication enabled, publish requires eithe
 - a granular/automation token that has package publish permission and 2FA bypass enabled.
 
 Do not commit npm tokens into this repository. Use temporary environment variables, local npm login, or a short-lived CI secret.
+
+If a token is pasted into a chat, issue, terminal log, or report, revoke it in npm
+and create a replacement token before the next release.

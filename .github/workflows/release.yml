@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version to publish, for example 0.3.0"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish-npm:
+    name: Publish npm Package
+    runs-on: ubuntu-latest
+    environment: npm-production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Validate requested version
+        run: |
+          set -euo pipefail
+          package_version="$(node -p "require('./package.json').version")"
+          if [ "$package_version" != "${{ inputs.version }}" ]; then
+            echo "::error::workflow input version (${{ inputs.version }}) does not match package.json ($package_version)"
+            exit 1
+          fi
+          if npm view "@mlllm/ui-ux-agent-skill-system@${{ inputs.version }}" version >/dev/null 2>&1; then
+            echo "::error::@mlllm/ui-ux-agent-skill-system@${{ inputs.version }} already exists on npm"
+            exit 1
+          fi
+
+      - name: Package lint
+        run: npm run lint
+
+      - name: Evidence report validator
+        run: npm run test:evidence
+
+      - name: Deterministic evals
+        run: npm run eval
+
+      - name: Eval contract coverage
+        run: npm run check:eval-contracts
+
+      - name: Rebuild adapters
+        run: npm run build:adapters
+
+      - name: Check generated dist is committed
+        run: git diff --exit-code dist
+
+      - name: Check dist drift
+        run: npm run check:dist
+
+      - name: Check freshness metadata
+        run: npm run check:freshness
+
+      - name: npm pack smoke test
+        run: npm pack --dry-run
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Verify npm registry
+        run: |
+          set -euo pipefail
+          tmp_cache="$(mktemp -d)"
+          trap 'rm -rf "$tmp_cache"' EXIT
+          published_version="$(npm view @mlllm/ui-ux-agent-skill-system version --cache "$tmp_cache" --prefer-online)"
+          latest_tag="$(npm view @mlllm/ui-ux-agent-skill-system dist-tags.latest --cache "$tmp_cache" --prefer-online)"
+          if [ "$published_version" != "${{ inputs.version }}" ] || [ "$latest_tag" != "${{ inputs.version }}" ]; then
+            echo "::error::npm registry verification failed: version=$published_version latest=$latest_tag expected=${{ inputs.version }}"
+            exit 1
+          fi
+          npm view @mlllm/ui-ux-agent-skill-system name version dist-tags.latest

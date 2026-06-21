@@ -31,10 +31,13 @@ jobs:
         run: npm run lint
 
       - name: Evidence report validator
-        run: npm run validate:evidence
+        run: npm run test:evidence
 
       - name: Deterministic evals
         run: npm run eval
+
+      - name: Eval contract coverage
+        run: npm run check:eval-contracts
 
       - name: Rebuild adapters
         run: npm run build:adapters
