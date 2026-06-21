@@ -153,7 +153,7 @@ rollback_policy:
 | T-006 | Validate package | done | tester |
 | T-007 | Add npm distribution layer | done | implementer |
 | T-008 | Add evidence report validator | done | docs_sync |
-| T-009 | Add eval runner and golden route checks | ready | planner |
+| T-009 | Add eval runner and golden route checks | done | docs_sync |
 | T-010 | Add GitHub Actions CI gates | blocked | planner |
 | T-011 | Add core-to-dist drift guard | ready | planner |
 | T-012 | Add data freshness manifest and checker | ready | planner |
@@ -417,7 +417,7 @@ task_id: T-009
 title: Add eval runner and golden route checks
 rationale: Existing eval JSON files define expectations, but there is no executable regression runner proving routing quality.
 priority: P1
-status: ready
+status: done
 dependencies:
 - T-007
 blocked_by: none
@@ -479,16 +479,26 @@ stop_on_failure: true
 commands_planned:
 - `python3 scripts/run_evals.py . --out reports/eval-results.json`
 - `python3 scripts/lint_publication_package.py .`
-commands_run: []
+commands_run:
+- `python3 scripts/run_evals.py . --out reports/eval-results.json`
+- `bash -lc 'if python3 scripts/run_evals.py . --eval-file tests/fixtures/evals/route-mismatch.json --out /tmp/uiux-route-mismatch.json; then echo unexpected-pass; exit 1; else echo expected-failure-route-mismatch; fi'`
+- `python3 -m json.tool reports/eval-results.json`
+- `python3 scripts/lint_publication_package.py .`
 expected_artifacts:
 - `scripts/run_evals.py`
 - `reports/eval-results.json`
 - updated eval schema notes
-artifact_locations: []
+artifact_locations:
+- `scripts/run_evals.py`
+- `reports/eval-results.json`
+- `tests/fixtures/evals/route-mismatch.json`
+- `evals/evals.json`
+- `core/skills/senior-ui-ux-orchestrator/scripts/classify_product_type.py`
+- `core/skills/senior-ui-ux-orchestrator/assets/routing-rules.json`
 rollback_plan:
 - remove eval runner and CI calls
 - keep eval JSON files as prompt-only fixtures if runner is reverted
-owner_role: planner
+owner_role: docs_sync
 agent_sequence:
 - planner
 - implementer

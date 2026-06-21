@@ -1,0 +1,10 @@
+{
+  "schema_version": "fixture",
+  "cases": [
+    {
+      "id": "route-mismatch",
+      "prompt": "Refactor our private admin dashboard filters and empty states.",
+      "expected_route": "marketing-site-skill"
+    }
+  ]
+}

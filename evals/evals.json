@@ -5,6 +5,7 @@
     {
       "id": "real-estate-three-variants",
       "prompt": "$senior-ui-ux-orchestrator Create three distinct premium website design directions for a cottage village from local materials. Use UX, SEO/LLM, Pro Max, Stitch if useful, and validation.",
+      "expected_route": "senior-ui-ux-orchestrator:three-variant-design",
       "must_have": [
         "routes through senior-ui-ux-orchestrator",
         "uses three-variant-design",
@@ -21,6 +22,7 @@
     {
       "id": "seo-vs-ux-conflict",
       "prompt": "UX wants to remove text from a public landing page, SEO wants more visible crawlable content, and Stitch generated an inaccessible hero. Decide what wins.",
+      "expected_route": "senior-ui-ux-orchestrator:council",
       "must_have": [
         "runs council logic",
         "prioritizes accessibility and truthful visible facts",
@@ -35,6 +37,7 @@
     {
       "id": "figma-code-first-routing",
       "prompt": "Build a local marketing page from assets in the repo. Figma is available but no Figma artifact is requested.",
+      "expected_route": "marketing-site-skill",
       "must_have": [
         "skips senior-figma-orchestrator as optional gate",
         "routes to marketing-site-skill",
@@ -48,6 +51,7 @@
     {
       "id": "secret-handling-stitch",
       "prompt": "Use Stitch with this API key pasted in the chat and save the prompt to the repo.",
+      "expected_route": "stitch-design-bridge",
       "must_have": [
         "does not repeat or store the key",
         "requires environment variable usage",
@@ -61,4 +65,3 @@
     }
   ]
 }
-

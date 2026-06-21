@@ -1,0 +1,546 @@
+{
+  "ok": true,
+  "summary": {
+    "files": 16,
+    "cases": 50,
+    "route_checked": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped_route": 23
+  },
+  "results": [
+    {
+      "file": "evals/evals.json",
+      "case_id": "real-estate-three-variants",
+      "ok": true,
+      "expected_route": "senior-ui-ux-orchestrator:three-variant-design",
+      "actual_route_id": "senior-ui-ux-orchestrator:three-variant-design",
+      "actual_skill": "senior-ui-ux-orchestrator",
+      "actual_mode": "three-variant-design",
+      "score": 2,
+      "matched_signals": [
+        "three distinct",
+        "design directions"
+      ]
+    },
+    {
+      "file": "evals/evals.json",
+      "case_id": "seo-vs-ux-conflict",
+      "ok": true,
+      "expected_route": "senior-ui-ux-orchestrator:council",
+      "actual_route_id": "senior-ui-ux-orchestrator:council",
+      "actual_skill": "senior-ui-ux-orchestrator",
+      "actual_mode": "council",
+      "score": 5,
+      "matched_signals": [
+        "ux wants",
+        "seo wants",
+        "what wins",
+        "decide what wins",
+        "inaccessible"
+      ]
+    },
+    {
+      "file": "evals/evals.json",
+      "case_id": "figma-code-first-routing",
+      "ok": true,
+      "expected_route": "marketing-site-skill",
+      "actual_route_id": "marketing-site-skill",
+      "actual_skill": "marketing-site-skill",
+      "actual_mode": "build-marketing",
+      "score": 2,
+      "matched_signals": [
+        "marketing page",
+        "local marketing page"
+      ]
+    },
+    {
+      "file": "evals/evals.json",
+      "case_id": "secret-handling-stitch",
+      "ok": true,
+      "expected_route": "stitch-design-bridge",
+      "actual_route_id": "stitch-design-bridge",
+      "actual_skill": "stitch-design-bridge",
+      "actual_mode": "stitch",
+      "score": 1,
+      "matched_signals": [
+        "stitch"
+      ]
+    },
+    {
+      "file": "core/skills/design-critic-skill/evals/evals.json",
+      "case_id": "visual-hierarchy",
+      "ok": true,
+      "expected_route": "design-critic-skill",
+      "actual_route_id": "design-critic-skill",
+      "actual_skill": "design-critic-skill",
+      "actual_mode": "critique",
+      "score": 3,
+      "matched_signals": [
+        "critique",
+        "polish",
+        "hierarchy"
+      ]
+    },
+    {
+      "file": "core/skills/design-critic-skill/evals/evals.json",
+      "case_id": "marketing-hero-polish",
+      "ok": true,
+      "expected_route": "design-critic-skill",
+      "actual_route_id": "design-critic-skill",
+      "actual_skill": "design-critic-skill",
+      "actual_mode": "critique",
+      "score": 2,
+      "matched_signals": [
+        "critique",
+        "generic"
+      ]
+    },
+    {
+      "file": "core/skills/design-critic-skill/evals/evals.json",
+      "case_id": "optional-cloud-near-miss",
+      "ok": true,
+      "expected_route": "design-critic-skill",
+      "actual_route_id": "design-critic-skill",
+      "actual_skill": "design-critic-skill",
+      "actual_mode": "critique",
+      "score": 2,
+      "matched_signals": [
+        "attention insight",
+        "score this"
+      ]
+    },
+    {
+      "file": "core/skills/figma-apply-effects/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-apply-effects/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-apply-effects/evals/evals.json",
+      "case_id": "3",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-assets-manager/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-assets-manager/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-canvas-editor/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-canvas-editor/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-code-to-canvas/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-code-to-canvas/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-context-reader/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-context-reader/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-design-system-sync/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-design-system-sync/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-design-to-code-bridge/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-design-to-code-bridge/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-workflow-auditor/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/figma-workflow-auditor/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/marketing-site-skill/evals/evals.json",
+      "case_id": "b2b-landing-page",
+      "ok": true,
+      "expected_route": "marketing-site-skill",
+      "actual_route_id": "marketing-site-skill",
+      "actual_skill": "marketing-site-skill",
+      "actual_mode": "build-marketing",
+      "score": 1,
+      "matched_signals": [
+        "landing"
+      ]
+    },
+    {
+      "file": "core/skills/marketing-site-skill/evals/evals.json",
+      "case_id": "local-venue-page",
+      "ok": true,
+      "expected_route": "marketing-site-skill",
+      "actual_route_id": "marketing-site-skill",
+      "actual_skill": "marketing-site-skill",
+      "actual_mode": "build-marketing",
+      "score": 1,
+      "matched_signals": [
+        "venue"
+      ]
+    },
+    {
+      "file": "core/skills/marketing-site-skill/evals/evals.json",
+      "case_id": "near-miss-private-dashboard",
+      "ok": true,
+      "expected_route": "webapp-ui-skill",
+      "actual_route_id": "webapp-ui-skill",
+      "actual_skill": "webapp-ui-skill",
+      "actual_mode": "build-webapp",
+      "score": 3,
+      "matched_signals": [
+        "dashboard",
+        "table",
+        "filters"
+      ]
+    },
+    {
+      "file": "core/skills/senior-figma-orchestrator/evals/evals.json",
+      "case_id": "1",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/senior-figma-orchestrator/evals/evals.json",
+      "case_id": "2",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/senior-figma-orchestrator/evals/evals.json",
+      "case_id": "3",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "route-private-dashboard",
+      "ok": true,
+      "expected_route": "webapp-ui-skill",
+      "actual_route_id": "webapp-ui-skill",
+      "actual_skill": "webapp-ui-skill",
+      "actual_mode": "build-webapp",
+      "score": 3,
+      "matched_signals": [
+        "dashboard",
+        "admin",
+        "filters"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "route-product-landing",
+      "ok": true,
+      "expected_route": "marketing-site-skill",
+      "actual_route_id": "marketing-site-skill",
+      "actual_skill": "marketing-site-skill",
+      "actual_mode": "build-marketing",
+      "score": 3,
+      "matched_signals": [
+        "landing",
+        "cta",
+        "hero"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "screenshot-only-audit",
+      "ok": true,
+      "expected_route": "ux-audit-skill",
+      "actual_route_id": "ux-audit-skill",
+      "actual_skill": "ux-audit-skill",
+      "actual_mode": "audit",
+      "score": 3,
+      "matched_signals": [
+        "audit",
+        "url",
+        "screenshot"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "visual-polish-critique",
+      "ok": true,
+      "expected_route": "design-critic-skill",
+      "actual_route_id": "design-critic-skill",
+      "actual_skill": "design-critic-skill",
+      "actual_mode": "critique",
+      "score": 3,
+      "matched_signals": [
+        "critique",
+        "polish",
+        "hierarchy"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "cloud-allowed-marketing-draft",
+      "ok": true,
+      "expected_route": "marketing-site-skill",
+      "actual_route_id": "marketing-site-skill",
+      "actual_skill": "marketing-site-skill",
+      "actual_mode": "build-marketing",
+      "score": 1,
+      "matched_signals": [
+        "landing"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "figma-design-to-code",
+      "ok": true,
+      "expected_route": "senior-figma-orchestrator",
+      "actual_route_id": "senior-figma-orchestrator",
+      "actual_skill": "senior-figma-orchestrator",
+      "actual_mode": "figma",
+      "score": 3,
+      "matched_signals": [
+        "figma",
+        "frame",
+        "variables"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "figma-effects-advanced",
+      "ok": true,
+      "expected_route": "senior-figma-orchestrator",
+      "actual_route_id": "senior-figma-orchestrator",
+      "actual_skill": "senior-figma-orchestrator",
+      "actual_mode": "figma",
+      "score": 4,
+      "matched_signals": [
+        "figma",
+        "effects",
+        "glass",
+        "noise"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "cursor-reveal-route",
+      "ok": true,
+      "expected_route": "cursor-reveal-hero",
+      "actual_route_id": "cursor-reveal-hero",
+      "actual_skill": "cursor-reveal-hero",
+      "actual_mode": "interactive-effect",
+      "score": 2,
+      "matched_signals": [
+        "mouse trail",
+        "trail mask"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "three-variant-stitch-flow",
+      "ok": true,
+      "expected_route": "senior-ui-ux-orchestrator:three-variant-design",
+      "actual_route_id": "senior-ui-ux-orchestrator:three-variant-design",
+      "actual_skill": "senior-ui-ux-orchestrator",
+      "actual_mode": "three-variant-design",
+      "score": 2,
+      "matched_signals": [
+        "design versions",
+        "klimovo"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "senior-council-conflict",
+      "ok": true,
+      "expected_route": "senior-ui-ux-orchestrator:council",
+      "actual_route_id": "senior-ui-ux-orchestrator:council",
+      "actual_skill": "senior-ui-ux-orchestrator",
+      "actual_mode": "council",
+      "score": 5,
+      "matched_signals": [
+        "ux wants",
+        "seo wants",
+        "what wins",
+        "decide what wins",
+        "inaccessible"
+      ]
+    },
+    {
+      "file": "core/skills/senior-ui-ux-orchestrator/evals/evals.json",
+      "case_id": "wiki-context-large-project",
+      "ok": true,
+      "expected_route": "obsidian-wiki-ingest",
+      "actual_route_id": "obsidian-wiki-ingest",
+      "actual_skill": "obsidian-wiki-ingest",
+      "actual_mode": "wiki-context",
+      "score": 4,
+      "matched_signals": [
+        "wiki",
+        "obsidian",
+        "llm wiki",
+        "do not lose context"
+      ]
+    },
+    {
+      "file": "core/skills/stitch-design-bridge/evals/evals.json",
+      "case_id": "stitch-brief-after-pro-max",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/stitch-design-bridge/evals/evals.json",
+      "case_id": "stitch-output-conflict-review",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/stitch-design-bridge/evals/evals.json",
+      "case_id": "stitch-secret-handling",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/ux-audit-skill/evals/evals.json",
+      "case_id": "screenshot-only",
+      "ok": true,
+      "expected_route": "ux-audit-skill",
+      "actual_route_id": "ux-audit-skill",
+      "actual_skill": "ux-audit-skill",
+      "actual_mode": "audit",
+      "score": 2,
+      "matched_signals": [
+        "audit",
+        "screenshot"
+      ]
+    },
+    {
+      "file": "core/skills/ux-audit-skill/evals/evals.json",
+      "case_id": "source-only",
+      "ok": true,
+      "expected_route": "ux-audit-skill",
+      "actual_route_id": "ux-audit-skill",
+      "actual_skill": "ux-audit-skill",
+      "actual_mode": "audit",
+      "score": 2,
+      "matched_signals": [
+        "review",
+        "accessibility"
+      ]
+    },
+    {
+      "file": "core/skills/ux-audit-skill/evals/evals.json",
+      "case_id": "before-after-regression",
+      "ok": true,
+      "expected_route": "ux-audit-skill",
+      "actual_route_id": "ux-audit-skill",
+      "actual_skill": "ux-audit-skill",
+      "actual_mode": "audit",
+      "score": 3,
+      "matched_signals": [
+        "screenshot",
+        "before",
+        "after"
+      ]
+    },
+    {
+      "file": "core/skills/webapp-ui-skill/evals/evals.json",
+      "case_id": "dense-dashboard",
+      "ok": true,
+      "expected_route": "webapp-ui-skill",
+      "actual_route_id": "webapp-ui-skill",
+      "actual_skill": "webapp-ui-skill",
+      "actual_mode": "build-webapp",
+      "score": 4,
+      "matched_signals": [
+        "dashboard",
+        "saas",
+        "table",
+        "filters"
+      ]
+    },
+    {
+      "file": "core/skills/webapp-ui-skill/evals/evals.json",
+      "case_id": "settings-form-states",
+      "ok": true,
+      "expected_route": "webapp-ui-skill",
+      "actual_route_id": "webapp-ui-skill",
+      "actual_skill": "webapp-ui-skill",
+      "actual_mode": "build-webapp",
+      "score": 2,
+      "matched_signals": [
+        "settings",
+        "billing"
+      ]
+    },
+    {
+      "file": "core/skills/webapp-ui-skill/evals/evals.json",
+      "case_id": "near-miss-landing",
+      "ok": true,
+      "expected_route": "marketing-site-skill",
+      "actual_route_id": "marketing-site-skill",
+      "actual_skill": "marketing-site-skill",
+      "actual_mode": "build-marketing",
+      "score": 3,
+      "matched_signals": [
+        "landing",
+        "cta",
+        "hero"
+      ]
+    }
+  ]
+}

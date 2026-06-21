@@ -9,6 +9,7 @@ python3 scripts/lint_publication_package.py .
 python3 scripts/build_adapters.py . --out dist
 python3 scripts/lint_publication_package.py .
 python3 scripts/validate_evidence_report.py tests/fixtures/evidence/valid.md
+python3 scripts/run_evals.py . --out reports/eval-results.json
 node bin/uiux-skills.js list
 npm pack --dry-run
 python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json
@@ -20,6 +21,7 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - Adapter build: completed.
 - Package linter after adapter build: passed with 0 warnings.
 - Evidence validator fixture check: passed.
+- Deterministic eval runner: passed, 16 files, 50 cases, 27 route checks, 0 failures.
 - `node bin/uiux-skills.js list`: passed.
 - `node bin/uiux-skills.js path`: passed.
 - `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`: passed.
