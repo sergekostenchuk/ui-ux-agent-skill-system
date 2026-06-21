@@ -152,7 +152,7 @@ rollback_policy:
 | T-005 | Build runtime projections | done | tester |
 | T-006 | Validate package | done | tester |
 | T-007 | Add npm distribution layer | done | implementer |
-| T-008 | Add evidence report validator | ready | planner |
+| T-008 | Add evidence report validator | done | docs_sync |
 | T-009 | Add eval runner and golden route checks | ready | planner |
 | T-010 | Add GitHub Actions CI gates | blocked | planner |
 | T-011 | Add core-to-dist drift guard | ready | planner |
@@ -300,7 +300,7 @@ task_id: T-008
 title: Add evidence report validator
 rationale: Convert the `Ran`/`Skipped`/`Planned`/`Manual` honesty contract from prompt-only guidance into a mechanical validation gate.
 priority: P1
-status: ready
+status: done
 dependencies:
 - T-007
 blocked_by: none
@@ -364,16 +364,27 @@ commands_planned:
 - `python3 scripts/validate_evidence_report.py tests/fixtures/evidence/valid.md`
 - `python3 scripts/validate_evidence_report.py tests/fixtures/evidence/missing-artifact.md`
 - `python3 scripts/lint_publication_package.py .`
-commands_run: []
+commands_run:
+- `python3 scripts/validate_evidence_report.py tests/fixtures/evidence/valid.md`
+- `bash -lc 'if python3 scripts/validate_evidence_report.py tests/fixtures/evidence/missing-artifact.md; then echo unexpected-pass; exit 1; else echo expected-failure-missing-artifact; fi'`
+- `bash -lc 'if python3 scripts/validate_evidence_report.py --require-ran tests/fixtures/evidence/planned-only.md; then echo unexpected-pass; exit 1; else echo expected-failure-planned-only; fi'`
+- `python3 scripts/lint_publication_package.py .`
 expected_artifacts:
 - `scripts/validate_evidence_report.py`
 - evidence fixtures
 - updated docs/reporting contract
-artifact_locations: []
+artifact_locations:
+- `scripts/validate_evidence_report.py`
+- `tests/fixtures/evidence/valid.md`
+- `tests/fixtures/evidence/missing-artifact.md`
+- `tests/fixtures/evidence/planned-only.md`
+- `tests/fixtures/evidence/artifacts/browser-smoke.txt`
+- `core/shared/reporting-contract.md`
+- `reports/package-validation.md`
 rollback_plan:
 - remove validator script and fixtures
 - remove CI gate references that call it
-owner_role: planner
+owner_role: docs_sync
 agent_sequence:
 - planner
 - implementer

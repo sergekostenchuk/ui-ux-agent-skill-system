@@ -1,0 +1,1 @@
+browser smoke evidence fixture
