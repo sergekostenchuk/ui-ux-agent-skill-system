@@ -1,10 +1,12 @@
 # UI/UX Agent Skill System
 
-Vendor-neutral UI/UX skill cluster for AI coding and design agents.
+Vendor-neutral core UI/UX skill cluster for AI coding and design agents, with optional vendor-specific adapters and integrations.
 
 Repository: https://github.com/sergekostenchuk/ui-ux-agent-skill-system
 
 This repository is not a loose prompt collection. It is a portable agent skill system with a central orchestrator, specialist skills, runtime adapters, deterministic checks, and realistic eval prompts.
+
+The core contracts, routing model, reporting format, evals, and validation gates are portable. Runtime packaging and integrations such as Figma MCP, Google Stitch, Codex, Claude, Gemini, Qwen, Copilot, GLM, and Kimi are adapter-specific and depend on the target tool's capabilities, authentication, and local environment.
 
 ## What It Does
 
@@ -16,8 +18,8 @@ Use it for:
 - SaaS dashboards and dense web apps;
 - product UX architecture and user journeys;
 - SEO, AEO/GEO, and LLM-readable public site structure;
-- Figma MCP workflows and design-system sync;
-- Stitch / AI UI exploration;
+- optional Figma MCP workflows and design-system sync;
+- optional Stitch / AI UI exploration;
 - three-direction design exploration;
 - UX audits and visual critique;
 - cursor reveal and image-layer alignment effects;
@@ -34,8 +36,8 @@ user request
 -> UI/UX Pro Max design intelligence
 -> three-variant direction selection when needed
 -> senior council when skills conflict
--> Stitch exploration when useful
--> Figma gate only when a Figma artifact is required
+-> optional Stitch exploration when useful and available
+-> optional Figma gate only when a Figma artifact is required
 -> implementation specialist
 -> audit, critic, visual/browser/semantic validation
 -> report or wiki capture
@@ -77,7 +79,7 @@ The orchestrator is the final routing and conflict-resolution layer. Specialist 
 - `ui-ux-llm-product-architect` — user journeys, IA, UX logic, accessibility, agent-readable UI.
 - `seo-llm-site-architect` — SEO, AEO/GEO, schema, metadata, crawlability, LLM-readability.
 - `ui-ux-pro-max` — searchable design intelligence: styles, palettes, typography, patterns, stack guidance.
-- `stitch-design-bridge` — Stitch prompts, AI UI exploration review, Figma/code handoff.
+- `stitch-design-bridge` — optional Stitch prompts, AI UI exploration review, Figma/code handoff.
 
 ### Figma Subsystem
 
@@ -246,7 +248,7 @@ senior-ui-ux-orchestrator
 -> seo-llm-site-architect
 -> ui-ux-pro-max
 -> senior council if UX/SEO/visual conflicts appear
--> stitch-design-bridge if AI exploration is useful
+-> stitch-design-bridge if AI exploration is useful and available
 -> marketing-site-skill
 -> design-critic-skill
 -> ux-audit-skill
@@ -258,7 +260,7 @@ What each skill contributes:
 - `ui-ux-llm-product-architect` defines buyer journeys: emotional entry, lot comparison, trust verification, request path.
 - `seo-llm-site-architect` keeps visible facts, metadata, schema, headings, and crawlable structure aligned.
 - `ui-ux-pro-max` suggests style candidates, palettes, typography, and layout patterns.
-- `stitch-design-bridge` can turn approved directions into Stitch-ready prompts.
+- `stitch-design-bridge` can turn approved directions into Stitch-ready prompts when Stitch is available.
 - `marketing-site-skill` implements the actual public page.
 - `design-critic-skill` checks premium feel, hierarchy, typography, spacing, and anti-slop risks.
 - `ux-audit-skill` verifies responsive behavior and evidence-backed UX risks.
@@ -376,7 +378,7 @@ Decision priority:
 3. Truthful visible facts.
 4. Semantic HTML, crawlability, LLM-readable structure.
 5. Conversion UX and user comprehension.
-6. Figma/design-system consistency.
+6. Figma/design-system consistency when Figma is part of the project.
 7. Maintainability.
 8. Visual novelty and AI-generated aesthetics.
 

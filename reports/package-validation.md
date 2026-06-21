@@ -13,6 +13,8 @@ python3 scripts/run_evals.py . --out reports/eval-results.json
 python3 scripts/build_adapters.py . --out dist
 python3 scripts/check_dist_sync.py .
 python3 scripts/check_freshness.py .
+rg -n "vendor-neutral|Vendor-neutral|Stitch|Figma" README.md docs package.json
+python3 scripts/lint_publication_package.py .
 node bin/uiux-skills.js list
 npm pack --dry-run
 python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json
@@ -27,6 +29,8 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - Deterministic eval runner: passed, 16 files, 50 cases, 27 route checks, 0 failures.
 - Adapter regeneration and dist sync check: passed.
 - Freshness metadata check: passed.
+- Vendor-neutral wording grep: passed; public docs now describe a vendor-neutral core with optional vendor-specific adapters and integrations.
+- Package linter after wording update: passed with 0 warnings.
 - `node bin/uiux-skills.js list`: passed.
 - `node bin/uiux-skills.js path`: passed.
 - `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`: passed.

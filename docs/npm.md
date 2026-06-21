@@ -13,6 +13,8 @@ The npm package includes:
 - prebuilt runtime projections in `dist`;
 - an installer CLI named `uiux-skills`.
 
+The npm package installs the portable core and adapter files. Optional integrations such as Figma MCP or Stitch still require their own vendor tools, credentials, and local configuration.
+
 ## Use With npx
 
 Install Codex skills:

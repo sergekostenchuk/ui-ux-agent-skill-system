@@ -4,6 +4,8 @@
 
 `senior-ui-ux-orchestrator` is the chair. Other skills provide expert input or execute a bounded stage. They do not compete for final authority.
 
+The system is vendor-neutral at the core-contract level: roles, routing, reporting, evals, gates, and validation are portable. Runtime adapters and integrations such as Figma MCP and Google Stitch are optional vendor-specific execution paths.
+
 ```text
 user request
 -> senior-ui-ux-orchestrator
@@ -13,8 +15,8 @@ user request
 -> UI/UX Pro Max advisory search
 -> orchestrator selects one or three directions
 -> senior council when skills conflict
--> Stitch exploration when useful
--> Figma gate only when a Figma artifact is required
+-> optional Stitch exploration when useful and available
+-> optional Figma gate only when a Figma artifact is required
 -> implementation specialist
 -> audit, critic, browser/semantic validation
 -> local report or wiki capture
@@ -29,8 +31,8 @@ user request
 | `ui-ux-llm-product-architect` | journeys, IA, UX logic, accessible interaction |
 | `seo-llm-site-architect` | crawlability, schema, metadata, LLM-readable public site architecture |
 | `ui-ux-pro-max` | searchable design intelligence and style candidates |
-| `stitch-design-bridge` | Stitch prompts, output review, Figma/code handoff |
-| `senior-figma-orchestrator` | Figma MCP routing, variables, canvas, design-system sync |
+| `stitch-design-bridge` | optional Stitch prompts, output review, Figma/code handoff |
+| `senior-figma-orchestrator` | optional Figma MCP routing, variables, canvas, design-system sync |
 | `marketing-site-skill` | public pages, landing pages, conversion pages |
 | `webapp-ui-skill` | dashboards, SaaS, admin, data-heavy UI |
 | `ux-audit-skill` | evidence-backed UX audits |
@@ -47,7 +49,7 @@ Use a council only when there is a real cross-domain conflict or a large project
 3. Truthful visible facts.
 4. Semantic HTML, crawlability, LLM-readable structure.
 5. Conversion UX and user comprehension.
-6. Figma/design-system consistency.
+6. Figma/design-system consistency when Figma is part of the project.
 7. Maintainability.
 8. Visual novelty and AI-generated aesthetics.
 
@@ -61,9 +63,8 @@ UX/product brief
 -> Pro Max style candidates
 -> orchestrator selects exactly three directions
 -> council checks conflicts
--> Stitch explores if useful
+-> Stitch explores if useful and available
 -> Figma or code implementation
 ```
 
-Stitch output is a candidate, not the final design.
-
+Stitch output is a candidate, not the final design. If Stitch is unavailable, the orchestrator can still produce the three directions as briefs, code implementations, or Figma-independent design specs.

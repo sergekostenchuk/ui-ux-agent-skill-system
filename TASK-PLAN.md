@@ -157,7 +157,7 @@ rollback_policy:
 | T-010 | Add GitHub Actions CI gates | ready | planner |
 | T-011 | Add core-to-dist drift guard | done | docs_sync |
 | T-012 | Add data freshness manifest and checker | done | docs_sync |
-| T-013 | Clarify vendor-neutral core wording | ready | planner |
+| T-013 | Clarify vendor-neutral core wording | done | docs_sync |
 | T-014 | Prepare npm 0.2.0 release gate | blocked | planner |
 | T-015 | Sync hardening decisions to Obsidian LLM Wiki | done | docs_sync |
 
@@ -908,13 +908,22 @@ stop_on_failure: true
 commands_planned:
 - `rg -n "vendor-neutral|Stitch|Figma" README.md docs package.json`
 - `python3 scripts/lint_publication_package.py .`
-commands_run: []
+commands_run:
+- `rg -n "vendor-neutral|Vendor-neutral|Stitch|Figma" README.md docs package.json`
+- `python3 scripts/lint_publication_package.py .`
 expected_artifacts:
 - updated docs wording
-artifact_locations: []
+artifact_locations:
+- `README.md`
+- `docs/architecture.md`
+- `docs/vendor-compatibility.md`
+- `docs/npm.md`
+- `package.json`
+- `reports/package-validation.md`
+- `TASK-PLAN.md`
 rollback_plan:
 - revert docs/metadata wording changes
-owner_role: planner
+owner_role: docs_sync
 agent_sequence:
 - planner
 - implementer
@@ -953,12 +962,7 @@ dependencies:
 - T-012
 - T-013
 blocked_by:
-- T-008
-- T-009
 - T-010
-- T-011
-- T-012
-- T-013
 unblocks: none
 task_size: S
 goal: Prepare and publish `0.2.0` only after CI, eval, evidence, dist, freshness, and docs gates pass.
