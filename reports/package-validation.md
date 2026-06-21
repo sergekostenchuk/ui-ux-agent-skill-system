@@ -47,6 +47,8 @@ git diff --exit-code dist
 npm run check:dist
 npm pack --dry-run
 rg -n "npm_[A-Za-z0-9]{10,}|[a-f0-9]{64}" . || true
+gh release create v0.2.0 --target f13bce03a5ea8c919d685b35015960735eee06d6 --title "v0.2.0" --notes "..."
+gh release view v0.2.0 --json url,tagName,targetCommitish,createdAt
 node bin/uiux-skills.js list
 npm pack --dry-run
 python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json
@@ -82,6 +84,7 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - Manual `Release` workflow added with `workflow_dispatch`, version match check, duplicate npm version guard, validation gates, and `NPM_TOKEN` secret publish.
 - README badges added for CI, npm version, and Apache-2.0 license.
 - Exact npm token and 2FA/recovery-code strings used during manual publish were not found in repository files after the hardening update.
+- GitHub Release `v0.2.0` created at the npm-published commit `f13bce03a5ea8c919d685b35015960735eee06d6`: https://github.com/sergekostenchuk/ui-ux-agent-skill-system/releases/tag/v0.2.0
 - `node bin/uiux-skills.js list`: passed.
 - `node bin/uiux-skills.js path`: passed.
 - `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`: passed.

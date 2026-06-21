@@ -164,7 +164,7 @@ rollback_policy:
 | T-017 | Add README quality badges | done | docs_sync |
 | T-018 | Add manual release workflow and docs | done | docs_sync |
 | T-019 | Add eval contract coverage gate | done | docs_sync |
-| T-020 | Tag GitHub release for npm 0.2.0 | ready | planner |
+| T-020 | Tag GitHub release for npm 0.2.0 | done | docs_sync |
 
 ## Task Blocks
 
@@ -1370,7 +1370,7 @@ task_id: T-020
 title: Tag GitHub release for npm 0.2.0
 rationale: npm `0.2.0` should be connected to the exact commit used to publish the tarball.
 priority: P2
-status: ready
+status: done
 dependencies:
 - T-014
 blocked_by: none
@@ -1384,8 +1384,11 @@ scope_out:
 - changing npm `0.2.0`
 commands_planned:
 - `gh release create v0.2.0 --target f13bce0 --title "v0.2.0" --notes "..."`
-commands_run: []
-artifact_locations: []
-owner_role: planner
+commands_run:
+- `gh release create v0.2.0 --target f13bce03a5ea8c919d685b35015960735eee06d6 --title "v0.2.0" --notes "..."`
+- `gh release view v0.2.0 --json url,tagName,targetCommitish,createdAt`
+artifact_locations:
+- `https://github.com/sergekostenchuk/ui-ux-agent-skill-system/releases/tag/v0.2.0`
+owner_role: docs_sync
 active_alarm_ids: []
 resolved_alarm_ids: []
