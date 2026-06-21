@@ -1,0 +1,58 @@
+{
+  "schema_version": "2026-06-21",
+  "default_max_age_days": 180,
+  "policy": "Local deterministic freshness metadata only. CI must not perform live web fetches by default.",
+  "datasets": [
+    {
+      "name": "google-fonts",
+      "paths": ["core/skills/ui-ux-pro-max/data/google-fonts.csv"],
+      "source_url": "https://fonts.google.com/",
+      "source_category": "Google Fonts catalog snapshot",
+      "last_checked_at": "2026-06-21",
+      "max_age_days": 90,
+      "stale_severity": "warning",
+      "update_mode": "manual snapshot refresh"
+    },
+    {
+      "name": "framework-stack-guidance",
+      "globs": ["core/skills/ui-ux-pro-max/data/stacks/*.csv"],
+      "source_category": "official framework docs and curated implementation guidance",
+      "last_checked_at": "2026-06-21",
+      "max_age_days": 120,
+      "stale_severity": "warning",
+      "update_mode": "manual source review"
+    },
+    {
+      "name": "react-performance",
+      "paths": ["core/skills/ui-ux-pro-max/data/react-performance.csv"],
+      "source_url": "https://react.dev/",
+      "source_category": "React and frontend performance guidance",
+      "last_checked_at": "2026-06-21",
+      "max_age_days": 120,
+      "stale_severity": "warning",
+      "update_mode": "manual source review"
+    },
+    {
+      "name": "curated-design-intelligence",
+      "paths": [
+        "core/skills/ui-ux-pro-max/data/app-interface.csv",
+        "core/skills/ui-ux-pro-max/data/charts.csv",
+        "core/skills/ui-ux-pro-max/data/colors.csv",
+        "core/skills/ui-ux-pro-max/data/design.csv",
+        "core/skills/ui-ux-pro-max/data/draft.csv",
+        "core/skills/ui-ux-pro-max/data/icons.csv",
+        "core/skills/ui-ux-pro-max/data/landing.csv",
+        "core/skills/ui-ux-pro-max/data/products.csv",
+        "core/skills/ui-ux-pro-max/data/styles.csv",
+        "core/skills/ui-ux-pro-max/data/typography.csv",
+        "core/skills/ui-ux-pro-max/data/ui-reasoning.csv",
+        "core/skills/ui-ux-pro-max/data/ux-guidelines.csv"
+      ],
+      "source_category": "curated local UI/UX pattern library",
+      "last_checked_at": "2026-06-21",
+      "max_age_days": 180,
+      "stale_severity": "warning",
+      "update_mode": "manual curation and spot-check"
+    }
+  ]
+}

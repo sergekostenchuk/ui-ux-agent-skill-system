@@ -12,7 +12,7 @@
     {
       "skill": "marketing-site-skill",
       "mode": "build-marketing",
-      "positive_signals": ["landing", "product page", "brand page", "venue", "campaign", "conversion", "cta", "metadata"],
+      "positive_signals": ["landing", "marketing page", "local marketing page", "product page", "brand page", "venue", "campaign", "conversion", "cta", "metadata"],
       "negative_signals": ["admin", "internal tool", "crm", "operator dashboard"],
       "must_require": ["first viewport signal", "metadata check", "responsive visual verification"]
     },
@@ -26,7 +26,7 @@
     {
       "skill": "design-critic-skill",
       "mode": "critique",
-      "positive_signals": ["critique", "visual quality", "polish", "hierarchy", "taste", "anti-slop", "spacing", "typography"],
+      "positive_signals": ["critique", "visual quality", "polish", "hierarchy", "taste", "anti-slop", "spacing", "typography", "attention insight", "score this", "generic"],
       "negative_signals": [],
       "must_require": ["observable findings", "privacy classification", "fix brief"]
     },
@@ -40,7 +40,7 @@
     {
       "skill": "senior-ui-ux-orchestrator",
       "mode": "three-variant-design",
-      "positive_signals": ["three design variants", "3 design versions", "three design versions", "design versions", "three directions", "different versions", "klimovo", "multiple visual concepts", "approved briefs to stitch", "before stitch"],
+      "positive_signals": ["three design variants", "3 design versions", "three design versions", "three distinct", "design directions", "design versions", "three directions", "different versions", "klimovo", "multiple visual concepts", "approved briefs to stitch", "before stitch"],
       "negative_signals": ["single small button fix", "one exact existing design to copy"],
       "must_require": ["chair owns final directions", "use ui-ux-pro-max before stitch", "define acceptance criteria per direction"]
     },
@@ -54,7 +54,7 @@
     {
       "skill": "senior-ui-ux-orchestrator",
       "mode": "council",
-      "positive_signals": ["senior council", "consilium", "консилиум", "ux seo conflict", "figma code conflict", "stitch conflict", "large cross-skill project"],
+      "positive_signals": ["senior council", "consilium", "консилиум", "ux wants", "seo wants", "what wins", "decide what wins", "inaccessible", "ux seo conflict", "figma code conflict", "stitch conflict", "large cross-skill project"],
       "negative_signals": ["small localized edit without conflict"],
       "must_require": ["one active chair", "apply council decision order", "record accepted tradeoffs and evidence plan"]
     },

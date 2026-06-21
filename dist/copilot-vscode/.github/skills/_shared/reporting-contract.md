@@ -32,3 +32,22 @@ If no command ran, say so directly. Do not convert planned commands into `Ran`.
 - Accessibility claims need axe/browser evidence or a clearly marked manual review.
 - Performance claims need Lighthouse or a project-specific metric report.
 - Metadata/SEO claims need source inspection or metadata linter output.
+
+## Machine Validation
+
+When a report is used as release or CI evidence, validate it with:
+
+```bash
+python3 scripts/validate_evidence_report.py path/to/report.md
+```
+
+Use `--require-ran` when the report is supposed to contain at least one executed check.
+
+The validator fails when:
+
+- `Ran` references a missing local artifact path;
+- `Ran` contains placeholder evidence such as `TBD` or `path/to`;
+- `Ran` describes planned or unexecuted work;
+- `--require-ran` is set and no `Ran` entry exists.
+
+The validator does not prove that an external service actually changed state. For external evidence, include a URL, a tool response artifact, or a separate machine-readable report.

@@ -15,7 +15,7 @@ ROUTES = {
     },
     "marketing-site-skill": {
         "mode": "build-marketing",
-        "signals": ["landing", "product page", "brand page", "venue", "campaign", "conversion", "cta", "hero", "metadata"],
+        "signals": ["landing", "marketing page", "local marketing page", "product page", "brand page", "venue", "campaign", "conversion", "cta", "hero", "metadata"],
     },
     "ux-audit-skill": {
         "mode": "audit",
@@ -23,7 +23,7 @@ ROUTES = {
     },
     "design-critic-skill": {
         "mode": "critique",
-        "signals": ["critique", "polish", "hierarchy", "taste", "anti-slop", "spacing", "typography", "visual quality"],
+        "signals": ["critique", "polish", "hierarchy", "taste", "anti-slop", "spacing", "typography", "visual quality", "attention insight", "score this", "generic"],
     },
     "ui-ux-pro-max": {
         "mode": "design-intelligence",
@@ -48,8 +48,10 @@ ROUTES = {
             "three design variants",
             "3 design versions",
             "three design versions",
+            "three distinct",
             "design versions",
             "three directions",
+            "design directions",
             "different versions",
             "klimovo",
             "like klimovo",
@@ -76,6 +78,11 @@ ROUTES = {
         "signals": [
             "senior council",
             "consilium",
+            "ux wants",
+            "seo wants",
+            "what wins",
+            "decide what wins",
+            "inaccessible",
             "ux seo conflict",
             "figma code conflict",
             "stitch conflict",

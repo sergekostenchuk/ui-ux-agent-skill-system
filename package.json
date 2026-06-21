@@ -50,7 +50,11 @@
   },
   "scripts": {
     "build:adapters": "python3 scripts/build_adapters.py . --out dist",
+    "check:dist": "python3 scripts/check_dist_sync.py .",
+    "check:freshness": "python3 scripts/check_freshness.py .",
+    "eval": "python3 scripts/run_evals.py . --out reports/eval-results.json",
     "lint": "python3 scripts/lint_publication_package.py .",
+    "validate:evidence": "python3 scripts/validate_evidence_report.py tests/fixtures/evidence/valid.md",
     "prepack": "python3 scripts/lint_publication_package.py ."
   }
 }

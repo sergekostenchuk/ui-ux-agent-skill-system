@@ -154,9 +154,9 @@ rollback_policy:
 | T-007 | Add npm distribution layer | done | implementer |
 | T-008 | Add evidence report validator | done | docs_sync |
 | T-009 | Add eval runner and golden route checks | done | docs_sync |
-| T-010 | Add GitHub Actions CI gates | blocked | planner |
-| T-011 | Add core-to-dist drift guard | ready | planner |
-| T-012 | Add data freshness manifest and checker | ready | planner |
+| T-010 | Add GitHub Actions CI gates | ready | planner |
+| T-011 | Add core-to-dist drift guard | done | docs_sync |
+| T-012 | Add data freshness manifest and checker | done | docs_sync |
 | T-013 | Clarify vendor-neutral core wording | ready | planner |
 | T-014 | Prepare npm 0.2.0 release gate | blocked | planner |
 | T-015 | Sync hardening decisions to Obsidian LLM Wiki | done | docs_sync |
@@ -530,17 +530,13 @@ task_id: T-010
 title: Add GitHub Actions CI gates
 rationale: Current checks are manual; CI is needed to make package lint, evals, dist drift, and npm pack reproducible for contributors.
 priority: P1
-status: blocked
+status: ready
 dependencies:
 - T-008
 - T-009
 - T-011
 - T-012
-blocked_by:
-- T-008
-- T-009
-- T-011
-- T-012
+blocked_by: none
 unblocks:
 - T-014
 task_size: M
@@ -644,7 +640,7 @@ task_id: T-011
 title: Add core-to-dist drift guard
 rationale: Prebuilt runtime projections are useful, but they can drift from canonical `core` without a mechanical check.
 priority: P1
-status: ready
+status: done
 dependencies:
 - T-007
 blocked_by: none
@@ -698,14 +694,21 @@ commands_planned:
 - `python3 scripts/build_adapters.py . --out dist`
 - `git diff --exit-code dist`
 - `python3 scripts/lint_publication_package.py .`
-commands_run: []
+commands_run:
+- `python3 scripts/build_adapters.py . --out dist`
+- `python3 scripts/check_dist_sync.py .`
+- `python3 scripts/lint_publication_package.py .`
 expected_artifacts:
 - documented drift command
 - updated validation report
-artifact_locations: []
+artifact_locations:
+- `scripts/check_dist_sync.py`
+- `dist/`
+- `package.json`
+- `reports/package-validation.md`
 rollback_plan:
 - revert guard docs and CI references
-owner_role: planner
+owner_role: docs_sync
 agent_sequence:
 - planner
 - implementer
@@ -736,7 +739,7 @@ task_id: T-012
 title: Add data freshness manifest and checker
 rationale: UI/UX Pro Max includes static CSV data that can become stale without source dates and an update process.
 priority: P1
-status: ready
+status: done
 dependencies:
 - T-007
 blocked_by: none
@@ -799,16 +802,26 @@ stop_on_failure: true
 commands_planned:
 - `python3 scripts/check_freshness.py .`
 - `python3 scripts/lint_publication_package.py .`
-commands_run: []
+commands_run:
+- `python3 scripts/check_freshness.py .`
+- `bash -lc 'if python3 scripts/check_freshness.py tests/fixtures/freshness/missing-metadata; then echo unexpected-pass; exit 1; else echo expected-failure-missing-freshness-metadata; fi'`
+- `python3 scripts/lint_publication_package.py .`
 expected_artifacts:
 - `core/skills/ui-ux-pro-max/data/freshness.json`
 - `scripts/check_freshness.py`
 - updated freshness docs
-artifact_locations: []
+artifact_locations:
+- `core/skills/ui-ux-pro-max/data/freshness.json`
+- `scripts/check_freshness.py`
+- `tests/fixtures/freshness/missing-metadata/core/skills/ui-ux-pro-max/data/freshness.json`
+- `tests/fixtures/freshness/missing-metadata/core/skills/ui-ux-pro-max/data/example.csv`
+- `core/shared/freshness-sources.md`
+- `package.json`
+- `reports/package-validation.md`
 rollback_plan:
 - remove freshness checker and metadata
 - revert CI references
-owner_role: planner
+owner_role: docs_sync
 agent_sequence:
 - planner
 - implementer
