@@ -9,6 +9,23 @@ python3 scripts/build_adapters.py . --out dist
 python3 scripts/lint_publication_package.py .
 ```
 
+## Local Validation And CI Parity
+
+GitHub Actions runs only credential-free checks. Before opening a pull request or publishing a package, run:
+
+```bash
+npm run lint
+npm run validate:evidence
+npm run eval
+npm run build:adapters
+git diff --exit-code dist
+npm run check:dist
+npm run check:freshness
+npm pack --dry-run
+```
+
+These checks fail on package-structure issues, invalid evidence reports, eval regressions, stale `dist/` projections, missing freshness metadata, and npm packaging errors.
+
 ## npm / npx
 
 Install from npm:

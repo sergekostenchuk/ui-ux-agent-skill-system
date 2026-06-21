@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Package lint
+        run: npm run lint
+
+      - name: Evidence report validator
+        run: npm run validate:evidence
+
+      - name: Deterministic evals
+        run: npm run eval
+
+      - name: Rebuild adapters
+        run: npm run build:adapters
+
+      - name: Check generated dist is committed
+        run: git diff --exit-code dist
+
+      - name: Check dist drift
+        run: npm run check:dist
+
+      - name: Check freshness metadata
+        run: npm run check:freshness
+
+      - name: npm pack smoke test
+        run: npm pack --dry-run

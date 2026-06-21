@@ -154,11 +154,11 @@ rollback_policy:
 | T-007 | Add npm distribution layer | done | implementer |
 | T-008 | Add evidence report validator | done | docs_sync |
 | T-009 | Add eval runner and golden route checks | done | docs_sync |
-| T-010 | Add GitHub Actions CI gates | ready | planner |
+| T-010 | Add GitHub Actions CI gates | done | docs_sync |
 | T-011 | Add core-to-dist drift guard | done | docs_sync |
 | T-012 | Add data freshness manifest and checker | done | docs_sync |
 | T-013 | Clarify vendor-neutral core wording | done | docs_sync |
-| T-014 | Prepare npm 0.2.0 release gate | blocked | planner |
+| T-014 | Prepare npm 0.2.0 release gate | ready | planner |
 | T-015 | Sync hardening decisions to Obsidian LLM Wiki | done | docs_sync |
 
 ## Task Blocks
@@ -530,7 +530,7 @@ task_id: T-010
 title: Add GitHub Actions CI gates
 rationale: Current checks are manual; CI is needed to make package lint, evals, dist drift, and npm pack reproducible for contributors.
 priority: P1
-status: ready
+status: done
 dependencies:
 - T-008
 - T-009
@@ -600,15 +600,27 @@ commands_planned:
 - `git diff --exit-code dist`
 - `python3 scripts/check_freshness.py .`
 - `npm pack --dry-run`
-commands_run: []
+commands_run:
+- `npm run lint`
+- `npm run validate:evidence`
+- `npm run eval`
+- `npm run build:adapters`
+- `npm run check:dist`
+- `git diff --exit-code dist`
+- `npm run check:freshness`
+- `npm pack --dry-run`
 expected_artifacts:
 - `.github/workflows/ci.yml`
 - updated package validation report
-artifact_locations: []
+artifact_locations:
+- `.github/workflows/ci.yml`
+- `docs/install.md`
+- `reports/package-validation.md`
+- `TASK-PLAN.md`
 rollback_plan:
 - remove workflow file
 - revert docs that claim CI coverage
-owner_role: planner
+owner_role: docs_sync
 agent_sequence:
 - planner
 - implementer
@@ -953,7 +965,7 @@ task_id: T-014
 title: Prepare npm 0.2.0 release gate
 rationale: npm version `0.1.0` is immutable; hardening changes require a version bump and release gate after validation passes.
 priority: P1
-status: blocked
+status: ready
 dependencies:
 - T-008
 - T-009
@@ -961,8 +973,7 @@ dependencies:
 - T-011
 - T-012
 - T-013
-blocked_by:
-- T-010
+blocked_by: none
 unblocks: none
 task_size: S
 goal: Prepare and publish `0.2.0` only after CI, eval, evidence, dist, freshness, and docs gates pass.
