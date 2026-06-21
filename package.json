@@ -1,6 +1,6 @@
 {
   "name": "@mlllm/ui-ux-agent-skill-system",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vendor-neutral core UI/UX agent skill system with optional vendor-specific adapters and integrations.",
   "license": "Apache-2.0",
   "author": "Sergey Kostenchuk",
@@ -24,6 +24,7 @@
     "evals/",
     "reports/package-validation.md",
     "scripts/",
+    "CHANGELOG.md",
     "FEATURE-PREPARATION.md",
     "LICENSE",
     "NOTICE",

@@ -23,6 +23,12 @@ npm run check:dist
 git diff --exit-code dist
 npm run check:freshness
 npm pack --dry-run
+python3 scripts/lint_publication_package.py .
+python3 scripts/run_evals.py . --out reports/eval-results.json
+python3 scripts/build_adapters.py . --out dist
+python3 scripts/check_dist_sync.py .
+python3 scripts/check_freshness.py .
+npm pack --dry-run --json
 node bin/uiux-skills.js list
 npm pack --dry-run
 python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json
@@ -42,6 +48,9 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - GitHub Actions CI workflow added for push and pull request checks without secrets.
 - Local CI parity: package lint, evidence validator, eval runner, adapter rebuild, dist sync, freshness metadata, and npm pack dry-run all passed.
 - `git diff --exit-code dist`: passed after adapter rebuild.
+- Release prep for `0.2.0`: package version bumped, `CHANGELOG.md` added, and Gemini adapter generation now reads the version from `package.json`.
+- Release prep checks for `0.2.0`: package lint, eval runner, adapter rebuild, dist sync, freshness metadata, and npm dry-run pack passed.
+- `npm pack --dry-run --json` for `0.2.0`: passed, 3.2 MB packed, 19.6 MB unpacked, 1928 files.
 - `node bin/uiux-skills.js list`: passed.
 - `node bin/uiux-skills.js path`: passed.
 - `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`: passed.
@@ -76,4 +85,4 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - npm package name prepared: `@mlllm/ui-ux-agent-skill-system`.
 - npm package published: https://www.npmjs.com/package/@mlllm/ui-ux-agent-skill-system
 - npm publication target changed to the authenticated npm user's scope after npm rejected the unavailable `@sergekostenchuk` scope.
-- npm dry-run tarball: 3.2 MB packed, 19.5 MB unpacked, 1914 files.
+- npm dry-run tarball for `0.2.0`: 3.2 MB packed, 19.6 MB unpacked, 1928 files.

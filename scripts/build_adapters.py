@@ -31,6 +31,11 @@ def write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def package_version(root: Path) -> str:
+    package_json = json.loads((root / "package.json").read_text(encoding="utf-8"))
+    return str(package_json["version"])
+
+
 def build_skill_folder_projection(root: Path, target: Path, subpath: str) -> None:
     skills_target = target / subpath
     skills_target.mkdir(parents=True, exist_ok=True)
@@ -50,8 +55,8 @@ def build_gemini(root: Path, target: Path) -> None:
         json.dumps(
             {
                 "name": "ui-ux-agent-skill-system",
-                "version": "0.1.0",
-                "description": "Vendor-neutral UI/UX skill system projection for Gemini CLI.",
+                "version": package_version(root),
+                "description": "Vendor-neutral core UI/UX skill system projection for Gemini CLI.",
                 "contextFileName": "GEMINI.md",
             },
             indent=2,
@@ -117,4 +122,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

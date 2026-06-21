@@ -1033,12 +1033,24 @@ commands_planned:
 - `npm pack --dry-run`
 - `npm publish --access public`
 - `npm view @mlllm/ui-ux-agent-skill-system version`
-commands_run: []
+commands_run:
+- `python3 scripts/lint_publication_package.py .`
+- `python3 scripts/run_evals.py . --out reports/eval-results.json`
+- `python3 scripts/build_adapters.py . --out dist`
+- `python3 scripts/check_dist_sync.py .`
+- `python3 scripts/check_freshness.py .`
+- `npm pack --dry-run --json`
 expected_artifacts:
 - GitHub commit and push
 - npm `0.2.0` package
 - updated validation report
-artifact_locations: []
+artifact_locations:
+- `package.json`
+- `CHANGELOG.md`
+- `scripts/build_adapters.py`
+- `dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json`
+- `reports/package-validation.md`
+- `TASK-PLAN.md`
 rollback_plan:
 - before publish: revert version bump
 - after publish: publish follow-up patch version; npm versions are immutable
