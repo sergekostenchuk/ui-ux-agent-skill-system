@@ -158,7 +158,7 @@ rollback_policy:
 | T-011 | Add core-to-dist drift guard | done | docs_sync |
 | T-012 | Add data freshness manifest and checker | done | docs_sync |
 | T-013 | Clarify vendor-neutral core wording | done | docs_sync |
-| T-014 | Prepare npm 0.2.0 release gate | blocked | docs_sync |
+| T-014 | Prepare npm 0.2.0 release gate | done | docs_sync |
 | T-015 | Sync hardening decisions to Obsidian LLM Wiki | done | docs_sync |
 
 ## Task Blocks
@@ -965,7 +965,7 @@ task_id: T-014
 title: Prepare npm 0.2.0 release gate
 rationale: npm version `0.1.0` is immutable; hardening changes require a version bump and release gate after validation passes.
 priority: P1
-status: blocked
+status: done
 dependencies:
 - T-008
 - T-009
@@ -973,8 +973,7 @@ dependencies:
 - T-011
 - T-012
 - T-013
-blocked_by:
-- npm registry authentication missing; `npm whoami` returned E401 Unauthorized
+blocked_by: none
 unblocks: none
 task_size: S
 goal: Prepare and publish `0.2.0` only after CI, eval, evidence, dist, freshness, and docs gates pass.
@@ -1044,6 +1043,11 @@ commands_run:
 - `git diff --exit-code dist`
 - `npm view @mlllm/ui-ux-agent-skill-system version`
 - `npm whoami`
+- `npm whoami` with temporary userconfig; token redacted
+- `npm publish --access public` with temporary userconfig; token redacted
+- `npm view @mlllm/ui-ux-agent-skill-system name version dist-tags.latest license bin repository.url`
+- `npm install --ignore-scripts @mlllm/ui-ux-agent-skill-system@0.2.0` in temporary directory
+- `./node_modules/.bin/uiux-skills list` in temporary directory
 expected_artifacts:
 - GitHub commit and push
 - npm `0.2.0` package
@@ -1083,9 +1087,9 @@ wiki_do_not_store:
 - npm tokens
 - OTP or recovery codes
 - private npm logs
-active_alarm_ids:
+active_alarm_ids: []
+resolved_alarm_ids:
 - npm-auth-required-2026-06-21
-resolved_alarm_ids: []
 
 ### T-015
 

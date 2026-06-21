@@ -32,6 +32,11 @@ npm pack --dry-run --json
 git diff --exit-code dist
 npm view @mlllm/ui-ux-agent-skill-system version
 npm whoami
+npm whoami # with temporary userconfig; token redacted
+npm publish --access public # with temporary userconfig; token redacted
+npm view @mlllm/ui-ux-agent-skill-system name version dist-tags.latest license bin repository.url
+npm install --ignore-scripts @mlllm/ui-ux-agent-skill-system@0.2.0 # in temporary directory
+./node_modules/.bin/uiux-skills list # in temporary directory
 node bin/uiux-skills.js list
 npm pack --dry-run
 python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.json
@@ -57,6 +62,10 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - Post-push `git diff --exit-code dist`: passed.
 - `npm view @mlllm/ui-ux-agent-skill-system version`: returned `0.1.0`; `0.2.0` is not published yet.
 - `npm whoami`: blocked with `E401 Unauthorized`; current shell has no active npm authentication. `npm publish` was not run because a fresh publish token or interactive npm login is required.
+- Temporary npm userconfig authentication: passed as `mlllm`; token was not committed or stored in repository files.
+- `npm publish --access public` for `@mlllm/ui-ux-agent-skill-system@0.2.0`: passed.
+- Registry verification: `name=@mlllm/ui-ux-agent-skill-system`, `version=0.2.0`, `dist-tags.latest=0.2.0`, `license=Apache-2.0`, `bin.uiux-skills=bin/uiux-skills.js`.
+- Clean temporary install of `@mlllm/ui-ux-agent-skill-system@0.2.0`: passed; `.bin/uiux-skills list` printed all runtime targets.
 - `node bin/uiux-skills.js list`: passed.
 - `node bin/uiux-skills.js path`: passed.
 - `node bin/uiux-skills.js install qwen-code --dest /tmp/uiux-skills-npm-test/.qwen/skills --dry-run`: passed.
@@ -92,3 +101,4 @@ python3 -m json.tool dist/gemini-cli/ui-ux-agent-skill-system/gemini-extension.j
 - npm package published: https://www.npmjs.com/package/@mlllm/ui-ux-agent-skill-system
 - npm publication target changed to the authenticated npm user's scope after npm rejected the unavailable `@sergekostenchuk` scope.
 - npm dry-run tarball for `0.2.0`: 3.2 MB packed, 19.6 MB unpacked, 1928 files.
+- npm `0.2.0` published as latest on 2026-06-21.
