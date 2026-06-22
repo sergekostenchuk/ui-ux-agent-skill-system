@@ -220,6 +220,35 @@
       "failure_behavior": "cannot be used as evidence until implemented"
     },
     {
+      "id": "serp-source-config-validator",
+      "class": "custom-script",
+      "status": "implemented",
+      "skills": ["serp-source-configurator"],
+      "path": "serp-source-configurator/scripts/validate_serp_source_config.py",
+      "command": "python3 scripts/validate_serp_source_config.py reports/serp-source-config.json --json > reports/serp-source-config-validation.json",
+      "inputs": ["redacted SERP source config JSON"],
+      "outputs": ["reports/serp-source-config-validation.json"],
+      "privacy": "local-only",
+      "failure_behavior": "block external SERP harvesting until secrets, approval, budget, and source settings are fixed"
+    },
+    {
+      "id": "openserp-api",
+      "class": "optional-cloud",
+      "status": "not-configured-approval-gated",
+      "skills": ["serp-source-configurator", "serp-keyword-harvester", "semantic-core-builder", "seo-llm-site-architect"],
+      "path": "external OpenSERP-compatible SERP/search API; no bundled credentials",
+      "command": "Use only after explicit user approval and configured OPENSERP_API_KEY; record locale, query set, data sent, purpose, response source, and local fallback.",
+      "inputs": ["approved public keyword queries", "locale/market", "search engine/device parameters", "redacted OpenSERP configuration"],
+      "outputs": ["SERP snapshots", "autocomplete/PAA/related-search evidence when supported", "source_status entries in reports/keyword-harvest.json"],
+      "privacy": "external-network-requires-approval",
+      "privacy_class": "external-network",
+      "approval_required": true,
+      "settings_status": "pending-user-configuration",
+      "config_env": ["OPENSERP_API_KEY", "OPENSERP_BASE_URL"],
+      "fallback": "local keyword harvest from user-provided materials, exports, existing site text, or manual SERP notes",
+      "failure_behavior": "if approval, credentials, quota, or provider support is missing, do not call OpenSERP; mark the source as Skipped or Planned and continue with local/user-provided inputs"
+    },
+    {
       "id": "v0-platform-api",
       "class": "optional-cloud",
       "status": "approval-gated",
