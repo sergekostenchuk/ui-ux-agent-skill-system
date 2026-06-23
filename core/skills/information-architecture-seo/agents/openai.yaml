@@ -1,0 +1,7 @@
+interface:
+  display_name: "Information Architecture SEO"
+  short_description: "Turn semantic core into URL map, canonical model, hreflang groups, and page roles"
+  default_prompt: "Use $information-architecture-seo to turn semantic-core.yaml into a URL map with page roles, canonical rules, hreflang groups, index policy, and duplicate-content boundaries."
+policy:
+  allow_implicit_invocation: true
+

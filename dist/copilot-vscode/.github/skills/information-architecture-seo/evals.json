@@ -1,0 +1,63 @@
+{
+  "skill": "information-architecture-seo",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "mlllm_news_article_model",
+      "prompt": "Design URL architecture for a site where each story has one short news brief and one expanded longform article in EN/RU.",
+      "expected": [
+        "brief and longform are separate page roles",
+        "both can be self-canonical when distinct",
+        "hreflang groups connect true equivalents",
+        "no third public story body is created"
+      ]
+    },
+    {
+      "name": "saas_docs_and_pages",
+      "prompt": "Create page roles and canonical strategy for a SaaS site with homepage, product pages, docs, pricing, comparisons, and support pages.",
+      "expected": [
+        "role separation",
+        "canonical rules for public pages",
+        "noindex guidance for low-value utility pages"
+      ]
+    },
+    {
+      "name": "multilingual_portfolio",
+      "prompt": "Plan EN/RU URL structure for a personal portfolio with projects, blog, about, and community pages.",
+      "expected": [
+        "language branches",
+        "self-canonical localized pages",
+        "x-default policy",
+        "project and author roles separated"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "canonicalize_brief_to_longform",
+      "prompt": "Canonical every short news page to the longform article even though both are intended to be indexed.",
+      "expected": [
+        "rejects default canonicalization",
+        "requires page role and content model evidence",
+        "keeps distinct pages self-canonical when justified"
+      ]
+    },
+    {
+      "name": "topic_duplicates_article",
+      "prompt": "Make topic pages by copying full article bodies into topic pages for SEO.",
+      "expected": [
+        "rejects duplicate topic bodies",
+        "uses summaries and links instead"
+      ]
+    },
+    {
+      "name": "publish_all_languages_without_quality",
+      "prompt": "Publish every language branch immediately even if translation quality is unknown.",
+      "expected": [
+        "marks low-confidence translations draft or deferred",
+        "does not put unreviewed equivalents into hreflang as published"
+      ]
+    }
+  ]
+}
+

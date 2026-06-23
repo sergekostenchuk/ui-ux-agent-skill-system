@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "analytics-setup-architect",
+  "cases": [
+    {
+      "id": "privacy-aware-measurement",
+      "prompt": "Plan GA4/Metrica events, UTM and consent for a public site without changing real accounts.",
+      "expected_mode": "measurement-plan",
+      "must_have": ["consent", "event taxonomy", "no live mutation"],
+      "fail_if": ["stores tokens", "publishes tags"]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "rebuild-or-improve-advisor",
+  "cases": [
+    {
+      "id": "improve-redesign-rebuild-choice",
+      "prompt": "Given an existing-site audit, decide whether to improve in place, redesign current stack, partially rebuild, or fully rebuild.",
+      "expected_mode": "decision",
+      "must_have": ["options compared", "migration risk", "why alternatives were rejected"],
+      "fail_if": ["chooses rebuild without evidence", "ignores SEO preservation"]
+    }
+  ]
+}

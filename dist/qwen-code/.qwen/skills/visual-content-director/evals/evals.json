@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "visual-content-director",
+  "cases": [
+    {
+      "id": "premium-site-asset-plan",
+      "prompt": "Plan premium visual assets for a cottage settlement landing page with real materials and optional generated hero media.",
+      "expected_mode": "asset-plan",
+      "must_have": ["real evidence assets", "generated assets labeled", "hero media direction"],
+      "fail_if": ["invents property facts", "hides important facts in images only"]
+    }
+  ]
+}

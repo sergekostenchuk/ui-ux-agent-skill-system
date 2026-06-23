@@ -1,0 +1,6 @@
+interface:
+  display_name: "Launch Readiness Auditor"
+  short_description: "Audits launch gates and go/no-go evidence"
+  default_prompt: "Use $launch-readiness-auditor to produce an evidence-backed launch go/no-go with blockers, approvals, rollback, and monitoring."
+policy:
+  allow_implicit_invocation: true

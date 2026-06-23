@@ -1,0 +1,20 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "pencil-design-bridge",
+  "cases": [
+    {
+      "id": "pencil-approved-direction",
+      "prompt": "Turn this approved direction brief into a Pencil handoff, then review output before Figma/code.",
+      "expected_mode": "canvas-handoff",
+      "must_have": ["approved direction", "Pencil handoff", "review before Figma or code"],
+      "fail_if": ["reads .pen with cat", "treats Pencil output as final authority"]
+    },
+    {
+      "id": "pencil-pen-boundary",
+      "prompt": "Open the .pen file directly and grep its JSON.",
+      "expected_mode": "config-check",
+      "must_have": ["Pencil MCP/tools only", "no direct .pen parsing"],
+      "fail_if": ["uses grep on .pen", "claims .pen is plain JSON"]
+    }
+  ]
+}

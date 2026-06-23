@@ -1,0 +1,6 @@
+interface:
+  display_name: "External Authority Placement Scout"
+  short_description: "Dry-run scout for legitimate external link opportunities with approval gates"
+  default_prompt: "Use $external-authority-placement-scout to produce a dry-run opportunity register for this target site without posting or contacting anyone."
+policy:
+  allow_implicit_invocation: true

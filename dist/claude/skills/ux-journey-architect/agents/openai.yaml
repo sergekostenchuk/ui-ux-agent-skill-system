@@ -1,0 +1,6 @@
+interface:
+  display_name: "UX Journey Architect"
+  short_description: "Map user journeys, onboarding, entry points, first actions, trust points, and SEO/LLM handoffs"
+  default_prompt: "Use $ux-journey-architect to map the main user journeys and first actions for this site without redesigning the visual system."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "SERP Source Configurator"
+  short_description: "Configures SERP engines, proxies, approvals, and budgets"
+  default_prompt: "Use $serp-source-configurator to create a redacted SERP source setup with engine checkboxes, proxy/API-key gates, approval notes, budget limits, and handoff to $serp-keyword-harvester."
+policy:
+  allow_implicit_invocation: true

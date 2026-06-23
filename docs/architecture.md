@@ -9,7 +9,9 @@ The system is vendor-neutral at the core-contract level: roles, routing, reporti
 ```text
 user request
 -> senior-ui-ux-orchestrator
+-> agent-progress-visualizer bootstrap screen when a substantial project starts
 -> task-plan gate when project is large or multi-step
+-> workflow-compliance-supervisor gates for promised journey stages
 -> product/UX architecture
 -> SEO/LLM constraints when public discoverability matters
 -> UI/UX Pro Max advisory search
@@ -19,6 +21,7 @@ user request
 -> optional Figma gate only when a Figma artifact is required
 -> implementation specialist
 -> audit, critic, browser/semantic validation
+-> workflow compliance check against real artifacts, logs, skips, and user gates
 -> local report or wiki capture
 ```
 
@@ -28,6 +31,8 @@ user request
 |---|---|
 | `senior-ui-ux-orchestrator` | final routing, conflict resolution, scope, privacy, evidence |
 | `task-plan-v2-orchestrator` | canonical planning, gates, task status, handoffs |
+| `workflow-compliance-supervisor` | promised journey enforcement, evidence checks, skip/block/rework decisions |
+| `agent-progress-visualizer` | customer-facing progress screen derived from canonical state |
 | `ui-ux-llm-product-architect` | journeys, IA, UX logic, accessible interaction |
 | `seo-llm-site-architect` | crawlability, schema, metadata, LLM-readable public site architecture |
 | `ui-ux-pro-max` | searchable design intelligence and style candidates |
@@ -39,6 +44,25 @@ user request
 | `design-critic-skill` | visual-quality critique and fix briefs |
 | `cursor-reveal-hero` | cursor reveal/masking hero effects |
 | `image-layer-alignment-validator` | local raster layer alignment checks |
+
+## Runtime Honesty Rule
+
+The progress screen is not a source of truth. It is a derived view.
+
+```text
+user request
+-> project-request.json / workflow-log.jsonl bootstrap
+-> TASK-PLAN.md canonical plan
+-> progress-state.json derived machine state
+-> agent-progress-screen.html derived customer view
+-> workflow-compliance-supervisor checks actual artifacts before continue/finish
+```
+
+A stage can be shown as done only when the required artifact, log entry, or validation report exists. A skipped stage needs a reason code, user-visible impact, and next action.
+
+## Optional Product Strategy Source
+
+Next Move Theory / AJTBD can be used as an external product-strategy source before concept, semantic core, value proposition, and go-to-market work. It is not bundled into this package and should be connected through a separate bridge to keep licensing and runtime boundaries clear.
 
 ## Council Rule
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Analytics Setup Architect"
+  short_description: "Plans privacy-aware analytics and event taxonomies"
+  default_prompt: "Use $analytics-setup-architect to create a measurement plan with consent, UTM, events, dashboards, and verification without mutating live accounts."
+policy:
+  allow_implicit_invocation: true

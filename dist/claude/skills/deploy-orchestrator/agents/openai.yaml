@@ -1,0 +1,6 @@
+interface:
+  display_name: "Deploy Orchestrator"
+  short_description: "Plans dry-run-first deployments"
+  default_prompt: "Use $deploy-orchestrator to plan build, deploy, smoke tests, rollback, and monitoring without production deploy."
+policy:
+  allow_implicit_invocation: true

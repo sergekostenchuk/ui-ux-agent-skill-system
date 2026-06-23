@@ -1,0 +1,6 @@
+interface:
+  display_name: "Pencil Design Bridge"
+  short_description: "Bridges approved UI directions into Pencil workflows"
+  default_prompt: "Use $pencil-design-bridge to create or review a Pencil handoff from approved UI/UX direction briefs without directly reading .pen files."
+policy:
+  allow_implicit_invocation: true

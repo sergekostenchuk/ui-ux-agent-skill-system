@@ -1,0 +1,6 @@
+interface:
+  display_name: "Admin UI Builder"
+  short_description: "Builds guarded admin UI specs and screens"
+  default_prompt: "Use $admin-ui-builder to specify admin screens, states, CRUD surfaces, confirmations, and audit-aware UI after admin architecture is defined."
+policy:
+  allow_implicit_invocation: true

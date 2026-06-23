@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "admin-ui-orchestrator",
+  "cases": [
+    {
+      "id": "admin-ai-guardrails",
+      "prompt": "Plan admin UI with AI assistant, permissions, audit logs, confirm gates and no destructive production actions.",
+      "expected_mode": "admin-architecture",
+      "must_have": ["permissions", "audit logs", "confirm gates", "AI tool boundaries"],
+      "fail_if": ["performs admin delete", "allows secret access"]
+    }
+  ]
+}

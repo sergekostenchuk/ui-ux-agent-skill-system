@@ -1,0 +1,23 @@
+name: agent-progress-visualizer
+version: 0.1.0
+description: Human-readable progress cockpit and task-plan-derived project status visualization for UI/UX Agent Skill System workflows.
+entrypoint: SKILL.md
+tags:
+  - ui-ux
+  - progress
+  - task-plan
+  - dashboard
+  - feedback
+  - local-first
+triggers:
+  - progress screen
+  - project cockpit
+  - agent work visualization
+  - auto-updating progress page
+  - user-facing task status
+  - показать этапы работы системы
+  - экран прогресса агента
+privacy:
+  default: local-first
+  stores_secrets: false
+  external_services: optional-only-with-approval

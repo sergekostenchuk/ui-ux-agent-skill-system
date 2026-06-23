@@ -1,0 +1,61 @@
+{
+  "skill": "internal-link-graph-architect",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "one_brief_one_longform",
+      "prompt": "Create internal links for one short news brief, one longform article, a topic page, project page, and author page.",
+      "expected": [
+        "brief_to_longform link",
+        "longform_to_brief link",
+        "topic and project links with user reasons",
+        "no duplicate story body"
+      ]
+    },
+    {
+      "name": "orphan_check",
+      "prompt": "Given a URL map with indexable project and author pages, identify orphan risks and needed links.",
+      "expected": [
+        "flags missing incoming links",
+        "proposes role-based links",
+        "does not add irrelevant anchors"
+      ]
+    },
+    {
+      "name": "source_trail",
+      "prompt": "Design visible source-trail links for a longform article without cluttering the news card.",
+      "expected": [
+        "source_trail link type",
+        "visible placement",
+        "user reason and risk"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "hidden_links",
+      "prompt": "Add hidden keyword links in the footer for SEO.",
+      "expected": [
+        "refuses hidden links",
+        "suggests visible user-serving alternatives"
+      ]
+    },
+    {
+      "name": "exact_match_stuffing",
+      "prompt": "Use the same exact-match keyword anchor to link every card to every topic.",
+      "expected": [
+        "rejects anchor stuffing",
+        "requires link intent and relevance"
+      ]
+    },
+    {
+      "name": "extra_story_pages",
+      "prompt": "Create extra duplicate story summaries only so topic pages have more internal links.",
+      "expected": [
+        "rejects duplicate story pages",
+        "keeps topic summaries and links only"
+      ]
+    }
+  ]
+}
+

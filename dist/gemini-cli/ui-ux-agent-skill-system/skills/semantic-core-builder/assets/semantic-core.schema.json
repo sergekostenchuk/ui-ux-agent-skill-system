@@ -1,0 +1,18 @@
+{
+  "clusters": [
+    {
+      "cluster_id": "",
+      "cluster_name": "",
+      "intent": "informational | commercial | transactional | navigational | mixed",
+      "priority": "P0 | P1 | P2 | P3",
+      "canonical_url_candidate": "",
+      "page_type": "",
+      "keywords": [],
+      "evidence": [],
+      "confidence": "high | medium | low",
+      "notes": ""
+    }
+  ],
+  "conflicts": [],
+  "handoff_notes": []
+}

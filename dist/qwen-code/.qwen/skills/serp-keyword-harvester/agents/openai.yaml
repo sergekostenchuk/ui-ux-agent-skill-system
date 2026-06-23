@@ -1,0 +1,6 @@
+interface:
+  display_name: "SERP Keyword Harvester"
+  short_description: "Prepares keyword and SERP inputs"
+  default_prompt: "Use $serp-keyword-harvester to create a local-first keyword harvest with evidence labels and approval-gated external search sources."
+policy:
+  allow_implicit_invocation: true

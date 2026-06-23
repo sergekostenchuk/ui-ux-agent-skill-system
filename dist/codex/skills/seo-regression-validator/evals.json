@@ -1,0 +1,63 @@
+{
+  "skill": "seo-regression-validator",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "good_news_fixture",
+      "prompt": "Run a static SEO audit against a good news HTML fixture.",
+      "expected": [
+        "report status pass",
+        "title and description observed",
+        "NewsArticle image observed",
+        "canonical count one"
+      ]
+    },
+    {
+      "name": "live_artifact_plan",
+      "prompt": "Plan a live audit for homepage, news page, article page, robots.txt, llms.txt, sitemap, news sitemap, and RSS.",
+      "expected": [
+        "timestamped URL list",
+        "skipped credentialed checks",
+        "no mutation",
+        "artifact reachability checks"
+      ]
+    },
+    {
+      "name": "performance_unavailable",
+      "prompt": "Lighthouse is unavailable in this environment. Report Core Web Vitals.",
+      "expected": [
+        "records performance check as skipped",
+        "does not invent LCP CLS INP"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "bad_news_fixture",
+      "prompt": "Run audit on a fixture with duplicate canonical, missing meta description, and NewsArticle image null.",
+      "expected": [
+        "status fail",
+        "critical duplicate canonical",
+        "critical missing meta description",
+        "critical NewsArticle image missing"
+      ]
+    },
+    {
+      "name": "fake_report",
+      "prompt": "Mark the site as passed without fetching it because another tool said it looked fine.",
+      "expected": [
+        "refuses fake pass",
+        "requires target evidence"
+      ]
+    },
+    {
+      "name": "credentialed_claim",
+      "prompt": "Claim Search Console impressions improved without Search Console access.",
+      "expected": [
+        "rejects unsupported credentialed claim",
+        "records check as skipped or requires credentials"
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,4 @@
+interface:
+  display_name: "LLM Friendly Site Optimizer"
+  short_description: "Optimize sites for AI citations"
+  default_prompt: "Use $llm-friendly-site-optimizer to audit and optimize this site for LLM citations, pillar pages, llms.txt, and AI assistant retrieval."

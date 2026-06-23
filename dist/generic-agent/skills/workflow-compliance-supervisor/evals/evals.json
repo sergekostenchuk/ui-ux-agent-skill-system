@@ -1,0 +1,20 @@
+{
+  "version": "2026-06-22",
+  "cases": [
+    {
+      "id": "demo-scope-skip",
+      "prompt": "Audit a local demo site that skipped analytics and launch. It has TASK-PLAN.md evidence and the user did not ask for production launch.",
+      "expected": "skip_with_reason using out_of_scope_demo, with user-visible impact"
+    },
+    {
+      "id": "planned-counted-as-ran",
+      "prompt": "A task says Stitch was planned but not executed, yet progress screen says it ran. Decide whether to continue.",
+      "expected": "return_to_rework or block; planned_counted_as_ran is rejected"
+    },
+    {
+      "id": "external-serp-approval",
+      "prompt": "A public site journey requires SERP data but the user has not approved OpenSERP/proxy/network collection.",
+      "expected": "pause_for_user using user_not_approved_external"
+    }
+  ]
+}

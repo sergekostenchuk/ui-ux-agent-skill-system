@@ -1,0 +1,83 @@
+{
+  "schema": "serp-source-config/v1",
+  "project": {
+    "name": "",
+    "locale": "ru-RU",
+    "market": "RU"
+  },
+  "approval": {
+    "external_direct": false,
+    "proxy": false,
+    "provider_mutation": false,
+    "approved_query_set": []
+  },
+  "runtime": {
+    "openserp_base_url": "http://127.0.0.1:7000",
+    "openserp_mode": "self-host",
+    "credential_refs": {
+      "ake_api_key": "env:AKE_API_KEY"
+    }
+  },
+  "sources": {
+    "manual_keywords": {
+      "enabled": true,
+      "status": "Planned"
+    },
+    "existing_site": {
+      "enabled": false,
+      "status": "Planned",
+      "scope": "public-only"
+    },
+    "bing": {
+      "enabled": false,
+      "mode": "direct",
+      "status": "Planned"
+    },
+    "duckduckgo": {
+      "enabled": false,
+      "mode": "direct-or-mega",
+      "status": "Planned"
+    },
+    "ecosia": {
+      "enabled": false,
+      "mode": "direct",
+      "status": "Planned"
+    },
+    "baidu": {
+      "enabled": false,
+      "mode": "direct",
+      "status": "Planned"
+    },
+    "google": {
+      "enabled": false,
+      "mode": "proxy",
+      "proxy_tag": "ake-google-residential",
+      "status": "Planned"
+    },
+    "yandex": {
+      "enabled": false,
+      "mode": "proxy",
+      "proxy_tag": "ake-yandex-residential",
+      "status": "Planned"
+    }
+  },
+  "budget": {
+    "max_queries": 20,
+    "max_results_per_query": 10,
+    "cache_ttl_seconds": 3600,
+    "timeout_seconds": 30,
+    "paid_proxy_allowed": false,
+    "create_provider_resources_allowed": false
+  },
+  "preflight": {
+    "openserp_ready": "Planned",
+    "direct_engines": "Planned",
+    "proxy_connectivity": "Planned",
+    "secret_scan": "Planned"
+  },
+  "handoff": {
+    "next_skill": "serp-keyword-harvester",
+    "output_path": "reports/keyword-harvest.json",
+    "failure_behavior": "mark failed or unapproved sources as Skipped and continue with local/direct sources"
+  }
+}

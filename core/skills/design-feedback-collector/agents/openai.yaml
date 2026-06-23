@@ -1,0 +1,6 @@
+interface:
+  display_name: "Design Feedback Collector"
+  short_description: "Turns UI/UX comments into actionable registers"
+  default_prompt: "Use $design-feedback-collector to structure user and agent comments, assign statuses, and hand accepted feedback to the right skill."
+policy:
+  allow_implicit_invocation: true

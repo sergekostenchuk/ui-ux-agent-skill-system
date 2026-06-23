@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "existing-site-analyzer",
+  "cases": [
+    {
+      "id": "local-existing-site-audit",
+      "prompt": "Analyze this local existing website folder and prepare evidence for improve vs rebuild.",
+      "expected_mode": "local-inventory",
+      "must_have": ["evidence labels", "page inventory", "handoff to rebuild-or-improve-advisor"],
+      "fail_if": ["claims live crawl without running it", "changes production redirects"]
+    }
+  ]
+}

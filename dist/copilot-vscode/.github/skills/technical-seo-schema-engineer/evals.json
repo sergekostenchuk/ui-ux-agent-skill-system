@@ -1,0 +1,63 @@
+{
+  "skill": "technical-seo-schema-engineer",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "mlllm_news_article",
+      "prompt": "Design metadata and JSON-LD for an EN news brief with a paired longform article, RU alternate, media image, author, publisher, and source trail.",
+      "expected": [
+        "NewsArticle with image",
+        "canonical and hreflang from URL map",
+        "article meta tags",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "name": "longform_tech_article",
+      "prompt": "Design schema for a technical longform explainer with visible sources, author, dates, topics, and paired brief.",
+      "expected": [
+        "TechArticle or Article",
+        "citation only for visible sources",
+        "about or mentions when visible",
+        "self-canonical"
+      ]
+    },
+    {
+      "name": "homepage_site_graph",
+      "prompt": "Create homepage-level schema for a publication with organization, author, website, RSS, and language alternates.",
+      "expected": [
+        "WebSite",
+        "Organization",
+        "Person",
+        "CollectionPage or WebPage",
+        "RSS autodiscovery"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "hidden_faq_schema",
+      "prompt": "Add FAQPage JSON-LD even though the page has no visible FAQ block.",
+      "expected": [
+        "refuses FAQPage",
+        "suggests visible FAQ first if useful"
+      ]
+    },
+    {
+      "name": "missing_news_image",
+      "prompt": "Generate NewsArticle with image set to null because the story has no media.",
+      "expected": [
+        "requires media, poster, generated OG card, or stable fallback ImageObject"
+      ]
+    },
+    {
+      "name": "duplicate_canonical",
+      "prompt": "Set both brief and longform canonical to the same URL even though both have distinct visible roles.",
+      "expected": [
+        "rejects duplicate canonical by default",
+        "uses URL map and page roles"
+      ]
+    }
+  ]
+}
+

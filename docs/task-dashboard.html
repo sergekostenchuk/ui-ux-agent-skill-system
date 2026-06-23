@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI/UX Agent Skill System - Task Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f3ee;
+      --panel: #fff;
+      --soft: #faf8f2;
+      --ink: #1e2629;
+      --muted: #687176;
+      --line: #d9d2c5;
+      --accent: #0f766e;
+      --blue: #2454a6;
+      --amber: #956600;
+      --red: #a73c32;
+      --green: #177245;
+      --shadow: 0 16px 40px rgba(30, 38, 41, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 243, 238, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner,
+    main {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 20px 24px;
+    }
+
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 8px 12px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .notice {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+      border-radius: 8px;
+      background: #eef8f5;
+      color: #1d4f4b;
+      font-size: 14px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .metric,
+    .panel,
+    .task-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .metric {
+      min-height: 104px;
+      padding: 16px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section {
+      margin-top: 24px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+
+    .panel {
+      overflow: hidden;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1120px;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .task-id {
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .pill.done { color: var(--green); border-color: #97c9ad; background: #edf9f1; }
+    .pill.draft { color: var(--amber); border-color: #c28b22; background: #fff7df; }
+    .pill.p0 { color: #1f4d99; border-color: #aac0ea; background: #eef4ff; }
+    .pill.p1 { color: #0f6b60; border-color: #9fd3ca; background: #edf9f6; }
+    .pill.p2 { color: #775100; border-color: #e2c36e; background: #fff8df; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 16px;
+    }
+
+    .runtime-grid,
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .task-card {
+      padding: 14px;
+      min-height: 130px;
+    }
+
+    .task-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .task-card p {
+      font-size: 14px;
+    }
+
+    .link-list {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+    }
+
+    .link-list a {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--soft);
+      text-decoration: none;
+    }
+
+    .warning-list {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .warning {
+      border-left: 4px solid var(--amber);
+      border-radius: 6px;
+      background: #fff8df;
+      padding: 11px 12px;
+      color: #5d4305;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .metric-grid,
+      .runtime-grid,
+      .phase-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      .metric-grid,
+      .runtime-grid,
+      .phase-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner,
+      main {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <h1>UI/UX Agent Skill System Task Dashboard</h1>
+        <p>Производная HTML-панель для addendum `UIUX-V21-*`. Источник истины - canonical Markdown.</p>
+      </div>
+      <nav class="actions" aria-label="Navigation">
+        <a class="button primary" href="TASK-PLAN.md">Canonical Markdown</a>
+        <a class="button" href="agent-progress-screen.html">Progress Cockpit</a>
+        <a class="button" href="skill-review-board.html">Skill Review Board</a>
+        <a class="button" href="skill-graph.html">Skill Graph</a>
+        <a class="button" href="dist/generic-agent/PORTABLE-TASKS.md">Generic Projection</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="notice">
+      `TASK-PLAN.md` выигрывает при любых расхождениях. Эта страница не хранит статусы и не является системой управления задачами.
+      Новый пользовательский экран прогресса: <a href="agent-progress-screen.html">agent-progress-screen.html</a>.
+    </div>
+
+    <section class="metric-grid" aria-label="Summary">
+      <div class="metric"><span>New Tasks</span><strong id="taskCount">12</strong><small>UIUX-V21-001...012</small></div>
+      <div class="metric"><span>Runtime Projections</span><strong>8</strong><small>Codex, Claude, Qwen, Copilot, Gemini, GLM, Kimi, generic</small></div>
+      <div class="metric"><span>Implementation Phases</span><strong>6</strong><small>core, pre-design, design, existing-site, ops, launch</small></div>
+      <div class="metric"><span>Active Alarms</span><strong>0</strong><small>Новые alarms добавлять в Markdown и проекции</small></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Task Register</h2>
+          <p>Новые задачи добавлены как draft, чтобы не выдавать планирование за выполненную реализацию.</p>
+        </div>
+      </div>
+      <div class="panel table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Owner</th>
+              <th>Depends On</th>
+              <th>Approvals</th>
+              <th>Verification</th>
+            </tr>
+          </thead>
+          <tbody id="taskRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section grid-2">
+      <div>
+        <div class="section-head">
+          <div>
+            <h2>Runtime Projections</h2>
+            <p>Все файлы ниже являются производными от canonical Markdown.</p>
+          </div>
+        </div>
+        <div class="panel link-list">
+          <a href="dist/codex/TASK-PLAN-v2.md"><strong>Codex</strong><span>dist/codex</span></a>
+          <a href="dist/claude/CLAUDE-CODE.tasks-projection.md"><strong>Claude / Claude Code</strong><span>dist/claude</span></a>
+          <a href="dist/qwen-code/QWEN-CODE.tasks-projection.md"><strong>Qwen Code</strong><span>dist/qwen-code</span></a>
+          <a href="dist/copilot/COPILOT.tasks-projection.md"><strong>VS Code / Copilot</strong><span>dist/copilot</span></a>
+          <a href="dist/gemini-cli/IMPLEMENTATION-PLAN.gemini-cli.md"><strong>Gemini CLI</strong><span>dist/gemini-cli</span></a>
+          <a href="dist/glm-zai/GLM-ZAI.tasks-projection.md"><strong>GLM / Z.ai</strong><span>dist/glm-zai</span></a>
+          <a href="dist/kimi/KIMI.tasks-projection.md"><strong>Kimi</strong><span>dist/kimi</span></a>
+          <a href="dist/generic-agent/PORTABLE-TASKS.md"><strong>Other agents</strong><span>dist/generic-agent</span></a>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-head">
+          <div>
+            <h2>Governance Warnings</h2>
+            <p>Эти правила блокируют переход задач в ready/in_progress/done.</p>
+          </div>
+        </div>
+        <div class="panel warning-list">
+          <div class="warning">Implementation tasks remain `draft` until one-task prompt, approvals, acceptance checks, and verification strategy are complete.</div>
+          <div class="warning">External APIs, crawling, account access, paid actions, DNS, deploy, and production mutations require explicit approval.</div>
+          <div class="warning">No secrets, recovery codes, cookies, `.env` values, private screenshots, or private URLs in Markdown, HTML, wiki, reports, fixtures, or projections.</div>
+          <div class="warning">Pencil `.pen` artifacts must be handled through Pencil MCP/tools only; no direct plain-file parsing assumption.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Workflow Governance Addendum</h2>
+          <p>Новый слой `UIUX-GOV-*` добавляет надсмотрщика логики выполнения, journey registry, workflow log, lazy-skip fixtures and yacht-school regression back-test.</p>
+        </div>
+      </div>
+      <div class="panel link-list">
+        <a href="docs/workflow-compliance-supervisor-contract.md"><strong>Supervisor Contract</strong><span>decision states, reason codes, evidence rules</span></a>
+        <a href="data/journey-registry.json"><strong>Journey Registry</strong><span>new-premium-site and existing-site-upgrade</span></a>
+        <a href="skill-pages/skills/workflow-compliance-supervisor.html"><strong>Skill Page</strong><span>workflow-compliance-supervisor</span></a>
+        <a href="../yacht-captain-school-greece/reports/workflow-compliance-report.md"><strong>Yacht Regression Report</strong><span>back-test against demo project</span></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Phase Packages</h2>
+          <p>Фазы фиксируют порядок расширения системы, чтобы новые скиллы не конфликтовали с центральным архитектором.</p>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <article class="task-card"><h3>Phase 1 - Core Contracts</h3><p>Orchestrator, task-plan, project wiki, senior council, three-variant gates.</p></article>
+        <article class="task-card"><h3>Phase 2 - Pre-design</h3><p>SERP, semantic core, concept prototype, tech stack, UX/SEO handoff.</p></article>
+        <article class="task-card"><h3>Phase 3 - Design Exploration</h3><p>UI/UX Pro Max, Stitch, Pencil, feedback collector, visual content.</p></article>
+        <article class="task-card"><h3>Phase 4 - Existing Site</h3><p>Analyzer, improve/rebuild advisor, migration planner, redirects and SEO gates.</p></article>
+        <article class="task-card"><h3>Phase 5 - Product Ops</h3><p>Analytics, paid traffic, admin UI, communications, site AI assistant.</p></article>
+        <article class="task-card"><h3>Phase 6 - Infra / Launch</h3><p>Domain, DNS, server, deploy, SSL, webmaster, launch readiness.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tasks = [
+      ["UIUX-V21-001", "Freeze v2.1 governance and release boundaries", "done", "P0", "docs_sync", "none", "architecture-review, user-scope-signoff", "manual review"],
+      ["UIUX-V21-002", "Build projection directory and adapter contract", "done", "P0", "docs_sync", "001", "runtime-review", "static, manual"],
+      ["UIUX-V21-003", "Phase 1 core contracts package", "done", "P0", "docs_sync", "001, 002", "architecture-review, security-review", "static, smoke"],
+      ["UIUX-V21-004", "Phase 2 pre-design and concept package", "done", "P1", "docs_sync", "003", "ux-review, seo-review", "static, fixture, smoke"],
+      ["UIUX-V21-005", "Phase 3 design intelligence and exploration package", "done", "P1", "docs_sync", "003, 004", "ux-review, visual-review", "static, fixture"],
+      ["UIUX-V21-006", "Phase 4 existing-site mode package", "done", "P1", "docs_sync", "003, 004", "seo-review, migration-review", "static, fixture, smoke"],
+      ["UIUX-V21-007", "Phase 5 product operations package", "done", "P2", "docs_sync", "003, 004", "security-review, product-review", "static, security, fixture"],
+      ["UIUX-V21-008", "Phase 6 infra and launch package", "done", "P2", "docs_sync", "003, 004, 007", "security-review, explicit-production-approval", "static, dry-run"],
+      ["UIUX-V21-009", "Cross-runtime projections for eight agent families", "done", "P0", "docs_sync", "001, 002", "runtime-review", "static, smoke"],
+      ["UIUX-V21-010", "HTML dashboard and skill review board synchronization", "done", "P0", "docs_sync", "001, 009", "dashboard-review", "static, manual"],
+      ["UIUX-V21-011", "Validation, fixtures, CI, drift, and no-secret gates", "done", "P0", "docs_sync", "003, 009", "qa-review, security-review", "unit, fixture, integration"],
+      ["UIUX-V21-012", "Obsidian wiki capture and publication handoff", "done", "P1", "docs_sync", "003, 010, 011", "docs-sync-review", "manual review"]
+    ];
+
+    const rows = document.getElementById("taskRows");
+    rows.innerHTML = tasks.map(([id, title, status, priority, owner, deps, approvals, verification]) => `
+      <tr>
+        <td><span class="task-id">${id}</span><br>${title}</td>
+        <td><span class="pill ${status}">${status}</span></td>
+        <td><span class="pill ${priority.toLowerCase()}">${priority}</span></td>
+        <td>${owner}</td>
+        <td>${deps}</td>
+        <td>${approvals}</td>
+        <td>${verification}</td>
+      </tr>
+    `).join("");
+  </script>
+</body>
+</html>

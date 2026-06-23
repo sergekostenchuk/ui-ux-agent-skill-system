@@ -1,0 +1,97 @@
+artifact_type: url_map
+generated_at: "2026-06-11T00:00:00Z"
+producer_skill: information-architecture-seo
+source_inputs:
+  - semantic-core.yaml
+  - entity-topic-map.yaml
+privacy:
+  contains_secrets: false
+  contains_private_urls: false
+  contains_raw_ip_logs: false
+  contains_private_analytics: false
+  redaction_note: none
+site:
+  canonical_host: "https://example.com"
+  default_language: en
+route_patterns:
+  home:
+    en: "/"
+    ru: "/ru/"
+  news_index:
+    en: "/news/"
+    ru: "/ru/news/"
+  news_brief:
+    en: "/news/{story_id}-{slug}/"
+    ru: "/ru/news/{story_id}-{slug}/"
+  longform_article:
+    en: "/articles/{story_id}-{slug}/"
+    ru: "/ru/articles/{story_id}-{slug}/"
+  topic:
+    en: "/topics/{topic_slug}/"
+    ru: "/ru/topics/{topic_slug}/"
+  project:
+    en: "/projects/{project_slug}/"
+    ru: "/ru/projects/{project_slug}/"
+pages:
+  - id: "story-123-en-brief"
+    url: "https://example.com/news/123-example-story/"
+    page_type: news_brief
+    locale: en
+    status: planned
+    canonical: "https://example.com/news/123-example-story/"
+    hreflang_group:
+      en: "https://example.com/news/123-example-story/"
+      ru: "https://example.com/ru/news/123-example-story/"
+      x-default: "https://example.com/news/123-example-story/"
+    index_policy: index
+    source_content_id: "123"
+    content_owner: "short_brief"
+    paired_page:
+      relation: longform
+      url: "https://example.com/articles/123-example-story/"
+    rationale: "Fast short news surface for the story."
+    duplicate_risk: none
+    evidence: []
+  - id: "story-123-en-longform"
+    url: "https://example.com/articles/123-example-story/"
+    page_type: longform_article
+    locale: en
+    status: planned
+    canonical: "https://example.com/articles/123-example-story/"
+    hreflang_group:
+      en: "https://example.com/articles/123-example-story/"
+      ru: "https://example.com/ru/articles/123-example-story/"
+      x-default: "https://example.com/articles/123-example-story/"
+    index_policy: index
+    source_content_id: "123"
+    content_owner: "expanded_article"
+    paired_page:
+      relation: brief
+      url: "https://example.com/news/123-example-story/"
+    rationale: "Durable explanatory surface for the same story."
+    duplicate_risk: none
+    evidence: []
+  - id: "topic-ai-news-pipeline-en"
+    url: "https://example.com/topics/ai-news-pipeline/"
+    page_type: topic
+    locale: en
+    status: planned
+    canonical: "https://example.com/topics/ai-news-pipeline/"
+    hreflang_group:
+      en: "https://example.com/topics/ai-news-pipeline/"
+      x-default: "https://example.com/topics/ai-news-pipeline/"
+    index_policy: index
+    source_content_id: none
+    content_owner: "topic_summary"
+    paired_page:
+      relation: none
+      url: none
+    rationale: "Evergreen topic page that organizes related briefs, longforms, and projects without duplicating bodies."
+    duplicate_risk: low
+    evidence: []
+risks:
+  - id: "duplicate-story-body"
+    severity: high
+    description: "Do not publish more than one short brief and one longform story body per language."
+    mitigation: "Use teasers on indexes/homepage and links to canonical story pages."
+

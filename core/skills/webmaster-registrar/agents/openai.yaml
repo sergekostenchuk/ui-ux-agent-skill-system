@@ -1,0 +1,6 @@
+interface:
+  display_name: "Webmaster Registrar"
+  short_description: "Plans webmaster verification and sitemap submission"
+  default_prompt: "Use $webmaster-registrar to plan GSC/Yandex/Bing verification, sitemap submission, and indexing monitoring without account mutations."
+policy:
+  allow_implicit_invocation: true

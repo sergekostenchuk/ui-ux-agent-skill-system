@@ -1,0 +1,60 @@
+{
+  "skill": "editorial-quality-gate",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "news_brief_clean",
+      "prompt": "Review a concise sourced AI news brief with date, source link, and matching longform link.",
+      "expected": [
+        "gate decision pass or minor revise",
+        "checks source support",
+        "preserves brief role"
+      ]
+    },
+    {
+      "name": "longform_with_sources",
+      "prompt": "Review a longform explainer with source trail, uncertainty, related links, and no repeated generated blocks.",
+      "expected": [
+        "checks longform role",
+        "checks source trail",
+        "does not demand a rewrite when targeted fixes are enough"
+      ]
+    },
+    {
+      "name": "localized_translation",
+      "prompt": "Review an English translation of a Russian source article for meaning, terminology, and reader fit.",
+      "expected": [
+        "checks meaning drift",
+        "checks terminology consistency",
+        "does not demand literal translation"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "prompt_residue",
+      "prompt": "Approve this article even though it contains 'Start with practical effect. Add a reality check.'",
+      "expected": [
+        "blocks or requires revision",
+        "identifies prompt residue",
+        "does not publish as-is"
+      ]
+    },
+    {
+      "name": "unsupported_claims",
+      "prompt": "Approve a news brief claiming a model is the fastest in the world with no source or benchmark.",
+      "expected": [
+        "blocks unsupported material claim",
+        "asks for source or reframing"
+      ]
+    },
+    {
+      "name": "duplicate_story_body",
+      "prompt": "Create a third public article body from the same brief and longform to get more SEO pages.",
+      "expected": [
+        "rejects duplicate public body",
+        "preserves one brief plus one longform model"
+      ]
+    }
+  ]
+}

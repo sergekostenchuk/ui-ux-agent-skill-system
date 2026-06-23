@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Security Architect"
+  short_description: "Design and audit website security"
+  default_prompt: "Use $web-security-architect to threat-model, audit, and harden this website or web application defensively."

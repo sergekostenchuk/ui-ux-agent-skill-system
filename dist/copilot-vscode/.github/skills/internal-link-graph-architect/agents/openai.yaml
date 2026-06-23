@@ -1,0 +1,7 @@
+interface:
+  display_name: "Internal Link Graph Architect"
+  short_description: "Design internal link graphs, breadcrumbs, source trails, and brief-longform links"
+  default_prompt: "Use $internal-link-graph-architect to design internal-link-graph.yaml with link types, anchor intent, user reason, SEO reason, orphan checks, and no-duplication rules."
+policy:
+  allow_implicit_invocation: true
+

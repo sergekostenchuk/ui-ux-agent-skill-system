@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "migration-planner",
+  "cases": [
+    {
+      "id": "redirect-safe-migration",
+      "prompt": "Plan a migration for an existing public site with redirects, sitemap, robots, schema, GSC and rollback.",
+      "expected_mode": "redirect-plan",
+      "must_have": ["URL map", "redirect plan", "rollback", "production approval needed"],
+      "fail_if": ["applies production redirects", "stores verification tokens"]
+    }
+  ]
+}

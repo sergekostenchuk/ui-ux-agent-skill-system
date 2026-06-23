@@ -1,0 +1,6 @@
+interface:
+  display_name: "Visual Content Director"
+  short_description: "Plans and validates UI visual assets"
+  default_prompt: "Use $visual-content-director to plan hero media, asset sourcing, generated visual prompts, and visual-content QA for a UI/UX project."
+policy:
+  allow_implicit_invocation: true

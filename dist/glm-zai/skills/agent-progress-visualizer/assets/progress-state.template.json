@@ -1,0 +1,69 @@
+{
+  "schema_version": "2026-06-22",
+  "generated_at": "2026-06-22T00:00:00+00:00",
+  "source_of_truth": {
+    "kind": "task-plan-v2",
+    "path": "TASK-PLAN.md",
+    "policy": "TASK-PLAN.md is canonical; JSON and HTML are derived views."
+  },
+  "project": {
+    "title": "Project title",
+    "user_request": "User request in plain language",
+    "audience_label": "Non-technical project owner",
+    "privacy_mode": "local-first"
+  },
+  "summary": {
+    "done": 0,
+    "running": 0,
+    "waiting_user": 0,
+    "blocked": 0,
+    "planned": 1,
+    "failed": 0,
+    "total": 1
+  },
+  "phases": [
+    {
+      "id": "phase-01",
+      "title": "Plain-language phase title",
+      "technical_title": "Task-plan task title",
+      "status": "planned",
+      "description": "What the system is doing in user language.",
+      "subprocesses": [
+        {
+          "id": "phase-01-a",
+          "title": "Subprocess title",
+          "status": "planned",
+          "description": ""
+        }
+      ],
+      "artifacts": [],
+      "technical": {
+        "task_id": "TASK-001",
+        "owner_role": "planner",
+        "dependencies": [],
+        "blocked_by": [],
+        "required_approvals": [],
+        "skill_routes": []
+      }
+    }
+  ],
+  "user_gates": [],
+  "activity_log": [
+    {
+      "time": "auto",
+      "status": "planned",
+      "message": "Progress screen initialized.",
+      "technical_task_id": "TASK-001"
+    }
+  ],
+  "next_user_action": {
+    "status": "wait",
+    "label": "Система готовит следующие шаги",
+    "description": "Пока от пользователя ничего не требуется."
+  },
+  "developer": {
+    "enabled": false,
+    "technical_routes": [],
+    "warnings": []
+  }
+}

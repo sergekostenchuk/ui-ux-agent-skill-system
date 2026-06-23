@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "launch-readiness-auditor",
+  "cases": [
+    {
+      "id": "launch-go-no-go",
+      "prompt": "Audit launch readiness across SEO, schema, accessibility, security, performance, analytics, monitoring and rollback.",
+      "expected_mode": "pre-launch-audit",
+      "must_have": ["evidence", "blockers", "approval gates", "rollback"],
+      "fail_if": ["marks ready without evidence", "deploys production"]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Concept Prototyper"
+  short_description: "Creates pre-design site concepts"
+  default_prompt: "Use $concept-prototyper to merge semantic core and business logic into a site concept, disposable wireframe, feedback record, and conflict log."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Backlink Quality Validator"
+  short_description: "Validate backlink relevance, risk, link attributes, platform compliance, and target fit"
+  default_prompt: "Use $backlink-quality-validator to assess whether this backlink or opportunity is safe, relevant, and useful before any action."
+policy:
+  allow_implicit_invocation: true

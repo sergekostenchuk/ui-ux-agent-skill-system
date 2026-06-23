@@ -1,0 +1,40 @@
+{
+  "artifact_type": "seo_regression_report",
+  "generated_at": "2026-06-11T00:00:00Z",
+  "target": "$HOME/SKILL/skills/seo-regression-validator/fixtures/good-news.html",
+  "fetch": {
+    "method": "file",
+    "status_code": "file",
+    "content_type": "text/html",
+    "user_agent": "none"
+  },
+  "status": "pass",
+  "issues": [],
+  "observed": {
+    "title": "Example AI News Story | example.com",
+    "meta_description": "A concise visible summary of an AI news story for builders.",
+    "canonical_count": 1,
+    "canonicals": [
+      "https://example.com/news/123-example-ai-news/"
+    ],
+    "hreflang_count": 3,
+    "hreflangs": [
+      "en",
+      "ru",
+      "x-default"
+    ],
+    "og_title": true,
+    "og_description": true,
+    "og_image": "https://example.com/assets/example-og.png",
+    "twitter_card": "summary_large_image",
+    "viewport": "width=device-width, initial-scale=1",
+    "rss": "https://example.com/rss.xml",
+    "article_published_time": "2026-06-11T00:00:00Z",
+    "article_modified_time": "2026-06-11T00:00:00Z",
+    "article_author": "https://example.com/about/",
+    "jsonld_blocks": 1,
+    "jsonld_types": [
+      "NewsArticle"
+    ]
+  }
+}

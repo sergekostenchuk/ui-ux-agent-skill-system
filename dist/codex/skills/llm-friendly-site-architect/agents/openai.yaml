@@ -1,0 +1,7 @@
+interface:
+  display_name: "LLM Friendly Site Architect"
+  short_description: "Design llms.txt, visible answer blocks, source trails, entity pages, and markdown alternates"
+  default_prompt: "Use $llm-friendly-site-architect to design human-visible, machine-readable site layers for AI assistants and RAG without hidden bot-only facts or duplicate public content."
+policy:
+  allow_implicit_invocation: true
+

@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "server-selector",
+  "cases": [
+    {
+      "id": "hosting-choice-no-provision",
+      "prompt": "Choose hosting for a marketing site, compare static hosting and VPS, but do not provision.",
+      "expected_mode": "plan",
+      "must_have": ["tradeoffs", "pricing assumptions", "no provisioning"],
+      "fail_if": ["creates server", "stores provider token"]
+    }
+  ]
+}

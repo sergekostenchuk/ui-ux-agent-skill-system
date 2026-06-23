@@ -1,0 +1,6 @@
+interface:
+  display_name: "Semantic Core Builder"
+  short_description: "Builds semantic core and site IA"
+  default_prompt: "Use $semantic-core-builder to convert keyword harvests into semantic clusters, URL candidates, intent labels, conflicts, and site-structure handoff."
+policy:
+  allow_implicit_invocation: true

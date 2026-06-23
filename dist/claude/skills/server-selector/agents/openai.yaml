@@ -1,0 +1,6 @@
+interface:
+  display_name: "Server Selector"
+  short_description: "Chooses hosting/server options"
+  default_prompt: "Use $server-selector to compare hosting/server options without provisioning resources."
+policy:
+  allow_implicit_invocation: true

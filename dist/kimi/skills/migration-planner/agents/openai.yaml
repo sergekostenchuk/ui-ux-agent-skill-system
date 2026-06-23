@@ -1,0 +1,6 @@
+interface:
+  display_name: "Migration Planner"
+  short_description: "Plans safe URL, redirect, SEO, and launch migrations"
+  default_prompt: "Use $migration-planner to produce a rollback-aware migration plan with URL maps, redirects, SEO surface checks, approvals, and monitoring."
+policy:
+  allow_implicit_invocation: true

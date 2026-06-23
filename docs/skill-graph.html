@@ -1,0 +1,2341 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI/UX Skill Graph</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #111315;
+      --panel: #181c1f;
+      --panel-soft: #20262a;
+      --ink: #edf2ef;
+      --muted: #9aa5a7;
+      --line: #3b4448;
+      --line-soft: rgba(180, 190, 190, 0.22);
+      --accent: #62d3c7;
+      --blue: #7da6ff;
+      --red: #ff8d80;
+      --amber: #f4b95f;
+      --green: #7bd991;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(17, 19, 21, 0.92);
+      backdrop-filter: blur(16px);
+    }
+    .topbar-inner {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 16px 22px;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+    }
+    h1 { margin: 0; font-size: 24px; line-height: 1.15; letter-spacing: 0; }
+    .subtitle { margin-top: 5px; color: var(--muted); font-size: 14px; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-soft);
+      color: var(--ink);
+      padding: 7px 11px;
+      cursor: pointer;
+    }
+    .button:hover { border-color: var(--accent); text-decoration: none; }
+    .shell {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 18px 22px 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 16px;
+    }
+    .graph-panel,
+    .side-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 8px;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #15191c;
+    }
+    input[type="search"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #0f1214;
+      color: var(--ink);
+      padding: 8px 10px;
+      outline: none;
+    }
+    input[type="search"]:focus { border-color: var(--accent); }
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .toggle input { accent-color: var(--accent); }
+    .graph-wrap {
+      position: relative;
+      height: min(76vh, 820px);
+      min-height: 620px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(98, 211, 199, 0.08), transparent 34%),
+        linear-gradient(180deg, #111416, #0c0f11);
+    }
+    svg { display: block; width: 100%; height: 100%; }
+    .edge {
+      stroke: var(--line-soft);
+      stroke-width: 1.15;
+      transition: opacity 140ms ease, stroke 140ms ease, stroke-width 140ms ease;
+    }
+    .edge.hidden { opacity: 0; pointer-events: none; }
+    .edge.dim { opacity: 0.06; }
+    .edge.active {
+      stroke: var(--accent);
+      stroke-width: 2.2;
+      opacity: 0.9;
+    }
+    .node circle {
+      fill: #22282c;
+      stroke: #647074;
+      stroke-width: 1.2;
+      transition: opacity 140ms ease, fill 140ms ease, stroke 140ms ease, r 140ms ease;
+    }
+    .node-hit {
+      fill: rgba(255, 255, 255, 0);
+      stroke: none;
+      pointer-events: all;
+    }
+    .node text {
+      fill: #cbd5d6;
+      font-size: 11px;
+      paint-order: stroke;
+      stroke: rgba(12, 15, 17, 0.9);
+      stroke-width: 3px;
+      pointer-events: none;
+      transition: opacity 140ms ease, fill 140ms ease;
+    }
+    .node { cursor: pointer; }
+    .node.dim circle,
+    .node.dim text { opacity: 0.18; }
+    .node.connected circle {
+      fill: #263338;
+      stroke: #9bd8d2;
+    }
+    .node.connected text { fill: #eef9f7; }
+    .node.active circle {
+      fill: var(--accent);
+      stroke: #ecfffb;
+      stroke-width: 2.3;
+    }
+    .node.active text { fill: #ffffff; }
+    .node.proposed circle { stroke-dasharray: 4 3; }
+    .side-panel { padding: 16px; }
+    .panel-title { font-weight: 800; font-size: 18px; line-height: 1.2; }
+    .panel-meta { margin-top: 8px; color: var(--muted); font-size: 13px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      padding: 3px 8px;
+      margin: 8px 6px 0 0;
+      font-size: 12px;
+      font-weight: 740;
+    }
+    .pill.existing { color: var(--blue); }
+    .pill.proposed { color: var(--green); }
+    .pill.filled { color: var(--green); }
+    .pill.partial { color: var(--amber); }
+    .pill.planned { color: var(--muted); }
+    .section { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .section h2 { margin: 0 0 8px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .detail-text { color: #dce4e4; font-size: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      color: var(--ink);
+      background: var(--panel-soft);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .chip:hover { border-color: var(--accent); text-decoration: none; }
+    .legend {
+      position: absolute;
+      left: 14px;
+      bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      pointer-events: none;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(17, 19, 21, 0.72);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    @media (max-width: 1050px) {
+      .shell { grid-template-columns: 1fr; }
+      .topbar-inner { grid-template-columns: 1fr; }
+      .actions { justify-content: flex-start; }
+      .graph-wrap { min-height: 560px; }
+      .toolbar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <h1>UI/UX Skill Graph</h1>
+        <div class="subtitle">Obsidian-style map of skill relationships. Click a skill to highlight its direct links.</div>
+      </div>
+      <nav class="actions">
+        <a class="button" href="skill-review-board.html">Main Matrix</a>
+        <a class="button" href="skill-pages/index.html">Skill Index</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="graph-panel">
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search skill">
+        <label class="toggle"><input id="showHub" type="checkbox"> Show hub links</label>
+        <button class="button" type="button" id="reset">Reset</button>
+      </div>
+      <div class="graph-wrap">
+        <svg id="graph" viewBox="0 0 1400 900" role="img" aria-label="Skill graph"></svg>
+        <div class="legend">
+          <span><i class="dot"></i> selected / connected</span>
+          <span>gray lines: neutral relationships</span>
+          <span>dashed nodes: proposed skills</span>
+        </div>
+      </div>
+    </section>
+    <aside class="side-panel" id="details">
+      <div class="panel-title">Select a skill</div>
+      <div class="panel-meta">Click any node to highlight its direct relationships.</div>
+    </aside>
+  </main>
+  <script>
+    const graphData = {
+      "generatedAt": "2026-06-22T14:32:28.924Z",
+      "hub": "senior-ui-ux-orchestrator",
+      "nodes": [
+            {
+                  "id": "senior-ui-ux-orchestrator",
+                  "label": "senior-ui-ux-orchestrator",
+                  "phase": "Core",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Главный архитектор, chair, routing, cross-domain decisions, three-variant design, council, privacy and evidence gates.",
+                  "risk": "Должен оставаться единственным главным оркестратором; proposed update: pre-design/existing-site routing, wiki gates, stricter release gates.",
+                  "detailUrl": "skill-pages/skills/senior-ui-ux-orchestrator.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (11)",
+                        "detail": "11 file(s), 5 supporting folder(s).",
+                        "fileCount": 11,
+                        "folderCount": 5,
+                        "hasSkillMd": true
+                  },
+                  "degree": 49
+            },
+            {
+                  "id": "task-plan-v2-orchestrator",
+                  "label": "task-plan-v2-orchestrator",
+                  "phase": "Planning",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "TASK-PLAN v2, gates, progress visibility, handoffs, review/test/rollback fields, dashboard contract.",
+                  "risk": "Риск бюрократии на мелких задачах; proposed update: auto-trigger, changelog, TASK-DASHBOARD.",
+                  "detailUrl": "skill-pages/skills/task-plan-v2-orchestrator.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (9)",
+                        "detail": "9 file(s), 3 supporting folder(s).",
+                        "fileCount": 9,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 10
+            },
+            {
+                  "id": "ui-ux-llm-product-architect",
+                  "label": "ui-ux-llm-product-architect",
+                  "phase": "Product UX",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Пользовательские пути, IA, UX-логика, accessibility intent, human and LLM-readable interfaces.",
+                  "risk": "Может конфликтовать с SEO, если упрощает контент слишком сильно.",
+                  "detailUrl": "skill-pages/skills/ui-ux-llm-product-architect.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (12)",
+                        "detail": "12 file(s), 4 supporting folder(s).",
+                        "fileCount": 12,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 3
+            },
+            {
+                  "id": "seo-llm-site-architect",
+                  "label": "seo-llm-site-architect",
+                  "phase": "SEO/LLM",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "SEO, AEO/GEO, schema, llms.txt, robots, sitemap, semantic HTML, AI-search readability.",
+                  "risk": "Может перегрузить страницу текстом; proposed update: semantic core input gate.",
+                  "detailUrl": "skill-pages/skills/seo-llm-site-architect.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (11)",
+                        "detail": "11 file(s), 4 supporting folder(s).",
+                        "fileCount": 11,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 7
+            },
+            {
+                  "id": "ui-ux-pro-max",
+                  "label": "ui-ux-pro-max",
+                  "phase": "Design Intelligence",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Searchable design intelligence: styles, palettes, typography, patterns, UX rules, stacks.",
+                  "risk": "Advisory only; его рекомендации нужно фильтровать через продукт, бренд, SEO и реализацию.",
+                  "detailUrl": "skill-pages/skills/ui-ux-pro-max.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (58)",
+                        "detail": "58 file(s), 3 supporting folder(s).",
+                        "fileCount": 58,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 6
+            },
+            {
+                  "id": "stitch-design-bridge",
+                  "label": "stitch-design-bridge",
+                  "phase": "Design Exploration",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Stitch-ready prompts, AI UI exploration, output review, handoff to Figma/code after approved directions.",
+                  "risk": "Optional cloud/vendor-specific; proposed update: one project per direction, manual model choice artifact.",
+                  "detailUrl": "skill-pages/skills/stitch-design-bridge.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (9)",
+                        "detail": "9 file(s), 5 supporting folder(s).",
+                        "fileCount": 9,
+                        "folderCount": 5,
+                        "hasSkillMd": true
+                  },
+                  "degree": 10
+            },
+            {
+                  "id": "senior-figma-orchestrator",
+                  "label": "senior-figma-orchestrator",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Figma MCP orchestration: context, design-to-code, code-to-canvas, canvas edits, variables, components, assets, effects.",
+                  "risk": "Не должен заменять product/SEO decisions; отвечает за Figma boundary.",
+                  "detailUrl": "skill-pages/skills/senior-figma-orchestrator.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (7)",
+                        "detail": "7 file(s), 4 supporting folder(s).",
+                        "fileCount": 7,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 13
+            },
+            {
+                  "id": "figma-context-reader",
+                  "label": "figma-context-reader",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Reads Figma hierarchy, layout, tokens, components, variables, assets, interaction notes.",
+                  "risk": "Read-only; нельзя выдавать скриншотные догадки за MCP evidence.",
+                  "detailUrl": "skill-pages/skills/figma-context-reader.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 6
+            },
+            {
+                  "id": "figma-design-to-code-bridge",
+                  "label": "figma-design-to-code-bridge",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Turns Figma frames into implementation plans, component mappings, token handoffs, Code Connect decisions.",
+                  "risk": "Не должен слепо pixel-copy макет без UX/code feasibility review.",
+                  "detailUrl": "skill-pages/skills/figma-design-to-code-bridge.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "figma-code-to-canvas",
+                  "label": "figma-code-to-canvas",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Brings live/local web UI back into Figma as editable layers when code is ahead of design.",
+                  "risk": "Privacy and tool-availability gate required before capture.",
+                  "detailUrl": "skill-pages/skills/figma-code-to-canvas.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 3
+            },
+            {
+                  "id": "figma-canvas-editor",
+                  "label": "figma-canvas-editor",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Creates/edits native Figma frames, components, variables, styles, FigJam objects, Slides objects.",
+                  "risk": "Mutation scope must be explicit; needs readback evidence.",
+                  "detailUrl": "skill-pages/skills/figma-canvas-editor.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "figma-design-system-sync",
+                  "label": "figma-design-system-sync",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Syncs design-system contracts between Figma and code: variables, styles, tokens, components.",
+                  "risk": "Can create governance overhead if used on one-off pages.",
+                  "detailUrl": "skill-pages/skills/figma-design-system-sync.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "figma-assets-manager",
+                  "label": "figma-assets-manager",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Exports, downloads, inventories, and prepares assets from Figma for implementation and audit.",
+                  "risk": "Must preserve licensing, privacy, naming, and asset manifest evidence.",
+                  "detailUrl": "skill-pages/skills/figma-assets-manager.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "figma-apply-effects",
+                  "label": "figma-apply-effects",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Creates, audits, removes, and binds Figma effects: shadows, blurs, glow, glass, noise, texture, progressive blur.",
+                  "risk": "Runtime compatibility differs by MCP/plugin support; requires readback.",
+                  "detailUrl": "skill-pages/skills/figma-apply-effects.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "figma-workflow-auditor",
+                  "label": "figma-workflow-auditor",
+                  "phase": "Figma",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Audits Figma workflows for correctness, freshness, privacy, evidence, and routing quality.",
+                  "risk": "Should be used as quality gate, not as a parallel orchestrator.",
+                  "detailUrl": "skill-pages/skills/figma-workflow-auditor.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "marketing-site-skill",
+                  "label": "marketing-site-skill",
+                  "phase": "Implementation",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Builds/refactors/audits public marketing pages, landing pages, conversion flows, metadata, media-heavy pages.",
+                  "risk": "Do not use for dense app/admin surfaces.",
+                  "detailUrl": "skill-pages/skills/marketing-site-skill.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (13)",
+                        "detail": "13 file(s), 5 supporting folder(s).",
+                        "fileCount": 13,
+                        "folderCount": 5,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "webapp-ui-skill",
+                  "label": "webapp-ui-skill",
+                  "phase": "Implementation",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Builds/refactors/audits dashboards, SaaS, admin panels, CRM, data-heavy product workflows.",
+                  "risk": "Do not use for pure landing pages unless the task is actually an app surface.",
+                  "detailUrl": "skill-pages/skills/webapp-ui-skill.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (13)",
+                        "detail": "13 file(s), 5 supporting folder(s).",
+                        "fileCount": 13,
+                        "folderCount": 5,
+                        "hasSkillMd": true
+                  },
+                  "degree": 3
+            },
+            {
+                  "id": "ux-audit-skill",
+                  "label": "ux-audit-skill",
+                  "phase": "Quality",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Evidence-backed audit of URLs, screenshots, Figma, source code, responsive behavior, accessibility, conversion blockers.",
+                  "risk": "Never claim DOM/Lighthouse/axe/screenshot evidence unless it exists.",
+                  "detailUrl": "skill-pages/skills/ux-audit-skill.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (9)",
+                        "detail": "9 file(s), 4 supporting folder(s).",
+                        "fileCount": 9,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "design-critic-skill",
+                  "label": "design-critic-skill",
+                  "phase": "Quality",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Visual quality critique: hierarchy, spacing, typography, contrast risk, consistency, brand fit, anti-slop review.",
+                  "risk": "Should create actionable critique, not aesthetic taste fights.",
+                  "detailUrl": "skill-pages/skills/design-critic-skill.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (8)",
+                        "detail": "8 file(s), 4 supporting folder(s).",
+                        "fileCount": 8,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 3
+            },
+            {
+                  "id": "cursor-reveal-hero",
+                  "label": "cursor-reveal-hero",
+                  "phase": "Visual Effects",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Builds and validates cursor-trail mask reveal hero effects, canvas compositing, hover reveal, before/after reveal.",
+                  "risk": "Specialist effect only; needs image alignment and browser visual checks.",
+                  "detailUrl": "skill-pages/skills/cursor-reveal-hero.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (9)",
+                        "detail": "9 file(s), 4 supporting folder(s).",
+                        "fileCount": 9,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "image-layer-alignment-validator",
+                  "label": "image-layer-alignment-validator",
+                  "phase": "Visual Effects",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Validates two raster layers for reveal, before/after, morph, mask compositing, annotated overlays/difference maps.",
+                  "risk": "Should run before reveal tuning if base/reveal images may drift.",
+                  "detailUrl": "skill-pages/skills/image-layer-alignment-validator.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 3 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 1
+            },
+            {
+                  "id": "serp-source-configurator",
+                  "label": "serp-source-configurator",
+                  "phase": "Pre-design",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "SERP source setup gate: engine checkboxes, OpenSERP/proxy/API-key runtime fields, approval, budget, and preflight before harvesting.",
+                  "risk": "Must not store API keys or proxy credentials; paid proxy and provider mutations require explicit approval.",
+                  "detailUrl": "skill-pages/skills/serp-source-configurator.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (7)",
+                        "detail": "7 file(s), 4 supporting folder(s).",
+                        "fileCount": 7,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "serp-keyword-harvester",
+                  "label": "serp-keyword-harvester",
+                  "phase": "Pre-design",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Collects SERP, autocomplete, and keyword evidence after source setup before structure and concept decisions.",
+                  "risk": "External search tools require approval and source config; local fallbacks should exist.",
+                  "detailUrl": "skill-pages/skills/serp-keyword-harvester.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (6)",
+                        "detail": "6 file(s), 3 supporting folder(s).",
+                        "fileCount": 6,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "semantic-core-builder",
+                  "label": "semantic-core-builder",
+                  "phase": "Pre-design",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Clusters keywords, intents, URL structure, and creates semantic-core.json plus site-structure.md.",
+                  "risk": "Must distinguish evidence from generated assumptions.",
+                  "detailUrl": "skill-pages/skills/semantic-core-builder.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 8
+            },
+            {
+                  "id": "concept-prototyper",
+                  "label": "concept-prototyper",
+                  "phase": "Pre-design",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Creates disposable clickable HTML concept/wireframe and captures business feedback before design/code.",
+                  "risk": "Prototype must not become production code by accident.",
+                  "detailUrl": "skill-pages/skills/concept-prototyper.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "design-feedback-collector",
+                  "label": "design-feedback-collector",
+                  "phase": "Design Exploration",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Collects user and agent feedback, tracks accepted/partial/applied statuses, and hands decisions to the right owner.",
+                  "risk": "Cannot mark feedback applied without an artifact or decision record.",
+                  "detailUrl": "skill-pages/skills/design-feedback-collector.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "agent-progress-visualizer",
+                  "label": "agent-progress-visualizer",
+                  "phase": "Core",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Creates a human-readable progress cockpit from TASK-PLAN.md, progress-state.json, feedback, reports, and wiki decisions.",
+                  "risk": "Must never become the source of truth; HTML and JSON are derived and must not store secrets.",
+                  "detailUrl": "skill-pages/skills/agent-progress-visualizer.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (6)",
+                        "detail": "6 file(s), 3 supporting folder(s).",
+                        "fileCount": 6,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "workflow-compliance-supervisor",
+                  "label": "workflow-compliance-supervisor",
+                  "phase": "Core",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Checks promised journeys against task-plan, progress state, HTML, workflow log, evidence, skipped stages, and approvals.",
+                  "risk": "Must not replace the central chair; blocks only evidence-backed workflow violations.",
+                  "detailUrl": "skill-pages/skills/workflow-compliance-supervisor.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (7)",
+                        "detail": "7 file(s), 4 supporting folder(s).",
+                        "fileCount": 7,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "pencil-design-bridge",
+                  "label": "pencil-design-bridge",
+                  "phase": "Design+Code Canvas",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Turns approved directions or reviewed Stitch outputs into Pencil tool handoffs and reviews Pencil outputs.",
+                  "risk": ".pen access must go through Pencil tools; do not parse .pen files directly.",
+                  "detailUrl": "skill-pages/skills/pencil-design-bridge.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 8
+            },
+            {
+                  "id": "project-wiki-manager",
+                  "label": "project-wiki-manager",
+                  "phase": "Project Memory",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Initializes and maintains project wiki, sanitized context, llms-context.md, index, and post-skill capture.",
+                  "risk": "Must never ingest secrets, tokens, cookies, private screenshots, or raw .env values.",
+                  "detailUrl": "skill-pages/skills/project-wiki-manager.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 3 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 9
+            },
+            {
+                  "id": "paid-traffic-architect",
+                  "label": "paid-traffic-architect",
+                  "phase": "SEO+Paid",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Plans paid campaigns, UTM maps, creative briefs, audience hypotheses, and landing requirements.",
+                  "risk": "Campaign launch, spend, pixels, and audience uploads require explicit approval.",
+                  "detailUrl": "skill-pages/skills/paid-traffic-architect.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "analytics-setup-architect",
+                  "label": "analytics-setup-architect",
+                  "phase": "Analytics",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Plans analytics, consent, UTM, event taxonomy, dashboards, and verification.",
+                  "risk": "Live tag/account changes and private exports require explicit approval.",
+                  "detailUrl": "skill-pages/skills/analytics-setup-architect.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "admin-ui-orchestrator",
+                  "label": "admin-ui-orchestrator",
+                  "phase": "Admin/CMS",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Coordinates admin/CMS roles, permissions, workflows, AI boundaries, audit logs, and builder handoff.",
+                  "risk": "Admin scope only; production admin mutations and destructive actions require confirm gates.",
+                  "detailUrl": "skill-pages/skills/admin-ui-orchestrator.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "admin-ui-builder",
+                  "label": "admin-ui-builder",
+                  "phase": "Admin/CMS",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Specifies or builds guarded admin screens, CRUD, tables, forms, states, and confirmations.",
+                  "risk": "Private admin does not mean low trust; no real customer data or hidden destructive actions.",
+                  "detailUrl": "skill-pages/skills/admin-ui-builder.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "omnichannel-comms-builder",
+                  "label": "omnichannel-comms-builder",
+                  "phase": "Admin/CMS",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Plans forms, inbox, chat, booking, CRM handoff, templates, operator routing, consent, and escalation.",
+                  "risk": "Real message sending and CRM mutations require explicit approval.",
+                  "detailUrl": "skill-pages/skills/omnichannel-comms-builder.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "site-ai-assistant-builder",
+                  "label": "site-ai-assistant-builder",
+                  "phase": "AI Assistant",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Plans public site AI assistant with RAG/source boundaries, injection protection, refusals, rate limits, logs, and escalation.",
+                  "risk": "No hallucinated price/legal claims, destructive tools, secret access, or unbounded sources.",
+                  "detailUrl": "skill-pages/skills/site-ai-assistant-builder.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "visual-content-director",
+                  "label": "visual-content-director",
+                  "phase": "Visual Content",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Plans real/generative visual assets, hero media, visual proof, and asset QA for Stitch/Pencil/Figma/code.",
+                  "risk": "Generated visuals and placeholder assets must be labeled and cannot invent real-world facts.",
+                  "detailUrl": "skill-pages/skills/visual-content-director.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 6
+            },
+            {
+                  "id": "infra-launch-orchestrator",
+                  "label": "infra-launch-orchestrator",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Coordinates dry-run-first domain, server, deploy, DNS, SSL, webmaster, security, and launch readiness specialists.",
+                  "risk": "Paid/destructive/production steps require explicit approval; it is not the central UI/UX chair.",
+                  "detailUrl": "skill-pages/skills/infra-launch-orchestrator.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 11
+            },
+            {
+                  "id": "domain-name-generator",
+                  "label": "domain-name-generator",
+                  "phase": "Domain",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Generates and scores domain candidates from concept, semantic core, geography, and brand tone.",
+                  "risk": "Availability is unknown unless checked with evidence; final registration is separate and approved.",
+                  "detailUrl": "skill-pages/skills/domain-name-generator.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "domain-registrar-advisor",
+                  "label": "domain-registrar-advisor",
+                  "phase": "Domain",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Advises registrar choice, pricing/renewal/privacy risks, and registration checklist.",
+                  "risk": "Paid/irreversible registration and account actions require explicit user confirmation.",
+                  "detailUrl": "skill-pages/skills/domain-registrar-advisor.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "server-selector",
+                  "label": "server-selector",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Chooses hosting/server profile based on geo, stack, traffic, CMS, database, CDN, security, and budget.",
+                  "risk": "Provider recommendations need freshness labels; resource creation requires approval.",
+                  "detailUrl": "skill-pages/skills/server-selector.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "server-provisioner",
+                  "label": "server-provisioner",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Prepares server provisioning dry-runs, SSH/firewall hardening, backups, monitoring, and rollback.",
+                  "risk": "Paid external action; no resource mutation without approval, no secrets in logs.",
+                  "detailUrl": "skill-pages/skills/server-provisioner.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 1
+            },
+            {
+                  "id": "deploy-orchestrator",
+                  "label": "deploy-orchestrator",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Plans build/deploy pipeline, CI/CD, smoke tests, environment checks, deploy docs, and rollback.",
+                  "risk": "Production deploy, migrations, and secret changes require explicit approval.",
+                  "detailUrl": "skill-pages/skills/deploy-orchestrator.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "domain-dns-configurator",
+                  "label": "domain-dns-configurator",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Plans DNS/Cloudflare/registrar records, TTL, propagation checks, and rollback.",
+                  "risk": "DNS changes are externally visible and can break production; approval and rollback required.",
+                  "detailUrl": "skill-pages/skills/domain-dns-configurator.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 1
+            },
+            {
+                  "id": "ssl-and-security-hardener",
+                  "label": "ssl-and-security-hardener",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Plans SSL/TLS, HTTPS, HSTS, security headers, CSP, cookie flags, monitoring, and hardening evidence.",
+                  "risk": "Live cert/server/header changes require approval; do not fake scan evidence.",
+                  "detailUrl": "skill-pages/skills/ssl-and-security-hardener.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 2
+            },
+            {
+                  "id": "webmaster-registrar",
+                  "label": "webmaster-registrar",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Plans GSC/Yandex/Bing verification, sitemap submission, ownership checks, and indexing monitoring.",
+                  "risk": "Account access, verification, sitemap submission, and tokens require approval/redaction.",
+                  "detailUrl": "skill-pages/skills/webmaster-registrar.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 4
+            },
+            {
+                  "id": "launch-readiness-auditor",
+                  "label": "launch-readiness-auditor",
+                  "phase": "Infra/Launch",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Final go/no-go gate across SEO, schema, analytics, performance, accessibility, security, DNS, SSL, monitoring, rollback.",
+                  "risk": "Should block release on critical issues; evidence must be mechanical or skipped with rationale.",
+                  "detailUrl": "skill-pages/skills/launch-readiness-auditor.html",
+                  "docStatus": {
+                        "state": "partial",
+                        "label": "Docs: partial (3)",
+                        "detail": "3 file(s), 2 supporting folder(s).",
+                        "fileCount": 3,
+                        "folderCount": 2,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "tech-stack-selector",
+                  "label": "tech-stack-selector",
+                  "phase": "Tech Stack",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Chooses stack from concept, semantic core, infra profile, content volume, CMS/admin/AI needs.",
+                  "risk": "Must notify user and log overrides; avoid trendy stack by default.",
+                  "detailUrl": "skill-pages/skills/tech-stack-selector.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (4)",
+                        "detail": "4 file(s), 3 supporting folder(s).",
+                        "fileCount": 4,
+                        "folderCount": 3,
+                        "hasSkillMd": true
+                  },
+                  "degree": 8
+            },
+            {
+                  "id": "existing-site-analyzer",
+                  "label": "existing-site-analyzer",
+                  "phase": "Existing Site",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Audits current site evidence: pages, content, SEO/LLM surface, UX, tech constraints, and visual assets.",
+                  "risk": "Crawling public URLs, authenticated pages, private analytics, and screenshots require approval when applicable.",
+                  "detailUrl": "skill-pages/skills/existing-site-analyzer.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 6
+            },
+            {
+                  "id": "rebuild-or-improve-advisor",
+                  "label": "rebuild-or-improve-advisor",
+                  "phase": "Existing Site",
+                  "status": "existing",
+                  "priority": "high",
+                  "role": "Compares improve in place, redesign current stack, partial rebuild, and full rebuild using audit evidence.",
+                  "risk": "Decision must preserve SEO equity, business-critical content, and migration feasibility.",
+                  "detailUrl": "skill-pages/skills/rebuild-or-improve-advisor.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            },
+            {
+                  "id": "migration-planner",
+                  "label": "migration-planner",
+                  "phase": "Existing Site",
+                  "status": "existing",
+                  "priority": "medium",
+                  "role": "Plans URL maps, redirects, sitemap, robots, schema, GSC/webmaster, launch checks, rollback, and monitoring.",
+                  "risk": "Migration mistakes can destroy organic traffic; production changes require explicit approval.",
+                  "detailUrl": "skill-pages/skills/migration-planner.html",
+                  "docStatus": {
+                        "state": "filled",
+                        "label": "Docs: filled (5)",
+                        "detail": "5 file(s), 4 supporting folder(s).",
+                        "fileCount": 5,
+                        "folderCount": 4,
+                        "hasSkillMd": true
+                  },
+                  "degree": 5
+            }
+      ],
+      "edges": [
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "ui-ux-llm-product-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "seo-llm-site-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "ui-ux-pro-max",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "stitch-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-figma-orchestrator",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-context-reader",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-design-to-code-bridge",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-code-to-canvas",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-canvas-editor",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-design-system-sync",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-assets-manager",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-apply-effects",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-workflow-auditor",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "marketing-site-skill",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "ux-audit-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-critic-skill",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "cursor-reveal-hero",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "image-layer-alignment-validator",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "serp-source-configurator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "serp-keyword-harvester",
+                  "type": "interaction"
+            },
+            {
+                  "source": "semantic-core-builder",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "concept-prototyper",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-feedback-collector",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "agent-progress-visualizer",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "pencil-design-bridge",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "project-wiki-manager",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "paid-traffic-architect",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "analytics-setup-architect",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-orchestrator",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-builder",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "omnichannel-comms-builder",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "site-ai-assistant-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "visual-content-director",
+                  "type": "interaction"
+            },
+            {
+                  "source": "infra-launch-orchestrator",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-name-generator",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-registrar-advisor",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "server-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "server-provisioner",
+                  "type": "interaction"
+            },
+            {
+                  "source": "deploy-orchestrator",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-dns-configurator",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "ssl-and-security-hardener",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "webmaster-registrar",
+                  "type": "interaction"
+            },
+            {
+                  "source": "launch-readiness-auditor",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-ui-ux-orchestrator",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "existing-site-analyzer",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "rebuild-or-improve-advisor",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "migration-planner",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "agent-progress-visualizer",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "deploy-orchestrator",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "existing-site-analyzer",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "migration-planner",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "project-wiki-manager",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "rebuild-or-improve-advisor",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "seo-llm-site-architect",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "task-plan-v2-orchestrator",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "task-plan-v2-orchestrator",
+                  "target": "ux-audit-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "concept-prototyper",
+                  "target": "ui-ux-llm-product-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "seo-llm-site-architect",
+                  "target": "ui-ux-llm-product-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "existing-site-analyzer",
+                  "target": "seo-llm-site-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "semantic-core-builder",
+                  "target": "seo-llm-site-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "seo-llm-site-architect",
+                  "target": "serp-keyword-harvester",
+                  "type": "interaction"
+            },
+            {
+                  "source": "seo-llm-site-architect",
+                  "target": "serp-source-configurator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "seo-llm-site-architect",
+                  "target": "ux-audit-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-critic-skill",
+                  "target": "ui-ux-pro-max",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-feedback-collector",
+                  "target": "ui-ux-pro-max",
+                  "type": "interaction"
+            },
+            {
+                  "source": "pencil-design-bridge",
+                  "target": "ui-ux-pro-max",
+                  "type": "interaction"
+            },
+            {
+                  "source": "stitch-design-bridge",
+                  "target": "ui-ux-pro-max",
+                  "type": "interaction"
+            },
+            {
+                  "source": "ui-ux-pro-max",
+                  "target": "visual-content-director",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-critic-skill",
+                  "target": "stitch-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-feedback-collector",
+                  "target": "stitch-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "pencil-design-bridge",
+                  "target": "stitch-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-figma-orchestrator",
+                  "target": "stitch-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "seo-llm-site-architect",
+                  "target": "stitch-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "stitch-design-bridge",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "stitch-design-bridge",
+                  "target": "ui-ux-llm-product-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "stitch-design-bridge",
+                  "target": "visual-content-director",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-apply-effects",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-assets-manager",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-canvas-editor",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-code-to-canvas",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-context-reader",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-design-system-sync",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-design-to-code-bridge",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-workflow-auditor",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "marketing-site-skill",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "pencil-design-bridge",
+                  "target": "senior-figma-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "senior-figma-orchestrator",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-critic-skill",
+                  "target": "figma-context-reader",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-canvas-editor",
+                  "target": "figma-context-reader",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-context-reader",
+                  "target": "figma-design-system-sync",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-context-reader",
+                  "target": "ux-audit-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-context-reader",
+                  "target": "figma-design-to-code-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-design-to-code-bridge",
+                  "target": "marketing-site-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-design-to-code-bridge",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-canvas-editor",
+                  "target": "figma-code-to-canvas",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-canvas-editor",
+                  "target": "figma-design-system-sync",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-apply-effects",
+                  "target": "figma-design-system-sync",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-assets-manager",
+                  "target": "marketing-site-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-assets-manager",
+                  "target": "visual-content-director",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-assets-manager",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "marketing-site-skill",
+                  "target": "visual-content-director",
+                  "type": "interaction"
+            },
+            {
+                  "source": "marketing-site-skill",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "analytics-setup-architect",
+                  "target": "ux-audit-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "existing-site-analyzer",
+                  "target": "ux-audit-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "launch-readiness-auditor",
+                  "target": "ux-audit-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "cursor-reveal-hero",
+                  "target": "image-layer-alignment-validator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "semantic-core-builder",
+                  "target": "serp-source-configurator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "serp-keyword-harvester",
+                  "target": "serp-source-configurator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "semantic-core-builder",
+                  "target": "serp-keyword-harvester",
+                  "type": "interaction"
+            },
+            {
+                  "source": "concept-prototyper",
+                  "target": "semantic-core-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "migration-planner",
+                  "target": "semantic-core-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "paid-traffic-architect",
+                  "target": "semantic-core-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "project-wiki-manager",
+                  "target": "semantic-core-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "concept-prototyper",
+                  "target": "pencil-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "concept-prototyper",
+                  "target": "stitch-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "concept-prototyper",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "agent-progress-visualizer",
+                  "target": "design-feedback-collector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "agent-progress-visualizer",
+                  "target": "project-wiki-manager",
+                  "type": "interaction"
+            },
+            {
+                  "source": "workflow-compliance-supervisor",
+                  "target": "senior-ui-ux-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "workflow-compliance-supervisor",
+                  "target": "task-plan-v2-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "workflow-compliance-supervisor",
+                  "target": "agent-progress-visualizer",
+                  "type": "interaction"
+            },
+            {
+                  "source": "workflow-compliance-supervisor",
+                  "target": "project-wiki-manager",
+                  "type": "interaction"
+            },
+            {
+                  "source": "workflow-compliance-supervisor",
+                  "target": "design-feedback-collector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "agent-progress-visualizer",
+                  "target": "serp-keyword-harvester",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-feedback-collector",
+                  "target": "pencil-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "figma-design-to-code-bridge",
+                  "target": "pencil-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "marketing-site-skill",
+                  "target": "pencil-design-bridge",
+                  "type": "interaction"
+            },
+            {
+                  "source": "pencil-design-bridge",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "deploy-orchestrator",
+                  "target": "project-wiki-manager",
+                  "type": "interaction"
+            },
+            {
+                  "source": "existing-site-analyzer",
+                  "target": "project-wiki-manager",
+                  "type": "interaction"
+            },
+            {
+                  "source": "migration-planner",
+                  "target": "project-wiki-manager",
+                  "type": "interaction"
+            },
+            {
+                  "source": "project-wiki-manager",
+                  "target": "rebuild-or-improve-advisor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "project-wiki-manager",
+                  "target": "webmaster-registrar",
+                  "type": "interaction"
+            },
+            {
+                  "source": "analytics-setup-architect",
+                  "target": "paid-traffic-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "paid-traffic-architect",
+                  "target": "seo-llm-site-architect",
+                  "type": "interaction"
+            },
+            {
+                  "source": "paid-traffic-architect",
+                  "target": "site-ai-assistant-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "analytics-setup-architect",
+                  "target": "launch-readiness-auditor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "analytics-setup-architect",
+                  "target": "site-ai-assistant-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-builder",
+                  "target": "admin-ui-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-orchestrator",
+                  "target": "marketing-site-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-orchestrator",
+                  "target": "omnichannel-comms-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-orchestrator",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-builder",
+                  "target": "omnichannel-comms-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "admin-ui-builder",
+                  "target": "site-ai-assistant-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "omnichannel-comms-builder",
+                  "target": "site-ai-assistant-builder",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-critic-skill",
+                  "target": "visual-content-director",
+                  "type": "interaction"
+            },
+            {
+                  "source": "image-layer-alignment-validator",
+                  "target": "visual-content-director",
+                  "type": "interaction"
+            },
+            {
+                  "source": "visual-content-director",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "deploy-orchestrator",
+                  "target": "infra-launch-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-dns-configurator",
+                  "target": "infra-launch-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-name-generator",
+                  "target": "infra-launch-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-registrar-advisor",
+                  "target": "infra-launch-orchestrator",
+                  "type": "interaction"
+            },
+            {
+                  "source": "infra-launch-orchestrator",
+                  "target": "launch-readiness-auditor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "infra-launch-orchestrator",
+                  "target": "server-provisioner",
+                  "type": "interaction"
+            },
+            {
+                  "source": "infra-launch-orchestrator",
+                  "target": "server-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "infra-launch-orchestrator",
+                  "target": "ssl-and-security-hardener",
+                  "type": "interaction"
+            },
+            {
+                  "source": "infra-launch-orchestrator",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "infra-launch-orchestrator",
+                  "target": "webmaster-registrar",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-name-generator",
+                  "target": "domain-registrar-advisor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "domain-dns-configurator",
+                  "target": "domain-registrar-advisor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "server-provisioner",
+                  "target": "server-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "deploy-orchestrator",
+                  "target": "launch-readiness-auditor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "deploy-orchestrator",
+                  "target": "webmaster-registrar",
+                  "type": "interaction"
+            },
+            {
+                  "source": "launch-readiness-auditor",
+                  "target": "ssl-and-security-hardener",
+                  "type": "interaction"
+            },
+            {
+                  "source": "seo-llm-site-architect",
+                  "target": "webmaster-registrar",
+                  "type": "interaction"
+            },
+            {
+                  "source": "launch-readiness-auditor",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "marketing-site-skill",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "pencil-design-bridge",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "stitch-design-bridge",
+                  "target": "tech-stack-selector",
+                  "type": "interaction"
+            },
+            {
+                  "source": "tech-stack-selector",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            },
+            {
+                  "source": "design-critic-skill",
+                  "target": "existing-site-analyzer",
+                  "type": "interaction"
+            },
+            {
+                  "source": "existing-site-analyzer",
+                  "target": "migration-planner",
+                  "type": "interaction"
+            },
+            {
+                  "source": "existing-site-analyzer",
+                  "target": "rebuild-or-improve-advisor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "marketing-site-skill",
+                  "target": "rebuild-or-improve-advisor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "migration-planner",
+                  "target": "rebuild-or-improve-advisor",
+                  "type": "interaction"
+            },
+            {
+                  "source": "rebuild-or-improve-advisor",
+                  "target": "webapp-ui-skill",
+                  "type": "interaction"
+            }
+      ]
+};
+    const svg = document.getElementById("graph");
+    const details = document.getElementById("details");
+    const search = document.getElementById("search");
+    const showHub = document.getElementById("showHub");
+    const reset = document.getElementById("reset");
+    const width = 1400;
+    const height = 900;
+    const center = { x: width / 2, y: height / 2 };
+    const phaseColors = ["#62d3c7", "#7da6ff", "#f4b95f", "#7bd991", "#c99cff", "#ff9f7b", "#9ecbff", "#e4d071"];
+    const phases = [...new Set(graphData.nodes.map((node) => node.phase))].sort();
+    const nodeById = new Map(graphData.nodes.map((node) => [node.id, node]));
+    const adjacency = new Map(graphData.nodes.map((node) => [node.id, new Set()]));
+    graphData.edges.forEach((edge) => {
+      adjacency.get(edge.source)?.add(edge.target);
+      adjacency.get(edge.target)?.add(edge.source);
+    });
+    let activeId = "";
+
+    function nodeStatusClass(node) {
+      return node.status === "proposed-new" ? "proposed" : "existing";
+    }
+
+    function radiusFor(node) {
+      if (node.id === graphData.hub) return 15;
+      return Math.max(7, Math.min(13, 7 + Math.sqrt(node.degree || 1)));
+    }
+
+    function computeLayout() {
+      const sorted = [...graphData.nodes].sort((a, b) => {
+        if (a.id === graphData.hub) return -1;
+        if (b.id === graphData.hub) return 1;
+        return a.phase.localeCompare(b.phase) || a.id.localeCompare(b.id);
+      });
+      let index = 0;
+      sorted.forEach((node) => {
+        if (node.id === graphData.hub) {
+          node.x = center.x;
+          node.y = center.y;
+          return;
+        }
+        index += 1;
+        const angle = index * 2.3999632297;
+        const radius = 105 + Math.sqrt(index) * 58;
+        node.x = center.x + Math.cos(angle) * radius;
+        node.y = center.y + Math.sin(angle) * radius;
+      });
+    }
+
+    function createSvgElement(name, attrs = {}) {
+      const element = document.createElementNS("http://www.w3.org/2000/svg", name);
+      Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+      return element;
+    }
+
+    function render() {
+      svg.innerHTML = "";
+      const edgeLayer = createSvgElement("g", { class: "edges" });
+      const nodeLayer = createSvgElement("g", { class: "nodes" });
+      svg.append(edgeLayer, nodeLayer);
+
+      graphData.edges.forEach((edge, index) => {
+        const source = nodeById.get(edge.source);
+        const target = nodeById.get(edge.target);
+        const line = createSvgElement("line", {
+          class: "edge",
+          "data-source": edge.source,
+          "data-target": edge.target,
+          x1: source.x,
+          y1: source.y,
+          x2: target.x,
+          y2: target.y
+        });
+        edgeLayer.appendChild(line);
+      });
+
+      graphData.nodes.forEach((node) => {
+        const group = createSvgElement("g", {
+          class: `node ${nodeStatusClass(node)}`,
+          transform: `translate(${node.x}, ${node.y})`,
+          "data-id": node.id,
+          tabindex: "0"
+        });
+        const color = phaseColors[phases.indexOf(node.phase) % phaseColors.length];
+        const nodeRadius = radiusFor(node);
+        const hitWidth = Math.min(250, Math.max(72, node.label.length * 6.8 + nodeRadius + 18));
+        const hit = createSvgElement("rect", {
+          class: "node-hit",
+          x: -nodeRadius - 6,
+          y: -16,
+          width: hitWidth,
+          height: 32,
+          rx: 16
+        });
+        const circle = createSvgElement("circle", {
+          r: nodeRadius,
+          "data-phase": node.phase
+        });
+        circle.style.stroke = color;
+        const text = createSvgElement("text", {
+          x: nodeRadius + 6,
+          y: 4
+        });
+        text.textContent = node.label;
+        const title = createSvgElement("title");
+        title.textContent = `${node.label} | ${node.phase}`;
+        group.append(title, hit, circle, text);
+        group.addEventListener("click", () => selectNode(node.id));
+        group.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") selectNode(node.id);
+        });
+        nodeLayer.appendChild(group);
+      });
+
+      updateHighlight();
+    }
+
+    function visibleEdge(edge) {
+      if (showHub.checked) return true;
+      if (activeId === graphData.hub) return true;
+      if (edge.source === graphData.hub || edge.target === graphData.hub) {
+        return activeId && (edge.source === activeId || edge.target === activeId);
+      }
+      return true;
+    }
+
+    function updateHighlight() {
+      const connected = activeId ? adjacency.get(activeId) || new Set() : new Set();
+      svg.querySelectorAll(".edge").forEach((edge) => {
+        const source = edge.dataset.source;
+        const target = edge.dataset.target;
+        const activeEdge = activeId && (source === activeId || target === activeId);
+        const edgeVisible = visibleEdge({ source, target });
+        edge.classList.toggle("hidden", !edgeVisible);
+        edge.classList.toggle("active", Boolean(activeEdge));
+        edge.classList.toggle("dim", Boolean(activeId && !activeEdge));
+      });
+      svg.querySelectorAll(".node").forEach((nodeElement) => {
+        const id = nodeElement.dataset.id;
+        const isActive = id === activeId;
+        const isConnected = connected.has(id);
+        nodeElement.classList.toggle("active", isActive);
+        nodeElement.classList.toggle("connected", isConnected);
+        nodeElement.classList.toggle("dim", Boolean(activeId && !isActive && !isConnected));
+      });
+    }
+
+    function statusLabel(node) {
+      if (node.status === "proposed-new") return "Proposed new";
+      return "Existing";
+    }
+
+    function selectNode(id) {
+      activeId = id;
+      const node = nodeById.get(id);
+      const connected = [...(adjacency.get(id) || [])].sort();
+      details.innerHTML = `
+        <div class="panel-title">${node.label}</div>
+        <div class="panel-meta">${node.phase}</div>
+        <div>
+          <span class="pill ${node.status === "proposed-new" ? "proposed" : "existing"}">${statusLabel(node)}</span>
+          <span class="pill ${node.docStatus.state}">${node.docStatus.label}</span>
+        </div>
+        <div class="section">
+          <h2>Role</h2>
+          <div class="detail-text">${escapeHtmlClient(node.role)}</div>
+        </div>
+        <div class="section">
+          <h2>Boundary / Risk</h2>
+          <div class="detail-text">${escapeHtmlClient(node.risk)}</div>
+        </div>
+        <div class="section">
+          <h2>Direct Links: ${connected.length}</h2>
+          <div class="chips">${connected.map((name) => `<button class="chip" type="button" data-jump="${name}">${name}</button>`).join("") || '<span class="panel-meta">No links.</span>'}</div>
+        </div>
+        <div class="section">
+          <a class="button" href="${node.detailUrl}">Open skill page</a>
+        </div>
+      `;
+      details.querySelectorAll("[data-jump]").forEach((button) => {
+        button.addEventListener("click", () => selectNode(button.dataset.jump));
+      });
+      updateHighlight();
+    }
+
+    function escapeHtmlClient(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    search.addEventListener("input", () => {
+      const query = search.value.trim().toLowerCase();
+      const match = graphData.nodes.find((node) => node.id.toLowerCase().includes(query));
+      if (query && match) selectNode(match.id);
+      if (!query) {
+        activeId = "";
+        details.innerHTML = '<div class="panel-title">Select a skill</div><div class="panel-meta">Click any node to highlight its direct relationships.</div>';
+        updateHighlight();
+      }
+    });
+    showHub.addEventListener("change", updateHighlight);
+    reset.addEventListener("click", () => {
+      activeId = "";
+      search.value = "";
+      details.innerHTML = '<div class="panel-title">Select a skill</div><div class="panel-meta">Click any node to highlight its direct relationships.</div>';
+      updateHighlight();
+    });
+
+    computeLayout();
+    render();
+  </script>
+</body>
+</html>

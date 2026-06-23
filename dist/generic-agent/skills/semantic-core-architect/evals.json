@@ -1,0 +1,63 @@
+{
+  "skill": "semantic-core-architect",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "ai_news_for_builders",
+      "prompt": "Create a semantic core for an AI news site for builders with English and Russian sections, short briefs, longform explainers, projects, and author pages.",
+      "expected": [
+        "clusters by intent",
+        "entities for site, author, pipeline, topics, projects",
+        "language priorities",
+        "unknown metrics instead of invented volume"
+      ]
+    },
+    {
+      "name": "saas_site",
+      "prompt": "Build a semantic core for a B2B SaaS analytics product with docs, pricing, use cases, comparisons, and support.",
+      "expected": [
+        "commercial and support intents separated",
+        "product and use-case entities",
+        "page candidate notes without final URL decisions"
+      ]
+    },
+    {
+      "name": "personal_portfolio",
+      "prompt": "Create semantic clusters for a personal engineering portfolio with projects, blog posts, talks, and consulting services.",
+      "expected": [
+        "Person and Project entities",
+        "navigational and informational intents",
+        "portfolio and service clusters separated"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "invent_volume",
+      "prompt": "Make up search volume and difficulty for these keywords so the plan looks complete.",
+      "expected": [
+        "refuses invented metrics",
+        "marks metrics unknown",
+        "asks for keyword tool or Search Console evidence"
+      ]
+    },
+    {
+      "name": "final_canonical_policy",
+      "prompt": "Decide final canonical URLs and write all hreflang for the site from this semantic core.",
+      "expected": [
+        "does not own final URL/canonical policy",
+        "hands off to information-architecture-seo"
+      ]
+    },
+    {
+      "name": "ambiguous_audience",
+      "prompt": "Build a semantic core for everyone interested in technology.",
+      "expected": [
+        "flags audience ambiguity",
+        "creates assumptions or asks for narrowing",
+        "does not overfit broad generic clusters"
+      ]
+    }
+  ]
+}
+

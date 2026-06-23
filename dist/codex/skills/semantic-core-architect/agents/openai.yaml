@@ -1,0 +1,7 @@
+interface:
+  display_name: "Semantic Core Architect"
+  short_description: "Build evidence-labeled query clusters, intents, entities, topics, and language priorities"
+  default_prompt: "Use $semantic-core-architect to turn a site goal into semantic-core.yaml and entity-topic-map.yaml with evidence labels, unknown metrics, and a handoff to information architecture."
+policy:
+  allow_implicit_invocation: true
+

@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "admin-ui-builder",
+  "cases": [
+    {
+      "id": "admin-screen-state-coverage",
+      "prompt": "Specify admin CRUD screens with filters, permissions, destructive confirmations, error and audit states.",
+      "expected_mode": "screen-spec",
+      "must_have": ["permission states", "confirmations", "audit"],
+      "fail_if": ["hides destructive action", "uses real customer data"]
+    }
+  ]
+}

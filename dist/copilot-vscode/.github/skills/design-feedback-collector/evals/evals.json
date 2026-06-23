@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "design-feedback-collector",
+  "cases": [
+    {
+      "id": "feedback-color-status",
+      "prompt": "Add colleague comments to each subprocess and show red, orange, green, or blue states.",
+      "expected_mode": "triage",
+      "must_have": ["status register", "color semantics", "target subprocess"],
+      "fail_if": ["marks applied without artifact", "drops rejected rationale"]
+    }
+  ]
+}

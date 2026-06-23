@@ -1,0 +1,7 @@
+interface:
+  display_name: "Site Growth Orchestrator"
+  short_description: "Coordinate SEO, LLM, UX, validation, monitoring, and authority workflows"
+  default_prompt: "Use $site-growth-orchestrator to route a multi-step site-growth request through the right specialist skills, artifacts, task-plan gates, validation checks, and safe release sequence."
+policy:
+  allow_implicit_invocation: true
+

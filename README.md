@@ -73,41 +73,39 @@ The orchestrator is the final routing and conflict-resolution layer. Specialist 
 
 ## Included Skills
 
-### Main Orchestration
+The package currently includes the expanded UI/UX Agent Skill System: orchestration, product UX, SEO/LLM architecture, design intelligence, Figma, Stitch, Pencil, implementation, admin, analytics, infrastructure, launch, SERP, progress visualization, and workflow compliance.
 
-- `senior-ui-ux-orchestrator` — central UI/UX chair and router.
-- `task-plan-v2-orchestrator` — planning, gates, handoffs, verification policy.
+See [docs/skill-map.md](docs/skill-map.md) for the full canonical list.
 
-### Product, SEO, And Design Intelligence
+### Main Control Layer
 
-- `ui-ux-llm-product-architect` — user journeys, IA, UX logic, accessibility, agent-readable UI.
-- `seo-llm-site-architect` — SEO, AEO/GEO, schema, metadata, crawlability, LLM-readability.
-- `ui-ux-pro-max` — searchable design intelligence: styles, palettes, typography, patterns, stack guidance.
-- `stitch-design-bridge` — optional Stitch prompts, AI UI exploration review, Figma/code handoff.
+- `senior-ui-ux-orchestrator` — central chair and conflict resolver.
+- `task-plan-v2-orchestrator` — task-plan gates, status, handoffs, and verification policy.
+- `workflow-compliance-supervisor` — checks promised journeys against real artifacts, logs, skips, blockers, and evidence.
+- `agent-progress-visualizer` — customer-facing progress cockpit and bootstrap progress screen.
 
-### Figma Subsystem
+### Product, SEO, And Strategy
 
-- `senior-figma-orchestrator`
-- `figma-context-reader`
-- `figma-design-to-code-bridge`
-- `figma-code-to-canvas`
-- `figma-canvas-editor`
-- `figma-design-system-sync`
-- `figma-assets-manager`
-- `figma-apply-effects`
-- `figma-workflow-auditor`
+- Product/journey layer: `ui-ux-llm-product-architect`, `ux-journey-architect`, `concept-prototyper`, `design-feedback-collector`, `project-wiki-manager`.
+- SEO/LLM layer: `seo-llm-site-architect`, `semantic-core-builder`, `information-architecture-seo`, `technical-seo-schema-engineer`, `seo-regression-validator`, `llm-friendly-site-architect`, `llm-friendly-site-optimizer`.
+- Growth layer: `site-growth-orchestrator`, `llm-citation-monitor`, `internal-link-graph-architect`, `editorial-quality-gate`, `external-authority-placement-scout`, `backlink-quality-validator`.
+- SERP layer: `serp-source-configurator`, `serp-keyword-harvester`.
 
-### Implementation And Review
+### Design And Implementation
 
-- `marketing-site-skill` — public pages, landing pages, conversion, metadata, responsive storytelling.
-- `webapp-ui-skill` — SaaS, dashboards, admin tools, tables, states, dense workflows.
-- `ux-audit-skill` — evidence-backed UX audit and regression review.
-- `design-critic-skill` — visual quality critique and anti-slop review.
+- Design intelligence: `ui-ux-pro-max`, `visual-content-director`, `design-critic-skill`, `ux-audit-skill`.
+- AI design exploration: `stitch-design-bridge`, `pencil-design-bridge`.
+- Figma subsystem: `senior-figma-orchestrator` plus context, design-to-code, code-to-canvas, canvas editor, design-system sync, asset, effects, and workflow-audit skills.
+- Build specialists: `marketing-site-skill`, `webapp-ui-skill`, `admin-ui-orchestrator`, `admin-ui-builder`, `site-ai-assistant-builder`, `omnichannel-comms-builder`, `analytics-setup-architect`, `paid-traffic-architect`.
 
-### Specialist Visual Effects
+### Existing Site And Launch
 
-- `cursor-reveal-hero` — cursor-trail masking/reveal hero effects.
-- `image-layer-alignment-validator` — local image layer alignment checks for reveal/morph/compositing.
+- Existing-site path: `existing-site-analyzer`, `rebuild-or-improve-advisor`, `migration-planner`.
+- Infrastructure and launch: `tech-stack-selector`, `deploy-orchestrator`, `infra-launch-orchestrator`, `launch-readiness-auditor`, `domain-name-generator`, `domain-registrar-advisor`, `domain-dns-configurator`, `server-selector`, `server-provisioner`, `ssl-and-security-hardener`, `web-security-architect`, `webmaster-registrar`.
+
+### Optional Product-Strategy Source
+
+Next Move Theory / AJTBD can be used as an external product-strategy source before concept, semantic core, and GTM work. The upstream materials are not bundled into this Apache-2.0 package; use attribution and a separate integration boundary if you connect them.
 
 ## Supported Agent Runtimes
 

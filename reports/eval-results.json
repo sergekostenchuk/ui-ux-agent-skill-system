@@ -1,12 +1,12 @@
 {
   "ok": true,
   "summary": {
-    "files": 16,
-    "cases": 50,
+    "files": 39,
+    "cases": 76,
     "route_checked": 27,
     "passed": 27,
     "failed": 0,
-    "skipped_route": 23
+    "skipped_route": 49
   },
   "results": [
     {
@@ -68,6 +68,30 @@
       ]
     },
     {
+      "file": "core/skills/admin-ui-builder/evals/evals.json",
+      "case_id": "admin-screen-state-coverage",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/admin-ui-orchestrator/evals/evals.json",
+      "case_id": "admin-ai-guardrails",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/analytics-setup-architect/evals/evals.json",
+      "case_id": "privacy-aware-measurement",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/deploy-orchestrator/evals/evals.json",
+      "case_id": "deploy-dry-run",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
       "file": "core/skills/design-critic-skill/evals/evals.json",
       "case_id": "visual-hierarchy",
       "ok": true,
@@ -109,6 +133,36 @@
         "attention insight",
         "score this"
       ]
+    },
+    {
+      "file": "core/skills/design-feedback-collector/evals/evals.json",
+      "case_id": "feedback-color-status",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/domain-dns-configurator/evals/evals.json",
+      "case_id": "dns-plan-no-change",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/domain-name-generator/evals/evals.json",
+      "case_id": "domain-shortlist-no-purchase",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/domain-registrar-advisor/evals/evals.json",
+      "case_id": "registrar-advice-no-buy",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/existing-site-analyzer/evals/evals.json",
+      "case_id": "local-existing-site-audit",
+      "ok": true,
+      "route_check": "skipped"
     },
     {
       "file": "core/skills/figma-apply-effects/evals/evals.json",
@@ -213,6 +267,18 @@
       "route_check": "skipped"
     },
     {
+      "file": "core/skills/infra-launch-orchestrator/evals/evals.json",
+      "case_id": "dry-run-launch-plan",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/launch-readiness-auditor/evals/evals.json",
+      "case_id": "launch-go-no-go",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
       "file": "core/skills/marketing-site-skill/evals/evals.json",
       "case_id": "b2b-landing-page",
       "ok": true,
@@ -252,6 +318,42 @@
         "table",
         "filters"
       ]
+    },
+    {
+      "file": "core/skills/migration-planner/evals/evals.json",
+      "case_id": "redirect-safe-migration",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/omnichannel-comms-builder/evals/evals.json",
+      "case_id": "comms-plan-no-send",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/paid-traffic-architect/evals/evals.json",
+      "case_id": "campaign-plan-no-spend",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/pencil-design-bridge/evals/evals.json",
+      "case_id": "pencil-approved-direction",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/pencil-design-bridge/evals/evals.json",
+      "case_id": "pencil-pen-boundary",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/rebuild-or-improve-advisor/evals/evals.json",
+      "case_id": "improve-redesign-rebuild-choice",
+      "ok": true,
+      "route_check": "skipped"
     },
     {
       "file": "core/skills/senior-figma-orchestrator/evals/evals.json",
@@ -437,6 +539,30 @@
       ]
     },
     {
+      "file": "core/skills/server-provisioner/evals/evals.json",
+      "case_id": "server-dry-run",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/server-selector/evals/evals.json",
+      "case_id": "hosting-choice-no-provision",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/site-ai-assistant-builder/evals/evals.json",
+      "case_id": "bounded-public-assistant",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/ssl-and-security-hardener/evals/evals.json",
+      "case_id": "ssl-security-plan",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
       "file": "core/skills/stitch-design-bridge/evals/evals.json",
       "case_id": "stitch-brief-after-pro-max",
       "ok": true,
@@ -498,6 +624,12 @@
       ]
     },
     {
+      "file": "core/skills/visual-content-director/evals/evals.json",
+      "case_id": "premium-site-asset-plan",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
       "file": "core/skills/webapp-ui-skill/evals/evals.json",
       "case_id": "dense-dashboard",
       "ok": true,
@@ -541,6 +673,30 @@
         "cta",
         "hero"
       ]
+    },
+    {
+      "file": "core/skills/webmaster-registrar/evals/evals.json",
+      "case_id": "webmaster-plan-no-submit",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/workflow-compliance-supervisor/evals/evals.json",
+      "case_id": "demo-scope-skip",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/workflow-compliance-supervisor/evals/evals.json",
+      "case_id": "planned-counted-as-ran",
+      "ok": true,
+      "route_check": "skipped"
+    },
+    {
+      "file": "core/skills/workflow-compliance-supervisor/evals/evals.json",
+      "case_id": "external-serp-approval",
+      "ok": true,
+      "route_check": "skipped"
     }
   ]
 }

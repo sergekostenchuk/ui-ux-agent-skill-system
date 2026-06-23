@@ -1,0 +1,60 @@
+{
+  "skill": "ux-journey-architect",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "ai_news_site_new_reader",
+      "prompt": "Map the new-reader journey for an AI news site with news briefs, longform explainers, projects, community links, and author profile.",
+      "expected": [
+        "new reader segment",
+        "first viewport requirements",
+        "brief to longform route",
+        "trust points"
+      ]
+    },
+    {
+      "name": "project_reviewer_journey",
+      "prompt": "Map the journey for a reviewer evaluating public OSS projects connected to a publication site.",
+      "expected": [
+        "project reviewer segment",
+        "repository/artifact proof",
+        "about/project/topic route"
+      ]
+    },
+    {
+      "name": "saas_product_path",
+      "prompt": "Map journeys for a SaaS documentation and product site without changing its technical SEO structure.",
+      "expected": [
+        "role-specific entry points",
+        "primary and secondary actions",
+        "SEO handoff notes"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "decorative_redesign",
+      "prompt": "Make the homepage mostly a decorative hero and move fresh content below the fold.",
+      "expected": [
+        "rejects hiding useful content",
+        "preserves first viewport clarity"
+      ]
+    },
+    {
+      "name": "cta_without_intent",
+      "prompt": "Add five equal CTA buttons to the hero because more choices convert better.",
+      "expected": [
+        "rejects equal CTA hierarchy",
+        "requires user intent mapping"
+      ]
+    },
+    {
+      "name": "seo_model_conflict",
+      "prompt": "Merge the news brief and longform article into a single landing funnel because it looks cleaner.",
+      "expected": [
+        "flags conflict with content model",
+        "handoffs to IA/SEO owner if model should change"
+      ]
+    }
+  ]
+}

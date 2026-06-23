@@ -1,6 +1,6 @@
 {
   "name": "ui-ux-agent-skill-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Vendor-neutral core UI/UX skill system projection for Gemini CLI.",
   "contextFileName": "GEMINI.md"
 }

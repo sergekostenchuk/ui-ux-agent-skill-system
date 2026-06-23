@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "id": "",
+      "source": "user | agent | validator | council",
+      "target_skill": "",
+      "target_subprocess": "",
+      "comment": "",
+      "severity": "low | medium | high | critical",
+      "status": "empty | open | accepted | partially_applied | applied | rejected",
+      "decision": "",
+      "owner": "",
+      "applied_artifact": "",
+      "evidence_status": "Ran | Skipped | Planned | Manual",
+      "next_action": ""
+    }
+  ]
+}

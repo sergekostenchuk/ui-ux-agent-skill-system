@@ -1,0 +1,6 @@
+interface:
+  display_name: "Infra Launch Orchestrator"
+  short_description: "Coordinates dry-run-first launch workflows"
+  default_prompt: "Use $infra-launch-orchestrator to coordinate launch planning, approvals, rollback, and infra specialist handoffs without production mutations."
+policy:
+  allow_implicit_invocation: true

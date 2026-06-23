@@ -1,0 +1,6 @@
+interface:
+  display_name: "Rebuild Or Improve Advisor"
+  short_description: "Chooses improve, redesign, partial rebuild, or full rebuild"
+  default_prompt: "Use $rebuild-or-improve-advisor to decide the safest existing-site strategy from audit evidence and migration risk."
+policy:
+  allow_implicit_invocation: true

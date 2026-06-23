@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "site-ai-assistant-builder",
+  "cases": [
+    {
+      "id": "bounded-public-assistant",
+      "prompt": "Design a public site AI assistant with RAG sources, no hallucinated price claims, injection protection and escalation.",
+      "expected_mode": "assistant-spec",
+      "must_have": ["source boundaries", "prompt-injection controls", "forbidden claims", "escalation"],
+      "fail_if": ["gives secret access", "allows destructive tools"]
+    }
+  ]
+}

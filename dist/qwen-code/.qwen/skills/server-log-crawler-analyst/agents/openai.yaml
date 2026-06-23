@@ -1,0 +1,6 @@
+interface:
+  display_name: "Server Log Crawler Analyst"
+  short_description: "Credential-free crawler and public endpoint monitoring with raw-IP privacy safeguards"
+  default_prompt: "Use $server-log-crawler-analyst to summarize crawler evidence from logs or public HTTP checks without exposing raw IP data or inventing ranking/citation claims."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Editorial Quality Gate"
+  short_description: "Review public content for source support, prompt residue, duplicate blocks, translation drift, and SEO filler"
+  default_prompt: "Use $editorial-quality-gate to decide whether this public content should pass, revise, or block before publication, with source-support and prompt-residue findings."
+policy:
+  allow_implicit_invocation: true

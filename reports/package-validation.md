@@ -1,6 +1,42 @@
 # Package Validation Report
 
-Date: 2026-06-20
+Date: 2026-06-23
+
+## 0.3.0 GitHub Publication Preparation
+
+### Scope
+
+- Expanded canonical `core/skills` from 21 to 68 UI/UX Agent Skill System skills.
+- Rebuilt all runtime projections with 68 skills each: Codex, Claude, Qwen Code, VS Code/Copilot, Gemini CLI, GLM/Z.ai, Kimi, and generic agents.
+- Added package-level progress/compliance runtime helpers and `data/journey-registry.json`.
+- Added interactive documentation artifacts: `docs/skill-review-board.html`, `docs/skill-graph.html`, `docs/task-dashboard.html`, and `docs/agent-progress-screen.example.html`.
+- Recorded NMT / AJTBD as an optional external product-strategy source without bundling upstream CC BY-NC-SA content.
+
+### Commands Run
+
+```bash
+npm run build:adapters
+npm run lint
+npm run test:evidence
+npm run eval
+npm run check:eval-contracts
+npm run check:dist
+npm run check:freshness
+npm pack --dry-run --json
+```
+
+### Results
+
+- `npm run lint`: passed with 0 warnings.
+- `npm run test:evidence`: passed; valid evidence accepted, missing-artifact rejected, planned-only rejected when Ran evidence is required.
+- `npm run eval`: passed with 39 files, 76 cases, 27 route checks, and 49 non-route contract cases.
+- `npm run check:eval-contracts`: passed; coverage includes accessibility, privacy, truthful content, and validation.
+- `npm run check:dist`: passed; regenerated adapter output matches committed `dist`.
+- `npm run check:freshness`: passed; freshness metadata covers 30 CSV files in 4 dataset groups.
+- `npm pack --dry-run --json`: passed for `@mlllm/ui-ux-agent-skill-system@0.3.0`; packed size about 4.1 MB, unpacked size about 24.2 MB, 4173 package entries.
+- Secret/local path scan: no local absolute user path, Stitch API token, npm token, or non-redacted secret assignment remains in package files.
+
+## Historical Validation Notes
 
 ## Commands Run
 

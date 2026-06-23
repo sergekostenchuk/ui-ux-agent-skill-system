@@ -1,0 +1,52 @@
+artifact_type: semantic_core
+generated_at: "2026-06-11T00:00:00Z"
+producer_skill: semantic-core-architect
+source_inputs: []
+privacy:
+  contains_secrets: false
+  contains_private_urls: false
+  contains_raw_ip_logs: false
+  contains_private_analytics: false
+  redaction_note: none
+site:
+  canonical_host: "https://example.com"
+  default_language: en
+  launch_languages:
+    - en
+  future_languages: []
+clusters:
+  - id: "example-core-topic"
+    label: "Example core topic"
+    primary_intent: informational
+    audience: "Primary audience"
+    priority: P0
+    languages:
+      - en
+    queries:
+      - text: "example query"
+        locale: en-US
+        source: inferred
+        evidence: []
+        metrics:
+          volume: unknown
+          difficulty: unknown
+          current_rank: unknown
+    entities:
+      - id: "example-entity"
+        name: "Example Entity"
+        type: Topic
+        canonical_candidate_url: unknown
+        evidence: []
+    topics:
+      - id: "example-topic"
+        label: "Example topic"
+        evidence: []
+    unknown_metrics:
+      - search_volume
+      - keyword_difficulty
+      - current_rank
+    assumptions: []
+    downstream_notes:
+      page_candidate: "topic_or_index"
+      url_architecture_note: "Final URL and canonical policy belong to information-architecture-seo."
+

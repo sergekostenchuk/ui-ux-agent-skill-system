@@ -1,0 +1,6 @@
+interface:
+  display_name: "Admin UI Orchestrator"
+  short_description: "Plans admin/CMS roles, workflows, and guardrails"
+  default_prompt: "Use $admin-ui-orchestrator to plan admin architecture, permissions, audit logs, AI boundaries, and builder handoff."
+policy:
+  allow_implicit_invocation: true

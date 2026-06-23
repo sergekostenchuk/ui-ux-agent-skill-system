@@ -1,0 +1,7 @@
+interface:
+  display_name: "Technical SEO Schema Engineer"
+  short_description: "Design metadata, canonical/hreflang, JSON-LD, OG/Twitter, sitemap, robots, RSS, and llms.txt templates"
+  default_prompt: "Use $technical-seo-schema-engineer to design deterministic technical SEO and schema.org templates that match visible content and can be validated by a regression checker."
+policy:
+  allow_implicit_invocation: true
+

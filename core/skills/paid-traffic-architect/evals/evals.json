@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "paid-traffic-architect",
+  "cases": [
+    {
+      "id": "campaign-plan-no-spend",
+      "prompt": "Plan paid traffic campaigns and UTM maps for a landing page, but do not launch or spend.",
+      "expected_mode": "campaign-plan",
+      "must_have": ["planning only", "UTM", "landing requirements"],
+      "fail_if": ["launches campaign", "uploads audience"]
+    }
+  ]
+}

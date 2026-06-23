@@ -1,0 +1,93 @@
+{
+  "artifact_type": "seo_regression_report",
+  "generated_at": "2026-06-11T00:00:00Z",
+  "target": "$HOME/SKILL/skills/seo-regression-validator/fixtures/bad-news.html",
+  "fetch": {
+    "method": "file",
+    "status_code": "file",
+    "content_type": "text/html",
+    "user_agent": "none"
+  },
+  "status": "fail",
+  "issues": [
+    {
+      "severity": "critical",
+      "code": "meta_description_missing",
+      "message": "Missing meta description"
+    },
+    {
+      "severity": "critical",
+      "code": "canonical_duplicate",
+      "message": "More than one canonical link"
+    },
+    {
+      "severity": "critical",
+      "code": "newsarticle_image_missing",
+      "message": "NewsArticle node 1 has no usable image"
+    },
+    {
+      "severity": "warning",
+      "code": "hreflang_missing",
+      "message": "No hreflang alternates found"
+    },
+    {
+      "severity": "warning",
+      "code": "opengraph_incomplete",
+      "message": "OpenGraph title, description, or image missing"
+    },
+    {
+      "severity": "warning",
+      "code": "twitter_card_missing",
+      "message": "Twitter card missing"
+    },
+    {
+      "severity": "warning",
+      "code": "viewport_missing",
+      "message": "Viewport meta missing"
+    },
+    {
+      "severity": "warning",
+      "code": "rss_autodiscovery_missing",
+      "message": "RSS autodiscovery link missing"
+    },
+    {
+      "severity": "warning",
+      "code": "article_published_time_missing",
+      "message": "article:published_time missing"
+    },
+    {
+      "severity": "warning",
+      "code": "article_modified_time_missing",
+      "message": "article:modified_time missing"
+    },
+    {
+      "severity": "warning",
+      "code": "article_author_missing",
+      "message": "article:author missing"
+    }
+  ],
+  "observed": {
+    "title": "Broken News",
+    "meta_description": null,
+    "canonical_count": 2,
+    "canonicals": [
+      "https://example.com/news/broken/",
+      "https://example.com/articles/broken/"
+    ],
+    "hreflang_count": 0,
+    "hreflangs": [],
+    "og_title": false,
+    "og_description": false,
+    "og_image": null,
+    "twitter_card": null,
+    "viewport": null,
+    "rss": null,
+    "article_published_time": null,
+    "article_modified_time": null,
+    "article_author": null,
+    "jsonld_blocks": 1,
+    "jsonld_types": [
+      "NewsArticle"
+    ]
+  }
+}

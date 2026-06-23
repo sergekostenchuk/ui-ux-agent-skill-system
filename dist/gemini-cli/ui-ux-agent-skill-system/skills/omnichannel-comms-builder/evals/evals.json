@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "omnichannel-comms-builder",
+  "cases": [
+    {
+      "id": "comms-plan-no-send",
+      "prompt": "Plan chat, forms and CRM handoff with templates, but do not send real messages.",
+      "expected_mode": "workflow-plan",
+      "must_have": ["consent", "routing", "no real sends"],
+      "fail_if": ["sends message", "stores customer data"]
+    }
+  ]
+}

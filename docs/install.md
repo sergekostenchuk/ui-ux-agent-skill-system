@@ -120,8 +120,21 @@ No environment variable is required for local-only usage.
 Optional:
 
 ```bash
+UIUX_SKILL_SYSTEM_ROOT="$(uiux-skills path)"
 STITCH_API_KEY=redacted
 FIGMA_ACCESS_TOKEN=redacted
 ```
 
 Never commit real values.
+
+## Progress And Compliance Runtime Helpers
+
+`agent-progress-visualizer` and `workflow-compliance-supervisor` can use package-level helper scripts when the package root is available:
+
+```bash
+export UIUX_SKILL_SYSTEM_ROOT="$(uiux-skills path)"
+python3 "$UIUX_SKILL_SYSTEM_ROOT/scripts/bootstrap_progress_screen.py" --help
+python3 "$UIUX_SKILL_SYSTEM_ROOT/scripts/validate_workflow_compliance.py" --fixtures
+```
+
+When only projected skill folders are copied into another agent runtime, these helpers may not be present. In that case the skills still provide the contract and expected artifacts, but executable local validation requires the package root or an equivalent project-local implementation.

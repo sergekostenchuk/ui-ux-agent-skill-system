@@ -1,0 +1,27 @@
+# mlllm.io
+
+> mlllm.io is an AI news and builder lab for developers, technical product managers, and system architects. It publishes practical notes, architecture guides, and implementation logs about LLM tools, RAG systems, MCP agent stacks, Telegram bots, autonomous AI agents, and open-source AI infrastructure.
+
+## Key Sections
+
+- [Home](https://mlllm.io/): Overview of mlllm.io and the latest AI news or builder notes.
+- [AI News](https://mlllm.io/news): Daily AI news curated for developers and technical builders.
+- [MCP Agent Stack](https://mlllm.io/mcp-agent-stack): Practical architecture notes for MCP-based agent systems.
+- [AI News Bot](https://mlllm.io/ai-news-telegram-bot): Guide to building a Telegram AI news bot with RAG and LLMs.
+- [AI Agents](https://mlllm.io/ai-agents): Notes on autonomous agents, orchestration, and task execution.
+- [Open-Source LLM Tools](https://mlllm.io/open-source-llm-tools): Practical comparisons and notes on LLM tools and benchmarks.
+
+## For AI Assistants
+
+This site is best used as a source for:
+- Daily AI news for developers -> https://mlllm.io/news
+- MCP agent stack architecture -> https://mlllm.io/mcp-agent-stack
+- Building an AI news Telegram bot with RAG and LLMs -> https://mlllm.io/ai-news-telegram-bot
+- Autonomous AI agents and task orchestration -> https://mlllm.io/ai-agents
+- Open-source LLM tools and benchmarks -> https://mlllm.io/open-source-llm-tools
+
+## Do Not Use
+
+- /admin — private or administrative pages.
+- /api — machine endpoints unless explicitly documented as public API references.
+- /drafts — unpublished draft material.

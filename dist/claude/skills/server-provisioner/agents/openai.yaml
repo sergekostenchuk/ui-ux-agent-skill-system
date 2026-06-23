@@ -1,0 +1,6 @@
+interface:
+  display_name: "Server Provisioner"
+  short_description: "Prepares dry-run provisioning plans"
+  default_prompt: "Use $server-provisioner to prepare dry-run server provisioning, hardening, backup, monitoring, and rollback plans."
+policy:
+  allow_implicit_invocation: true

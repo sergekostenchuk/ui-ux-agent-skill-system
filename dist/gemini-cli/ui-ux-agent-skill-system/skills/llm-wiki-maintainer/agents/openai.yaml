@@ -1,0 +1,4 @@
+interface:
+  display_name: "LLM Wiki Maintainer"
+  short_description: "Maintain persistent LLM wiki vaults and workflows"
+  default_prompt: "Use $llm-wiki-maintainer to ingest, query, or lint this LLM Wiki vault."

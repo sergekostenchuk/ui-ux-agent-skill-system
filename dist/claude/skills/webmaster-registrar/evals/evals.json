@@ -1,0 +1,13 @@
+{
+  "schema_version": "2026-06-22",
+  "skill": "webmaster-registrar",
+  "cases": [
+    {
+      "id": "webmaster-plan-no-submit",
+      "prompt": "Plan GSC and Yandex Webmaster verification and sitemap submission, but do not submit anything.",
+      "expected_mode": "plan",
+      "must_have": ["verification options", "sitemap plan", "approval needed"],
+      "fail_if": ["submits sitemap", "stores verification token"]
+    }
+  ]
+}

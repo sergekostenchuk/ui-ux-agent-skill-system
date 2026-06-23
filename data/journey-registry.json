@@ -1,0 +1,920 @@
+{
+  "schema_version": "2026-06-22",
+  "generated_at": "2026-06-22T16:09:46+00:00",
+  "source": "docs/skill-review-board.html",
+  "journeys": [
+    {
+      "id": "new-premium-site",
+      "title": "Новый премиальный сайт с нуля",
+      "meta": "Пример: коттеджный поселок, клиника, девелопер, B2B-услуга, продуктовая лендинговая система.",
+      "stages": [
+        {
+          "id": "new-premium-site-intake-and-scope",
+          "title": "Intake and scope",
+          "skills": [
+            "senior-ui-ux-orchestrator",
+            "task-plan-v2-orchestrator",
+            "agent-progress-visualizer",
+            "project-wiki-manager"
+          ],
+          "detail": "Цель, аудитория, privacy mode, формат результата, уровень автоматизации, progress cockpit, wiki context.",
+          "expected_outputs": [
+            "docs/project-intake.md",
+            "reports/project-constraints.md",
+            "reports/source-materials-inventory.md",
+            "TASK-PLAN.md",
+            "wiki/index.md, wiki/llms-context.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-intake-and-scope-p01",
+              "name": "Business Brief Intake",
+              "action": "Зафиксировать цель сайта, продукт, географию, аудиторию, цену/чек, сроки и главный коммерческий результат.",
+              "output": "docs/project-intake.md"
+            },
+            {
+              "id": "new-premium-site-intake-and-scope-p02",
+              "name": "Stakeholder And Constraint Capture",
+              "action": "Собрать ограничения по бренду, контенту, юридическим формулировкам, приватности, внешним сервисам и платным действиям.",
+              "output": "reports/project-constraints.md"
+            },
+            {
+              "id": "new-premium-site-intake-and-scope-p03",
+              "name": "Artifact Inventory",
+              "action": "Проверить, какие материалы уже есть: тексты, фото, логотип, Figma, старый сайт, презентации, таблицы, CRM/CMS.",
+              "output": "reports/source-materials-inventory.md"
+            },
+            {
+              "id": "new-premium-site-intake-and-scope-p04",
+              "name": "Scope And Gate Contract",
+              "action": "Разделить работу на discovery, semantic core, concept, design, implementation, validation и launch gates.",
+              "output": "TASK-PLAN.md"
+            },
+            {
+              "id": "new-premium-site-intake-and-scope-p05",
+              "name": "Project Memory Bootstrap",
+              "action": "Создать безопасную wiki-память проекта и правила, что туда можно/нельзя сохранять.",
+              "output": "wiki/index.md, wiki/llms-context.md"
+            }
+          ]
+        },
+        {
+          "id": "new-premium-site-search-and-semantic-evidence",
+          "title": "Search and semantic evidence",
+          "skills": [
+            "serp-source-configurator",
+            "serp-keyword-harvester",
+            "semantic-core-builder",
+            "seo-llm-site-architect"
+          ],
+          "detail": "Выбор источников/прокси/лимитов, запросы, интенты, кластеры, структура страниц, SEO/LLM constraints.",
+          "expected_outputs": [
+            "reports/research-approval.md",
+            "reports/keyword-harvest.json",
+            "reports/competitor-offer-scan.md",
+            "reports/semantic-core.json",
+            "docs/site-structure.md",
+            "reports/seo-llm-structure-gate.md"
+          ],
+          "enforcement_policy": "approval_gated",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-search-and-semantic-evidence-p01",
+              "name": "External Research Approval",
+              "action": "Определить, можно ли использовать внешние SERP/API/поисковые сервисы или только локальные материалы.",
+              "output": "reports/research-approval.md"
+            },
+            {
+              "id": "new-premium-site-search-and-semantic-evidence-p02",
+              "name": "SERP And Suggest Harvest",
+              "action": "Собрать поисковые формулировки, подсказки, конкурентов, интенты и частотные сигналы.",
+              "output": "reports/keyword-harvest.json"
+            },
+            {
+              "id": "new-premium-site-search-and-semantic-evidence-p03",
+              "name": "Competitor And Offer Scan",
+              "action": "Выделить, какие офферы, доказательства, CTA и структуры используют конкуренты.",
+              "output": "reports/competitor-offer-scan.md"
+            },
+            {
+              "id": "new-premium-site-search-and-semantic-evidence-p04",
+              "name": "Intent Clustering",
+              "action": "Сгруппировать запросы по интентам: купить, сравнить, узнать, довериться, связаться, приехать, забронировать.",
+              "output": "reports/semantic-core.json"
+            },
+            {
+              "id": "new-premium-site-search-and-semantic-evidence-p05",
+              "name": "Information Architecture Draft",
+              "action": "Собрать будущие страницы, блоки, URL и переходы из семантического ядра и бизнес-цели.",
+              "output": "docs/site-structure.md"
+            },
+            {
+              "id": "new-premium-site-search-and-semantic-evidence-p06",
+              "name": "SEO/LLM Structure Gate",
+              "action": "Проверить, что структура понятна человеку, поисковику и AI-ассистенту, без скрытого важного контента.",
+              "output": "reports/seo-llm-structure-gate.md"
+            }
+          ]
+        },
+        {
+          "id": "new-premium-site-concept-prototype",
+          "title": "Concept prototype",
+          "skills": [
+            "concept-prototyper",
+            "ui-ux-llm-product-architect"
+          ],
+          "detail": "Черновой clickable prototype, пользовательские пути, оффер, спорные бизнес-решения.",
+          "expected_outputs": [
+            "docs/entry-points.md",
+            "docs/journey-map.md",
+            "docs/offer-objection-model.md",
+            "docs/content-hierarchy.md",
+            "prototype/index.html",
+            "reports/business-concept-feedback.json"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-concept-prototype-p01",
+              "name": "Entry Point Mapping",
+              "action": "Разложить входы пользователя: органика, реклама, рекомендация, соцсети, прямой заход, офлайн-контакт.",
+              "output": "docs/entry-points.md"
+            },
+            {
+              "id": "new-premium-site-concept-prototype-p02",
+              "name": "Primary Journey Map",
+              "action": "Описать путь от первого экрана до заявки/звонка/бронирования с критичными trust points.",
+              "output": "docs/journey-map.md"
+            },
+            {
+              "id": "new-premium-site-concept-prototype-p03",
+              "name": "Offer And Objection Model",
+              "action": "Сформулировать оффер, доказательства, возражения, ответы и причины оставить заявку.",
+              "output": "docs/offer-objection-model.md"
+            },
+            {
+              "id": "new-premium-site-concept-prototype-p04",
+              "name": "Content Hierarchy Prototype",
+              "action": "Определить порядок блоков, CTA, доказательств, FAQ, карт/планов/галерей и контактов.",
+              "output": "docs/content-hierarchy.md"
+            },
+            {
+              "id": "new-premium-site-concept-prototype-p05",
+              "name": "Disposable Clickable Prototype",
+              "action": "Собрать черновой HTML-прототип для обсуждения логики, не используя его как финальный production-код.",
+              "output": "prototype/index.html"
+            },
+            {
+              "id": "new-premium-site-concept-prototype-p06",
+              "name": "Business Feedback Capture",
+              "action": "Собрать комментарии пользователя по концепции, конфликтам и недостающим фактам.",
+              "output": "reports/business-concept-feedback.json"
+            }
+          ]
+        },
+        {
+          "id": "new-premium-site-three-design-directions",
+          "title": "Three design directions",
+          "skills": [
+            "ui-ux-pro-max",
+            "senior-ui-ux-orchestrator",
+            "design-feedback-collector"
+          ],
+          "detail": "Три разных направления, style code, palette/type intent, content hierarchy, feedback.",
+          "expected_outputs": [
+            "reports/design-intelligence.md",
+            "reports/brand-fit-filter.md",
+            "reports/design-direction-candidates.md",
+            "reports/three-directions.md",
+            "reports/design-council-check.md",
+            "reports/design-feedback.json"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-three-design-directions-p01",
+              "name": "Design Intelligence Scan",
+              "action": "Подобрать релевантные стили, палитры, типографику, layout-паттерны и риски визуального направления.",
+              "output": "reports/design-intelligence.md"
+            },
+            {
+              "id": "new-premium-site-three-design-directions-p02",
+              "name": "Brand Fit Filter",
+              "action": "Отсечь стили, которые красивы сами по себе, но не подходят продукту, аудитории, цене или географии.",
+              "output": "reports/brand-fit-filter.md"
+            },
+            {
+              "id": "new-premium-site-three-design-directions-p03",
+              "name": "Direction Candidate Pool",
+              "action": "Собрать набор возможных направлений до выбора финальных трех.",
+              "output": "reports/design-direction-candidates.md"
+            },
+            {
+              "id": "new-premium-site-three-design-directions-p04",
+              "name": "Three Direction Curation",
+              "action": "Выбрать ровно три осмысленно разные дизайн-версии, а не три вариации одной темы.",
+              "output": "reports/three-directions.md"
+            },
+            {
+              "id": "new-premium-site-three-design-directions-p05",
+              "name": "Council Conflict Check",
+              "action": "Проверить UX/SEO/LLM/accessibility/implementation конфликты до передачи в Stitch/Figma/code.",
+              "output": "reports/design-council-check.md"
+            },
+            {
+              "id": "new-premium-site-three-design-directions-p06",
+              "name": "Direction Feedback Loop",
+              "action": "Собрать комментарии пользователя по направлениям и отметить, что оставить, убрать, усилить или отложить.",
+              "output": "reports/design-feedback.json"
+            }
+          ]
+        },
+        {
+          "id": "new-premium-site-ai-design-exploration",
+          "title": "AI design exploration",
+          "skills": [
+            "stitch-design-bridge",
+            "pencil-design-bridge",
+            "senior-figma-orchestrator"
+          ],
+          "detail": "Stitch prompts, Pencil/Figma/code handoff, review of generated candidates.",
+          "expected_outputs": [
+            "design-briefs/*.md",
+            "stitch-briefs/*.md",
+            "reports/stitch-output-review.md",
+            "reports/design-handoff-decision.md",
+            "docs/implementation-brief.md"
+          ],
+          "enforcement_policy": "approval_gated",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-ai-design-exploration-p01",
+              "name": "Approved Direction Packaging",
+              "action": "Упаковать каждое утвержденное направление в brief: цель, стиль, контент, ограничения, facts, validation criteria.",
+              "output": "design-briefs/*.md"
+            },
+            {
+              "id": "new-premium-site-ai-design-exploration-p02",
+              "name": "Stitch Prompt Preparation",
+              "action": "Превратить direction briefs в Stitch-ready prompts без передачи лишних приватных данных.",
+              "output": "stitch-briefs/*.md"
+            },
+            {
+              "id": "new-premium-site-ai-design-exploration-p03",
+              "name": "Stitch Exploration Review",
+              "action": "Оценить AI-варианты как кандидатов, а не финальный дизайн: факты, CTA, hierarchy, accessibility, SEO.",
+              "output": "reports/stitch-output-review.md"
+            },
+            {
+              "id": "new-premium-site-ai-design-exploration-p04",
+              "name": "Pencil/Figma Handoff Decision",
+              "action": "Решить, нужен ли editable canvas, Figma MCP, Pencil workflow или сразу code implementation.",
+              "output": "reports/design-handoff-decision.md"
+            },
+            {
+              "id": "new-premium-site-ai-design-exploration-p05",
+              "name": "Implementation Brief Freeze",
+              "action": "Зафиксировать выбранную дизайн-логику перед кодом, чтобы не менять основу на этапе верстки.",
+              "output": "docs/implementation-brief.md"
+            }
+          ]
+        },
+        {
+          "id": "new-premium-site-build-and-content-assets",
+          "title": "Build and content assets",
+          "skills": [
+            "marketing-site-skill",
+            "visual-content-director",
+            "figma-assets-manager"
+          ],
+          "detail": "Production HTML/React/site, real visual slots, placeholders gate, asset manifest.",
+          "expected_outputs": [
+            "site source files",
+            "reports/responsive-check.md",
+            "reports/content-integration.md",
+            "reports/visual-placeholders.json",
+            "reports/state-coverage.md",
+            "reports/implementation-check.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-build-and-content-assets-p01",
+              "name": "Production Structure Build",
+              "action": "Собрать страницы/секции с семантической HTML-структурой, понятными heading levels и CTA.",
+              "output": "site source files"
+            },
+            {
+              "id": "new-premium-site-build-and-content-assets-p02",
+              "name": "Responsive Layout Pass",
+              "action": "Проверить, что hero, формы, карточки, галереи, таблицы и CTA не ломаются на основных viewport.",
+              "output": "reports/responsive-check.md"
+            },
+            {
+              "id": "new-premium-site-build-and-content-assets-p03",
+              "name": "Content And Fact Integration",
+              "action": "Вставить утвержденные факты, цены/условия/локации/FAQ без выдуманных утверждений.",
+              "output": "reports/content-integration.md"
+            },
+            {
+              "id": "new-premium-site-build-and-content-assets-p04",
+              "name": "Visual Asset Pipeline",
+              "action": "Подготовить реальные изображения, иллюстрации, exports, alt-тексты и placeholder audit.",
+              "output": "reports/visual-placeholders.json"
+            },
+            {
+              "id": "new-premium-site-build-and-content-assets-p05",
+              "name": "Interaction And State Coverage",
+              "action": "Проверить формы, hover/focus, loading/error/success states, mobile menu и accessibility states.",
+              "output": "reports/state-coverage.md"
+            },
+            {
+              "id": "new-premium-site-build-and-content-assets-p06",
+              "name": "Implementation Evidence",
+              "action": "Собрать evidence: browser checks, screenshots, metadata/schema checks и известные пропуски.",
+              "output": "reports/implementation-check.md"
+            }
+          ]
+        },
+        {
+          "id": "new-premium-site-measurement-and-assistant",
+          "title": "Measurement and assistant",
+          "skills": [
+            "analytics-setup-architect",
+            "site-ai-assistant-builder",
+            "paid-traffic-architect"
+          ],
+          "detail": "Events, consent, UTM, RAG assistant, paid traffic landing requirements.",
+          "expected_outputs": [
+            "reports/measurement-plan.md",
+            "reports/analytics-setup.md",
+            "reports/consent-gate.md",
+            "reports/site-ai-assistant-brief.md",
+            "reports/rag-source-pack.md",
+            "reports/paid-traffic-brief.md"
+          ],
+          "enforcement_policy": "approval_gated",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-measurement-and-assistant-p01",
+              "name": "Measurement Plan",
+              "action": "Определить цели измерения: лиды, звонки, формы, бронирования, route clicks, messenger clicks.",
+              "output": "reports/measurement-plan.md"
+            },
+            {
+              "id": "new-premium-site-measurement-and-assistant-p02",
+              "name": "Event Taxonomy",
+              "action": "Описать события: CTA clicks, form starts, submits, scroll depth, phone/email/messenger interactions.",
+              "output": "reports/analytics-setup.md"
+            },
+            {
+              "id": "new-premium-site-measurement-and-assistant-p03",
+              "name": "Consent And Privacy Gate",
+              "action": "Проверить cookie/analytics consent, privacy copy, retention и запрет лишнего сбора данных.",
+              "output": "reports/consent-gate.md"
+            },
+            {
+              "id": "new-premium-site-measurement-and-assistant-p04",
+              "name": "Public AI Assistant Scope",
+              "action": "Описать, что ассистент может отвечать, какие источники использует и где эскалирует к человеку.",
+              "output": "reports/site-ai-assistant-brief.md"
+            },
+            {
+              "id": "new-premium-site-measurement-and-assistant-p05",
+              "name": "RAG Source Pack",
+              "action": "Собрать разрешенные источники для AI-ассистента: страницы, FAQ, условия, контакты, policy.",
+              "output": "reports/rag-source-pack.md"
+            },
+            {
+              "id": "new-premium-site-measurement-and-assistant-p06",
+              "name": "Paid Traffic Readiness",
+              "action": "Согласовать UTM, landing requirements, campaign messages и SEO/ads conflicts.",
+              "output": "reports/paid-traffic-brief.md"
+            }
+          ]
+        },
+        {
+          "id": "new-premium-site-launch",
+          "title": "Launch",
+          "skills": [
+            "tech-stack-selector",
+            "infra-launch-orchestrator",
+            "launch-readiness-auditor"
+          ],
+          "detail": "Stack, hosting, DNS, SSL, webmaster tools, final evidence gate and wiki capture.",
+          "expected_outputs": [
+            "docs/tech-stack.md",
+            "reports/domain-hosting-route.md",
+            "reports/deploy-setup.md",
+            "reports/dns-ssl-setup.md",
+            "reports/webmaster-registration.md",
+            "reports/launch-readiness.md",
+            "wiki/launch-handoff.md"
+          ],
+          "enforcement_policy": "approval_gated",
+          "subprocesses": [
+            {
+              "id": "new-premium-site-launch-p01",
+              "name": "Tech Stack Decision",
+              "action": "Выбрать стек, CMS/static/dynamic подход, сборку, зависимости и причины отказа от альтернатив.",
+              "output": "docs/tech-stack.md"
+            },
+            {
+              "id": "new-premium-site-launch-p02",
+              "name": "Domain And Hosting Route",
+              "action": "Подготовить домен, hosting profile, DNS strategy и список действий, требующих ручного подтверждения.",
+              "output": "reports/domain-hosting-route.md"
+            },
+            {
+              "id": "new-premium-site-launch-p03",
+              "name": "Deploy Pipeline Setup",
+              "action": "Подготовить build/deploy, environment example, rollback route и production checklist.",
+              "output": "reports/deploy-setup.md"
+            },
+            {
+              "id": "new-premium-site-launch-p04",
+              "name": "DNS And SSL Setup",
+              "action": "Проверить DNS records, SSL, HTTPS-only, security headers и propagation evidence.",
+              "output": "reports/dns-ssl-setup.md"
+            },
+            {
+              "id": "new-premium-site-launch-p05",
+              "name": "Webmaster Registration",
+              "action": "Подготовить sitemap, robots, Search Console/Yandex Webmaster и verification steps.",
+              "output": "reports/webmaster-registration.md"
+            },
+            {
+              "id": "new-premium-site-launch-p06",
+              "name": "Launch Readiness Gate",
+              "action": "Заблокировать релиз при критичных проблемах: SEO, analytics, placeholders, accessibility, security.",
+              "output": "reports/launch-readiness.md"
+            },
+            {
+              "id": "new-premium-site-launch-p07",
+              "name": "Final Wiki Handoff",
+              "action": "Сохранить финальные решения, артефакты, риски и дальнейшие задачи в проектную wiki.",
+              "output": "wiki/launch-handoff.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "existing-site-upgrade",
+      "title": "Редизайн или улучшение существующего сайта",
+      "meta": "Пример: уже есть сайт, трафик, страницы, позиции, визуальные активы и риск потерять SEO.",
+      "stages": [
+        {
+          "id": "existing-site-upgrade-existing-site-evidence",
+          "title": "Existing site evidence",
+          "skills": [
+            "existing-site-analyzer",
+            "ux-audit-skill",
+            "seo-llm-site-architect"
+          ],
+          "detail": "Crawl, screenshots, technical stack, SEO state, UX blockers, content inventory.",
+          "expected_outputs": [
+            "reports/crawl-scope.md",
+            "reports/existing-site-audit.md",
+            "reports/page-template-inventory.md",
+            "reports/seo-preservation-map.md",
+            "reports/existing-visual-assets.md",
+            "reports/ux-audit.md",
+            "reports/technical-risk-snapshot.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-existing-site-evidence-p01",
+              "name": "Crawl Scope Approval",
+              "action": "Определить, что можно crawлить: публичные URL, приватные разделы, staging, лимиты запросов.",
+              "output": "reports/crawl-scope.md"
+            },
+            {
+              "id": "existing-site-upgrade-existing-site-evidence-p02",
+              "name": "Current Site Crawl",
+              "action": "Собрать страницы, URL, шаблоны, визуальные активы, технический стек и текущую структуру.",
+              "output": "reports/existing-site-audit.md"
+            },
+            {
+              "id": "existing-site-upgrade-existing-site-evidence-p03",
+              "name": "Page And Template Inventory",
+              "action": "Разделить страницы на шаблоны, типы контента, повторяющиеся блоки и уникальные landing pages.",
+              "output": "reports/page-template-inventory.md"
+            },
+            {
+              "id": "existing-site-upgrade-existing-site-evidence-p04",
+              "name": "SEO Equity Snapshot",
+              "action": "Зафиксировать страницы, которые нельзя потерять: трафик, индексация, canonical, sitemap, redirects.",
+              "output": "reports/seo-preservation-map.md"
+            },
+            {
+              "id": "existing-site-upgrade-existing-site-evidence-p05",
+              "name": "Visual Asset Inventory",
+              "action": "Собрать фото, видео, логотипы, иконки, документы и понять, что пригодно для нового дизайна.",
+              "output": "reports/existing-visual-assets.md"
+            },
+            {
+              "id": "existing-site-upgrade-existing-site-evidence-p06",
+              "name": "UX And Conversion Audit",
+              "action": "Найти блокеры доверия, навигации, формы, мобильного опыта и визуальной иерархии.",
+              "output": "reports/ux-audit.md"
+            },
+            {
+              "id": "existing-site-upgrade-existing-site-evidence-p07",
+              "name": "Technical Risk Snapshot",
+              "action": "Зафиксировать стек, CMS, performance issues, third-party scripts, forms, integrations.",
+              "output": "reports/technical-risk-snapshot.md"
+            }
+          ]
+        },
+        {
+          "id": "existing-site-upgrade-preserve-or-replace-decision",
+          "title": "Preserve or replace decision",
+          "skills": [
+            "rebuild-or-improve-advisor",
+            "senior-ui-ux-orchestrator",
+            "senior council"
+          ],
+          "detail": "Improve current site, redesign on current base, or full rebuild with tradeoffs.",
+          "expected_outputs": [
+            "reports/option-a-improve.md",
+            "reports/option-b-redesign.md",
+            "reports/option-c-rebuild.md",
+            "reports/rebuild-or-improve-decision.md",
+            "docs/selected-upgrade-path.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-preserve-or-replace-decision-p01",
+              "name": "Improve Path",
+              "action": "Оценить, можно ли решить задачу точечными правками без полной переработки.",
+              "output": "reports/option-a-improve.md"
+            },
+            {
+              "id": "existing-site-upgrade-preserve-or-replace-decision-p02",
+              "name": "Redesign Path",
+              "action": "Оценить редизайн на текущей базе с сохранением URL, CMS и важных активов.",
+              "output": "reports/option-b-redesign.md"
+            },
+            {
+              "id": "existing-site-upgrade-preserve-or-replace-decision-p03",
+              "name": "Full Rebuild Path",
+              "action": "Оценить полную переработку с миграцией, рисками, сроками и rollback-планом.",
+              "output": "reports/option-c-rebuild.md"
+            },
+            {
+              "id": "existing-site-upgrade-preserve-or-replace-decision-p04",
+              "name": "Council Decision",
+              "action": "Свести UX, SEO, реализацию, бюджет, сроки и риски в одно решение chair.",
+              "output": "reports/rebuild-or-improve-decision.md"
+            },
+            {
+              "id": "existing-site-upgrade-preserve-or-replace-decision-p05",
+              "name": "Decision Handoff",
+              "action": "Зафиксировать выбранный путь, что сохраняем, что меняем и какие проверки обязательны.",
+              "output": "docs/selected-upgrade-path.md"
+            }
+          ]
+        },
+        {
+          "id": "existing-site-upgrade-migration-protection",
+          "title": "Migration protection",
+          "skills": [
+            "migration-planner",
+            "semantic-core-builder",
+            "project-wiki-manager"
+          ],
+          "detail": "URL map, 301 redirects, canonical strategy, sitemap coverage, saved context.",
+          "expected_outputs": [
+            "reports/url-inventory.csv",
+            "reports/redirect-map.csv",
+            "reports/metadata-preservation-map.csv",
+            "reports/content-migration-rules.md",
+            "reports/migration-test-plan.md",
+            "wiki/seo-migration.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-migration-protection-p01",
+              "name": "URL Inventory",
+              "action": "Собрать текущие URL, целевые URL, статусы страниц и правила сохранения.",
+              "output": "reports/url-inventory.csv"
+            },
+            {
+              "id": "existing-site-upgrade-migration-protection-p02",
+              "name": "Redirect Mapping",
+              "action": "Спланировать 301, canonical, noindex, sitemap coverage и change-of-address при необходимости.",
+              "output": "reports/redirect-map.csv"
+            },
+            {
+              "id": "existing-site-upgrade-migration-protection-p03",
+              "name": "Metadata Preservation Map",
+              "action": "Сохранить title, description, H1, schema, внутренние ссылки и важные content blocks.",
+              "output": "reports/metadata-preservation-map.csv"
+            },
+            {
+              "id": "existing-site-upgrade-migration-protection-p04",
+              "name": "Content Migration Rules",
+              "action": "Определить, какой контент переносится без изменений, какой переписывается, какой удаляется.",
+              "output": "reports/content-migration-rules.md"
+            },
+            {
+              "id": "existing-site-upgrade-migration-protection-p05",
+              "name": "Migration Test Plan",
+              "action": "Подготовить тесты 301/404/sitemap/canonical/schema до production cutover.",
+              "output": "reports/migration-test-plan.md"
+            },
+            {
+              "id": "existing-site-upgrade-migration-protection-p06",
+              "name": "Migration Context Capture",
+              "action": "Сохранить решения миграции в wiki, чтобы не потерять SEO-критичный контекст.",
+              "output": "wiki/seo-migration.md"
+            }
+          ]
+        },
+        {
+          "id": "existing-site-upgrade-design-refresh",
+          "title": "Design refresh",
+          "skills": [
+            "ui-ux-pro-max",
+            "stitch-design-bridge",
+            "design-critic-skill"
+          ],
+          "detail": "Style candidates, AI exploration, visual critique, preservation of brand assets.",
+          "expected_outputs": [
+            "reports/brand-preservation.md",
+            "reports/redesign-intelligence.md",
+            "reports/redesign-directions.md",
+            "reports/design-critic-review.md",
+            "docs/selected-refresh-direction.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-design-refresh-p01",
+              "name": "Brand Asset Preservation",
+              "action": "Определить, какие элементы старого сайта сохранить: фото, цвета, tone, proof, узнаваемость.",
+              "output": "reports/brand-preservation.md"
+            },
+            {
+              "id": "existing-site-upgrade-design-refresh-p02",
+              "name": "Design Intelligence Refresh",
+              "action": "Подобрать новые стили и паттерны, которые улучшают сайт без разрушения доверия.",
+              "output": "reports/redesign-intelligence.md"
+            },
+            {
+              "id": "existing-site-upgrade-design-refresh-p03",
+              "name": "Refresh Direction Set",
+              "action": "Подготовить визуальные направления: аккуратное улучшение, заметный редизайн, премиальный rebuild.",
+              "output": "reports/redesign-directions.md"
+            },
+            {
+              "id": "existing-site-upgrade-design-refresh-p04",
+              "name": "Critique And Conflict Review",
+              "action": "Проверить направления на визуальную слабость, SEO-перегруз, accessibility и реалистичность.",
+              "output": "reports/design-critic-review.md"
+            },
+            {
+              "id": "existing-site-upgrade-design-refresh-p05",
+              "name": "Selected Refresh Direction",
+              "action": "Зафиксировать выбранное направление и элементы, которые запрещено потерять.",
+              "output": "docs/selected-refresh-direction.md"
+            }
+          ]
+        },
+        {
+          "id": "existing-site-upgrade-implementation-path",
+          "title": "Implementation path",
+          "skills": [
+            "marketing-site-skill",
+            "webapp-ui-skill",
+            "senior-figma-orchestrator"
+          ],
+          "detail": "Public pages, admin/app surfaces, Figma sync, component mapping.",
+          "expected_outputs": [
+            "reports/implementation-scope.md",
+            "reports/component-map.md",
+            "reports/data-dependency-check.md",
+            "reports/incremental-build-plan.md",
+            "reports/figma-code-sync-decision.md",
+            "reports/rollback-strategy.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-implementation-path-p01",
+              "name": "Surface Split",
+              "action": "Разделить публичные страницы, app/admin surfaces, CMS-части и Figma/code handoff.",
+              "output": "reports/implementation-scope.md"
+            },
+            {
+              "id": "existing-site-upgrade-implementation-path-p02",
+              "name": "Component Mapping",
+              "action": "Связать старые блоки, новые компоненты, Figma context и кодовую реализацию.",
+              "output": "reports/component-map.md"
+            },
+            {
+              "id": "existing-site-upgrade-implementation-path-p03",
+              "name": "CMS/Data Dependency Check",
+              "action": "Понять, какие блоки зависят от CMS, форм, интеграций, CRM, каталогов или внешних API.",
+              "output": "reports/data-dependency-check.md"
+            },
+            {
+              "id": "existing-site-upgrade-implementation-path-p04",
+              "name": "Incremental Build Plan",
+              "action": "Определить порядок внедрения без остановки бизнеса и без SEO-регрессии.",
+              "output": "reports/incremental-build-plan.md"
+            },
+            {
+              "id": "existing-site-upgrade-implementation-path-p05",
+              "name": "Figma/Code Sync Decision",
+              "action": "Решить, нужно ли синхронизировать live UI в Figma или вести реализацию напрямую в коде.",
+              "output": "reports/figma-code-sync-decision.md"
+            },
+            {
+              "id": "existing-site-upgrade-implementation-path-p06",
+              "name": "Rollback Strategy",
+              "action": "Описать, как откатить релиз, если формы, SEO, performance или DNS сломаются.",
+              "output": "reports/rollback-strategy.md"
+            }
+          ]
+        },
+        {
+          "id": "existing-site-upgrade-admin-and-operations",
+          "title": "Admin and operations",
+          "skills": [
+            "admin-ui-orchestrator",
+            "admin-ui-builder",
+            "omnichannel-comms-builder"
+          ],
+          "detail": "CMS, content roles, forms, chat, booking, inbox, operator workflow.",
+          "expected_outputs": [
+            "reports/admin-architecture.md",
+            "reports/admin-roles.md",
+            "reports/operator-workflow.md",
+            "reports/omnichannel-routing.md",
+            "reports/admin-safety.md"
+          ],
+          "enforcement_policy": "manual_review",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-admin-and-operations-p01",
+              "name": "CMS Content Model",
+              "action": "Описать типы контента, поля, роли редакторов, workflow публикации и модерации.",
+              "output": "reports/admin-architecture.md"
+            },
+            {
+              "id": "existing-site-upgrade-admin-and-operations-p02",
+              "name": "Access And Role Model",
+              "action": "Разделить права владельца, редактора, менеджера, оператора и администратора.",
+              "output": "reports/admin-roles.md"
+            },
+            {
+              "id": "existing-site-upgrade-admin-and-operations-p03",
+              "name": "Operator Workflow",
+              "action": "Спроектировать обработку заявок, чатов, форм, бронирований и follow-up.",
+              "output": "reports/operator-workflow.md"
+            },
+            {
+              "id": "existing-site-upgrade-admin-and-operations-p04",
+              "name": "Omnichannel Routing",
+              "action": "Связать формы, мессенджеры, чат, email, booking и CRM/inbox в понятный процесс.",
+              "output": "reports/omnichannel-routing.md"
+            },
+            {
+              "id": "existing-site-upgrade-admin-and-operations-p05",
+              "name": "Admin Safety Rules",
+              "action": "Определить права, audit log, подтверждения destructive actions и AI-assistant boundary.",
+              "output": "reports/admin-safety.md"
+            }
+          ]
+        },
+        {
+          "id": "existing-site-upgrade-validation",
+          "title": "Validation",
+          "skills": [
+            "ux-audit-skill",
+            "launch-readiness-auditor",
+            "analytics-setup-architect"
+          ],
+          "detail": "Browser checks, SEO/schema, analytics events, accessibility, performance, placeholders.",
+          "expected_outputs": [
+            "reports/regression-check.md",
+            "reports/seo-schema-validation.md",
+            "reports/accessibility-mobile-pass.md",
+            "reports/performance-third-party-pass.md",
+            "reports/analytics-verification.md",
+            "reports/lead-flow-check.md",
+            "reports/launch-blockers.md"
+          ],
+          "enforcement_policy": "required",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-validation-p01",
+              "name": "Pre-launch Regression Checks",
+              "action": "Сравнить старую и новую версию по critical pages, URL, metadata, forms и CTA.",
+              "output": "reports/regression-check.md"
+            },
+            {
+              "id": "existing-site-upgrade-validation-p02",
+              "name": "SEO And Schema Validation",
+              "action": "Проверить title, descriptions, H1, canonical, sitemap, robots, schema and llms-readable structure.",
+              "output": "reports/seo-schema-validation.md"
+            },
+            {
+              "id": "existing-site-upgrade-validation-p03",
+              "name": "Accessibility And Mobile Pass",
+              "action": "Проверить keyboard/focus, contrast risks, mobile layout, tap targets and readable hierarchy.",
+              "output": "reports/accessibility-mobile-pass.md"
+            },
+            {
+              "id": "existing-site-upgrade-validation-p04",
+              "name": "Performance And Third-party Pass",
+              "action": "Проверить вес страниц, изображения, scripts, analytics tags и критичные third-party риски.",
+              "output": "reports/performance-third-party-pass.md"
+            },
+            {
+              "id": "existing-site-upgrade-validation-p05",
+              "name": "Analytics Verification",
+              "action": "Проверить события, цели, UTM, consent и отсутствие потери измеримости.",
+              "output": "reports/analytics-verification.md"
+            },
+            {
+              "id": "existing-site-upgrade-validation-p06",
+              "name": "Forms And Lead Flow Check",
+              "action": "Проверить заявки, сообщения, email, CRM/inbox, thank-you states and error states.",
+              "output": "reports/lead-flow-check.md"
+            },
+            {
+              "id": "existing-site-upgrade-validation-p07",
+              "name": "Launch Blockers Review",
+              "action": "Зафиксировать blockers и не выпускать сайт при критичных нарушениях.",
+              "output": "reports/launch-blockers.md"
+            }
+          ]
+        },
+        {
+          "id": "existing-site-upgrade-launch-and-monitor",
+          "title": "Launch and monitor",
+          "skills": [
+            "deploy-orchestrator",
+            "webmaster-registrar",
+            "project-wiki-manager"
+          ],
+          "detail": "Deploy, webmaster verification, post-launch monitoring, wiki capture of final state.",
+          "expected_outputs": [
+            "reports/deploy-cutover.md",
+            "reports/redirect-404-watch.md",
+            "reports/webmaster-resubmission.md",
+            "reports/post-launch-monitoring.md",
+            "reports/hotfix-triage.md",
+            "wiki/post-launch-context.md"
+          ],
+          "enforcement_policy": "approval_gated",
+          "subprocesses": [
+            {
+              "id": "existing-site-upgrade-launch-and-monitor-p01",
+              "name": "Deployment Cutover",
+              "action": "Подготовить deploy, rollback, DNS/SSL, redirects и окно переключения.",
+              "output": "reports/deploy-cutover.md"
+            },
+            {
+              "id": "existing-site-upgrade-launch-and-monitor-p02",
+              "name": "Redirect And 404 Watch",
+              "action": "Проверить 301, 404, canonical, sitemap after release and redirect chains.",
+              "output": "reports/redirect-404-watch.md"
+            },
+            {
+              "id": "existing-site-upgrade-launch-and-monitor-p03",
+              "name": "Webmaster Resubmission",
+              "action": "Обновить sitemap, проверить индексацию, отправить ключевые страницы на переобход.",
+              "output": "reports/webmaster-resubmission.md"
+            },
+            {
+              "id": "existing-site-upgrade-launch-and-monitor-p04",
+              "name": "Post-launch Monitoring",
+              "action": "Следить за 404, индексацией, формами, скоростью, конверсиями и SEO-сигналами.",
+              "output": "reports/post-launch-monitoring.md"
+            },
+            {
+              "id": "existing-site-upgrade-launch-and-monitor-p05",
+              "name": "Hotfix Triage",
+              "action": "Разделить post-launch проблемы на critical, high, normal and backlog.",
+              "output": "reports/hotfix-triage.md"
+            },
+            {
+              "id": "existing-site-upgrade-launch-and-monitor-p06",
+              "name": "Final Context Capture",
+              "action": "Сохранить финальную карту сайта, решения, проверки, открытые риски и следующие задачи.",
+              "output": "wiki/post-launch-context.md"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

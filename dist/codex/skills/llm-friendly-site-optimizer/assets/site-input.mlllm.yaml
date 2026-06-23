@@ -1,0 +1,11 @@
+site_url: "https://mlllm.io"
+site_language: "ru/en"
+site_niche: "AI news + builder lab"
+target_audience: "AI/ML developers, technical product managers, and system architects"
+top_topics:
+  - "daily AI news for developers"
+  - "practical MCP agent stack architecture"
+  - "building an AI news Telegram bot with RAG and LLMs"
+  - "autonomous AI agents and task orchestration"
+  - "open-source LLM tools and benchmarks"
+competitor_urls: []

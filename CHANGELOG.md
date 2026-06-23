@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Prepared `0.3.0` expanded GitHub publication package with the local UI/UX Skill System scope.
+- Added pre-design, existing-site, admin, analytics, infrastructure, launch, SEO growth, SERP, progress, feedback, and workflow compliance skills to `core/skills`.
+- Added package-level progress/compliance runtime helpers and `data/journey-registry.json`.
+- Added interactive documentation artifacts: skill review board, skill graph, task dashboard, and progress screen example.
+- Recorded NMT as an optional external product-strategy source without bundling CC BY-NC-SA source text.
 - Added negative evidence-validator fixture coverage to CI.
 - Added eval contract coverage checks for top-level route and acceptance constraints.
 - Added README status badges for CI, npm, and license.

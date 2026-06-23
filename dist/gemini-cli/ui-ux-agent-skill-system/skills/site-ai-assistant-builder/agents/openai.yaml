@@ -1,0 +1,6 @@
+interface:
+  display_name: "Site AI Assistant Builder"
+  short_description: "Designs bounded public site AI assistants"
+  default_prompt: "Use $site-ai-assistant-builder to specify a public site AI assistant with source boundaries, injection protection, refusals, escalation, logging, and rate limits."
+policy:
+  allow_implicit_invocation: true

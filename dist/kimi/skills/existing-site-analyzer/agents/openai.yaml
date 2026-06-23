@@ -1,0 +1,6 @@
+interface:
+  display_name: "Existing Site Analyzer"
+  short_description: "Audits current sites before redesign or rebuild"
+  default_prompt: "Use $existing-site-analyzer to create a local-first existing-site audit with evidence labels and approval-gated URL/private-source handling."
+policy:
+  allow_implicit_invocation: true

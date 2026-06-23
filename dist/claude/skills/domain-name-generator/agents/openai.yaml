@@ -1,0 +1,6 @@
+interface:
+  display_name: "Domain Name Generator"
+  short_description: "Generates domain name shortlists safely"
+  default_prompt: "Use $domain-name-generator to create and score domain candidates without purchasing or claiming availability without evidence."
+policy:
+  allow_implicit_invocation: true

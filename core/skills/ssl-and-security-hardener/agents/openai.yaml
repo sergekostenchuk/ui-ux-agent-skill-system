@@ -1,0 +1,6 @@
+interface:
+  display_name: "SSL And Security Hardener"
+  short_description: "Plans SSL and launch security hardening"
+  default_prompt: "Use $ssl-and-security-hardener to plan SSL/TLS, headers, CSP, redirects, backups, monitoring, and rollback without production mutation."
+policy:
+  allow_implicit_invocation: true

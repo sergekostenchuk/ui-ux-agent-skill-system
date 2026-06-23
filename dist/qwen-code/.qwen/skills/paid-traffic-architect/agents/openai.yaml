@@ -1,0 +1,6 @@
+interface:
+  display_name: "Paid Traffic Architect"
+  short_description: "Plans ad campaigns without live spend"
+  default_prompt: "Use $paid-traffic-architect to plan campaign structure, UTM, creative briefs, and landing requirements without mutating ad accounts."
+policy:
+  allow_implicit_invocation: true

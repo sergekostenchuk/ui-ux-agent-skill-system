@@ -1,0 +1,7 @@
+interface:
+  display_name: "SEO Regression Validator"
+  short_description: "Validate live/static SEO, schema, metadata, crawler artifacts, and LLM-readability evidence"
+  default_prompt: "Use $seo-regression-validator to turn SEO and LLM-friendly claims into timestamped pass/fail checks against HTML, public artifacts, and regression reports."
+policy:
+  allow_implicit_invocation: true
+

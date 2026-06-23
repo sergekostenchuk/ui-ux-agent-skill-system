@@ -1,0 +1,6 @@
+interface:
+  display_name: "Project Wiki Manager"
+  short_description: "Controls sanitized project wiki gates"
+  default_prompt: "Use $project-wiki-manager to capture durable project context, create a sanitized wiki/context-pack plan, and keep secrets out of wiki artifacts."
+policy:
+  allow_implicit_invocation: true

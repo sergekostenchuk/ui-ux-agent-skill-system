@@ -1,0 +1,6 @@
+interface:
+  display_name: "LLM Citation Monitor"
+  short_description: "Plan and record timestamped assistant/search citation evidence without unsupported citation claims"
+  default_prompt: "Use $llm-citation-monitor to create a timestamped query matrix and citation evidence report for this target site, refusing unsupported citation claims."
+policy:
+  allow_implicit_invocation: true

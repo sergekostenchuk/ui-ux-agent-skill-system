@@ -1,0 +1,34 @@
+artifact_type: entity_topic_map
+generated_at: "2026-06-11T00:00:00Z"
+producer_skill: semantic-core-architect
+source_inputs: []
+privacy:
+  contains_secrets: false
+  contains_private_urls: false
+  contains_raw_ip_logs: false
+  contains_private_analytics: false
+  redaction_note: none
+entities:
+  - id: "example-entity"
+    name: "Example Entity"
+    type: Topic
+    canonical_candidate_url: unknown
+    same_as: []
+    evidence: []
+topics:
+  - id: "example-topic"
+    label: "Example topic"
+    canonical_candidate_url: unknown
+    related_entities:
+      - "example-entity"
+    evidence: []
+relationships:
+  - source: "example-entity"
+    predicate: "related_to"
+    target: "example-topic"
+    evidence: []
+gaps:
+  - id: "example-gap"
+    description: "Metric or source evidence is not verified yet."
+    blocks_final_architecture: false
+

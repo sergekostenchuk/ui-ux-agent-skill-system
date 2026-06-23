@@ -1,0 +1,6 @@
+interface:
+  display_name: "Domain DNS Configurator"
+  short_description: "Plans DNS changes and rollback"
+  default_prompt: "Use $domain-dns-configurator to prepare DNS records, TTL, propagation, and rollback without changing production DNS."
+policy:
+  allow_implicit_invocation: true

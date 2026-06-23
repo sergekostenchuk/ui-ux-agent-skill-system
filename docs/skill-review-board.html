@@ -1,0 +1,3348 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI/UX Agent Skill System - Review Board</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f2ec;
+      --panel: #ffffff;
+      --panel-soft: #f9f7f0;
+      --ink: #1d2528;
+      --muted: #6c7478;
+      --line: #d8d2c3;
+      --accent: #0f766e;
+      --accent-dark: #0b5f59;
+      --blue: #2454a6;
+      --red: #a73c32;
+      --amber: #9a6500;
+      --green: #177245;
+      --shadow: 0 16px 42px rgba(29, 37, 40, 0.08);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(244, 242, 236, 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 18px 24px;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .title-block p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+      white-space: nowrap;
+    }
+
+    .button:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .button.primary:hover {
+      background: var(--accent-dark);
+    }
+
+    .layout {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      min-height: 96px;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric .value {
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 750;
+    }
+
+    .metric .hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.4fr) repeat(4, minmax(160px, 0.6fr));
+      gap: 10px;
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.13);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin: 28px 0 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      background: var(--panel);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1180px;
+      table-layout: fixed;
+    }
+
+    col.col-skill { width: 17%; }
+    col.col-status { width: 9%; }
+    col.col-phase { width: 8%; }
+    col.col-role { width: 19%; }
+    col.col-risk { width: 18%; }
+    col.col-decision { width: 10%; }
+    col.col-comment { width: 19%; }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    thead th:first-child {
+      border-top-left-radius: var(--radius);
+    }
+
+    thead th:last-child {
+      border-top-right-radius: var(--radius);
+    }
+
+    tbody td {
+      background: var(--panel);
+    }
+
+    tbody tr:hover td {
+      background: #fcfbf7;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .skill-name {
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .skill-link {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .skill-link:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      text-decoration: none;
+    }
+
+    .skill-note {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .skill-meta-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .doc-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid currentColor;
+      font-size: 11px;
+      font-weight: 740;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .doc-badge.filled { color: var(--green); }
+    .doc-badge.partial { color: var(--amber); }
+    .doc-badge.planned { color: var(--muted); }
+    .doc-badge:hover { text-decoration: none; background: var(--panel-soft); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid currentColor;
+      white-space: nowrap;
+    }
+
+    .pill.existing { color: var(--blue); }
+    .pill.proposed { color: var(--green); }
+    .pill.update { color: var(--amber); }
+    .pill.risk { color: var(--red); }
+
+    .role {
+      color: #344044;
+      font-size: 14px;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
+    }
+
+    .risk {
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
+    }
+
+    td select,
+    td textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 9px;
+      outline: none;
+    }
+
+    td select:focus,
+    td textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.13);
+    }
+
+    textarea.comment {
+      min-height: 88px;
+      resize: vertical;
+      font-size: 14px;
+    }
+
+    .decision-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .journey {
+      padding: 18px;
+    }
+
+    .journey h3 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+
+    .journey .journey-meta {
+      margin: 6px 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      padding: 12px;
+    }
+
+    .step-top {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .step-title {
+      font-weight: 750;
+    }
+
+    .step-skills {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .subprocesses {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .subprocess {
+      display: grid;
+      gap: 3px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .subprocess-name {
+      font-weight: 760;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .subprocess-action,
+    .subprocess-output {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .subprocess-output strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .subprocess-comment {
+      margin-top: 8px;
+    }
+
+    .comment-label {
+      display: block;
+      margin: 10px 0 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .agent-review {
+      margin-top: 8px;
+    }
+
+    .agent-review-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      border-radius: 6px;
+      border: 1px solid currentColor;
+      background: #fff;
+      padding: 5px 9px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .agent-review-toggle.blue { color: var(--blue); }
+    .agent-review-toggle.red { color: var(--red); }
+    .agent-review-toggle.green { color: var(--green); }
+    .agent-review-toggle.orange { color: var(--amber); }
+
+    .agent-review-panel {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .agent-review-panel.collapsed {
+      display: none;
+    }
+
+    .agent-review-panel textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .agent-review-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .agent-applied-check {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .agent-applied-check input {
+      width: auto;
+    }
+
+    .step textarea,
+    .agent-review-panel select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 9px;
+      outline: none;
+    }
+
+    .step textarea:focus,
+    .agent-review-panel select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.13);
+    }
+
+    .step textarea {
+      margin-top: 10px;
+      min-height: 78px;
+      resize: vertical;
+    }
+
+    .notes-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .notes-panel .panel {
+      padding: 16px;
+    }
+
+    .notes-panel h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .notes-panel textarea {
+      min-height: 180px;
+      resize: vertical;
+    }
+
+    .footer {
+      margin: 24px 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1180px) {
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .journey-grid,
+      .notes-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      .layout {
+        padding: 16px;
+      }
+
+      .summary-grid,
+      .filters {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="title-block">
+          <h1>UI/UX Agent Skill System Review Board</h1>
+          <p>Существующие скиллы, предложенные расширения и пользовательские пути для обсуждения архитектуры системы.</p>
+        </div>
+        <div class="actions">
+          <a class="button" href="TASK-DASHBOARD.html">Task Dashboard</a>
+          <a class="button" href="skill-graph.html">Skill Graph</a>
+          <a class="button" href="skill-pages/index.html">Skill Index</a>
+          <button class="button" type="button" id="copyMarkdown">Copy Markdown</button>
+          <button class="button" type="button" id="exportJson">Export JSON</button>
+          <button class="button" type="button" id="importJson">Import JSON</button>
+          <button class="button primary" type="button" id="printPage">Print</button>
+          <input class="hidden" type="file" id="importFile" accept="application/json">
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="summary-grid" aria-label="System summary">
+        <div class="metric">
+          <div class="label">Existing core</div>
+          <div class="value" id="existingCount">0</div>
+          <div class="hint">в пакете сейчас</div>
+        </div>
+        <div class="metric">
+          <div class="label">Proposed new</div>
+          <div class="value" id="proposedCount">0</div>
+          <div class="hint">из integration brief v2</div>
+        </div>
+        <div class="metric">
+          <div class="label">Proposed updates</div>
+          <div class="value" id="updateCount">0</div>
+          <div class="hint">существующие скиллы</div>
+        </div>
+        <div class="metric">
+          <div class="label">Comments</div>
+          <div class="value" id="commentCount">0</div>
+          <div class="hint">заполнено пользователем</div>
+        </div>
+        <div class="metric">
+          <div class="label">Discuss</div>
+          <div class="value" id="discussCount">0</div>
+          <div class="hint">помечено к разбору</div>
+        </div>
+        <div class="metric">
+          <div class="label">Source</div>
+          <div class="value">v2</div>
+          <div class="hint">new-skills-integration-brief</div>
+        </div>
+      </section>
+
+      <section class="panel filters" aria-label="Filters">
+        <div class="field">
+          <label for="search">Search</label>
+          <input id="search" type="search" placeholder="skill, role, phase, risk">
+        </div>
+        <div class="field">
+          <label for="filterStatus">Status</label>
+          <select id="filterStatus">
+            <option value="all">All</option>
+            <option value="existing">Existing</option>
+            <option value="proposed-new">Proposed new</option>
+            <option value="proposed-update">Proposed update</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="filterPhase">Phase</label>
+          <select id="filterPhase">
+            <option value="all">All</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="filterDecision">Decision</label>
+          <select id="filterDecision">
+            <option value="all">All</option>
+            <option value="keep">Keep</option>
+            <option value="revise">Revise</option>
+            <option value="later">Later</option>
+            <option value="remove">Remove</option>
+            <option value="discuss">Discuss</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="filterPriority">Priority</label>
+          <select id="filterPriority">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <div>
+            <h2>Skill Matrix</h2>
+            <p>Каждая строка фиксирует роль, место в системе, риск конфликта и пользовательский комментарий.</p>
+          </div>
+        </div>
+        <div class="panel table-wrap">
+          <table>
+            <colgroup>
+              <col class="col-skill">
+              <col class="col-status">
+              <col class="col-phase">
+              <col class="col-role">
+              <col class="col-risk">
+              <col class="col-decision">
+              <col class="col-comment">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Skill</th>
+                <th>Status</th>
+                <th>Phase</th>
+                <th>Role</th>
+                <th>Boundary / Risk</th>
+                <th>Decision</th>
+                <th>Comment</th>
+              </tr>
+            </thead>
+            <tbody id="skillsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <div>
+            <h2>User Journeys</h2>
+            <p>Два рабочих сценария показывают, как скиллы взаимодействуют в реальном проекте.</p>
+          </div>
+        </div>
+        <div class="journey-grid" id="journeyGrid"></div>
+      </section>
+
+      <section class="notes-panel">
+        <div class="panel">
+          <h3>System-level comments</h3>
+          <div class="field">
+            <label for="systemComments">Architecture notes</label>
+            <textarea id="systemComments" data-storage-key="system-comments" placeholder="Что оставить, что упростить, где нужен другой порядок, какие роли конфликтуют."></textarea>
+            <div data-static-agent-review="system-comments"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Open decisions</h3>
+          <div class="field">
+            <label for="openDecisions">Questions for discussion</label>
+            <textarea id="openDecisions" data-storage-key="open-decisions" placeholder="Какие решения нужно обсудить отдельно: состав фаз, спорные скиллы, vendor-specific части, approval gates."></textarea>
+            <div data-static-agent-review="open-decisions"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        Comments are saved in this browser via localStorage. Export JSON or copy Markdown before moving to another browser/profile.
+        Rebuild generated skill pages and document badges with:
+        <code>node "$UIUX_SKILL_SYSTEM_ROOT/scripts/build_skill_review_pages.mjs"</code>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_PREFIX = "uiux-skill-review-v1:";
+
+    const proposedUpdates = new Set([
+      "senior-ui-ux-orchestrator",
+      "task-plan-v2-orchestrator",
+      "seo-llm-site-architect",
+      "stitch-design-bridge"
+    ]);
+
+    const skills = [
+      {
+        name: "senior-ui-ux-orchestrator",
+        status: "existing",
+        phase: "Core",
+        priority: "high",
+        role: "Главный архитектор, chair, routing, cross-domain decisions, three-variant design, council, privacy and evidence gates.",
+        risk: "Должен оставаться единственным главным оркестратором; proposed update: pre-design/existing-site routing, wiki gates, stricter release gates."
+      },
+      {
+        name: "task-plan-v2-orchestrator",
+        status: "existing",
+        phase: "Planning",
+        priority: "high",
+        role: "TASK-PLAN v2, gates, progress visibility, handoffs, review/test/rollback fields, dashboard contract.",
+        risk: "Риск бюрократии на мелких задачах; proposed update: auto-trigger, changelog, TASK-DASHBOARD."
+      },
+      {
+        name: "ui-ux-llm-product-architect",
+        status: "existing",
+        phase: "Product UX",
+        priority: "high",
+        role: "Пользовательские пути, IA, UX-логика, accessibility intent, human and LLM-readable interfaces.",
+        risk: "Может конфликтовать с SEO, если упрощает контент слишком сильно."
+      },
+      {
+        name: "seo-llm-site-architect",
+        status: "existing",
+        phase: "SEO/LLM",
+        priority: "high",
+        role: "SEO, AEO/GEO, schema, llms.txt, robots, sitemap, semantic HTML, AI-search readability.",
+        risk: "Может перегрузить страницу текстом; proposed update: semantic core input gate."
+      },
+      {
+        name: "ui-ux-pro-max",
+        status: "existing",
+        phase: "Design Intelligence",
+        priority: "high",
+        role: "Searchable design intelligence: styles, palettes, typography, patterns, UX rules, stacks.",
+        risk: "Advisory only; его рекомендации нужно фильтровать через продукт, бренд, SEO и реализацию."
+      },
+      {
+        name: "stitch-design-bridge",
+        status: "existing",
+        phase: "Design Exploration",
+        priority: "high",
+        role: "Stitch-ready prompts, AI UI exploration, output review, handoff to Figma/code after approved directions.",
+        risk: "Optional cloud/vendor-specific; proposed update: one project per direction, manual model choice artifact."
+      },
+      {
+        name: "senior-figma-orchestrator",
+        status: "existing",
+        phase: "Figma",
+        priority: "high",
+        role: "Figma MCP orchestration: context, design-to-code, code-to-canvas, canvas edits, variables, components, assets, effects.",
+        risk: "Не должен заменять product/SEO decisions; отвечает за Figma boundary."
+      },
+      {
+        name: "figma-context-reader",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Reads Figma hierarchy, layout, tokens, components, variables, assets, interaction notes.",
+        risk: "Read-only; нельзя выдавать скриншотные догадки за MCP evidence."
+      },
+      {
+        name: "figma-design-to-code-bridge",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Turns Figma frames into implementation plans, component mappings, token handoffs, Code Connect decisions.",
+        risk: "Не должен слепо pixel-copy макет без UX/code feasibility review."
+      },
+      {
+        name: "figma-code-to-canvas",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Brings live/local web UI back into Figma as editable layers when code is ahead of design.",
+        risk: "Privacy and tool-availability gate required before capture."
+      },
+      {
+        name: "figma-canvas-editor",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Creates/edits native Figma frames, components, variables, styles, FigJam objects, Slides objects.",
+        risk: "Mutation scope must be explicit; needs readback evidence."
+      },
+      {
+        name: "figma-design-system-sync",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Syncs design-system contracts between Figma and code: variables, styles, tokens, components.",
+        risk: "Can create governance overhead if used on one-off pages."
+      },
+      {
+        name: "figma-assets-manager",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Exports, downloads, inventories, and prepares assets from Figma for implementation and audit.",
+        risk: "Must preserve licensing, privacy, naming, and asset manifest evidence."
+      },
+      {
+        name: "figma-apply-effects",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Creates, audits, removes, and binds Figma effects: shadows, blurs, glow, glass, noise, texture, progressive blur.",
+        risk: "Runtime compatibility differs by MCP/plugin support; requires readback."
+      },
+      {
+        name: "figma-workflow-auditor",
+        status: "existing",
+        phase: "Figma",
+        priority: "medium",
+        role: "Audits Figma workflows for correctness, freshness, privacy, evidence, and routing quality.",
+        risk: "Should be used as quality gate, not as a parallel orchestrator."
+      },
+      {
+        name: "marketing-site-skill",
+        status: "existing",
+        phase: "Implementation",
+        priority: "high",
+        role: "Builds/refactors/audits public marketing pages, landing pages, conversion flows, metadata, media-heavy pages.",
+        risk: "Do not use for dense app/admin surfaces."
+      },
+      {
+        name: "webapp-ui-skill",
+        status: "existing",
+        phase: "Implementation",
+        priority: "high",
+        role: "Builds/refactors/audits dashboards, SaaS, admin panels, CRM, data-heavy product workflows.",
+        risk: "Do not use for pure landing pages unless the task is actually an app surface."
+      },
+      {
+        name: "ux-audit-skill",
+        status: "existing",
+        phase: "Quality",
+        priority: "high",
+        role: "Evidence-backed audit of URLs, screenshots, Figma, source code, responsive behavior, accessibility, conversion blockers.",
+        risk: "Never claim DOM/Lighthouse/axe/screenshot evidence unless it exists."
+      },
+      {
+        name: "design-critic-skill",
+        status: "existing",
+        phase: "Quality",
+        priority: "high",
+        role: "Visual quality critique: hierarchy, spacing, typography, contrast risk, consistency, brand fit, anti-slop review.",
+        risk: "Should create actionable critique, not aesthetic taste fights."
+      },
+      {
+        name: "cursor-reveal-hero",
+        status: "existing",
+        phase: "Visual Effects",
+        priority: "medium",
+        role: "Builds and validates cursor-trail mask reveal hero effects, canvas compositing, hover reveal, before/after reveal.",
+        risk: "Specialist effect only; needs image alignment and browser visual checks."
+      },
+      {
+        name: "image-layer-alignment-validator",
+        status: "existing",
+        phase: "Visual Effects",
+        priority: "medium",
+        role: "Validates two raster layers for reveal, before/after, morph, mask compositing, annotated overlays/difference maps.",
+        risk: "Should run before reveal tuning if base/reveal images may drift."
+      },
+      {
+        name: "serp-source-configurator",
+        status: "existing",
+        phase: "Pre-design",
+        priority: "high",
+        role: "SERP source setup gate: engine checkboxes, OpenSERP/proxy/API-key runtime fields, approval, budget, and preflight before harvesting.",
+        risk: "Must not store API keys or proxy credentials; paid proxy and provider mutations require explicit approval."
+      },
+      {
+        name: "serp-keyword-harvester",
+        status: "existing",
+        phase: "Pre-design",
+        priority: "high",
+        role: "Collects SERP, autocomplete, and keyword evidence after source setup before structure and concept decisions.",
+        risk: "External search tools require approval and source config; local fallbacks should exist."
+      },
+      {
+        name: "semantic-core-builder",
+        status: "existing",
+        phase: "Pre-design",
+        priority: "high",
+        role: "Clusters keywords, intents, URL structure, and creates semantic-core.json plus site-structure.md.",
+        risk: "Must distinguish evidence from generated assumptions."
+      },
+      {
+        name: "concept-prototyper",
+        status: "existing",
+        phase: "Pre-design",
+        priority: "high",
+        role: "Creates disposable clickable HTML concept/wireframe and captures business feedback before design/code.",
+        risk: "Prototype must not become production code by accident."
+      },
+      {
+        name: "design-feedback-collector",
+        status: "existing",
+        phase: "Design Exploration",
+        priority: "medium",
+        role: "Collects user and agent feedback, tracks accepted/partial/applied statuses, and hands decisions to the right owner.",
+        risk: "Cannot mark feedback applied without an artifact or decision record."
+      },
+      {
+        name: "agent-progress-visualizer",
+        status: "existing",
+        phase: "Core",
+        priority: "high",
+        role: "Creates a human-readable progress cockpit from TASK-PLAN.md, progress-state.json, feedback, reports, and wiki decisions.",
+        risk: "Must never become the source of truth; HTML and JSON are derived and must not store secrets."
+      },
+      {
+        name: "workflow-compliance-supervisor",
+        status: "existing",
+        phase: "Core",
+        priority: "high",
+        role: "Checks promised user journeys against task-plan, progress state, evidence, workflow log, skipped stages, and user approvals.",
+        risk: "Must not replace senior-ui-ux-orchestrator; it blocks lazy skips and fake Done/Ran claims only through evidence-backed gates."
+      },
+      {
+        name: "pencil-design-bridge",
+        status: "existing",
+        phase: "Design+Code Canvas",
+        priority: "high",
+        role: "Turns approved directions or reviewed Stitch outputs into Pencil tool handoffs and reviews Pencil outputs.",
+        risk: ".pen access must go through Pencil tools; do not parse .pen files directly."
+      },
+      {
+        name: "project-wiki-manager",
+        status: "existing",
+        phase: "Project Memory",
+        priority: "high",
+        role: "Initializes and maintains project wiki, sanitized context, llms-context.md, index, and post-skill capture.",
+        risk: "Must never ingest secrets, tokens, cookies, private screenshots, or raw .env values."
+      },
+      {
+        name: "paid-traffic-architect",
+        status: "existing",
+        phase: "SEO+Paid",
+        priority: "medium",
+        role: "Plans paid campaigns, UTM maps, creative briefs, audience hypotheses, and landing requirements.",
+        risk: "Campaign launch, spend, pixels, and audience uploads require explicit approval."
+      },
+      {
+        name: "analytics-setup-architect",
+        status: "existing",
+        phase: "Analytics",
+        priority: "medium",
+        role: "Plans analytics, consent, UTM, event taxonomy, dashboards, and verification.",
+        risk: "Live tag/account changes and private exports require explicit approval."
+      },
+      {
+        name: "admin-ui-orchestrator",
+        status: "existing",
+        phase: "Admin/CMS",
+        priority: "medium",
+        role: "Coordinates admin/CMS roles, permissions, workflows, AI boundaries, audit logs, and builder handoff.",
+        risk: "Admin scope only; production admin mutations and destructive actions require confirm gates."
+      },
+      {
+        name: "admin-ui-builder",
+        status: "existing",
+        phase: "Admin/CMS",
+        priority: "medium",
+        role: "Specifies or builds guarded admin screens, CRUD, tables, forms, states, and confirmations.",
+        risk: "Private admin does not mean low trust; no real customer data or hidden destructive actions."
+      },
+      {
+        name: "omnichannel-comms-builder",
+        status: "existing",
+        phase: "Admin/CMS",
+        priority: "medium",
+        role: "Plans forms, inbox, chat, booking, CRM handoff, templates, operator routing, consent, and escalation.",
+        risk: "Real message sending and CRM mutations require explicit approval."
+      },
+      {
+        name: "site-ai-assistant-builder",
+        status: "existing",
+        phase: "AI Assistant",
+        priority: "high",
+        role: "Plans public site AI assistant with RAG/source boundaries, injection protection, refusals, rate limits, logs, and escalation.",
+        risk: "No hallucinated price/legal claims, destructive tools, secret access, or unbounded sources."
+      },
+      {
+        name: "visual-content-director",
+        status: "existing",
+        phase: "Visual Content",
+        priority: "high",
+        role: "Plans real/generative visual assets, hero media, visual proof, and asset QA for Stitch/Pencil/Figma/code.",
+        risk: "Generated visuals and placeholder assets must be labeled and cannot invent real-world facts."
+      },
+      {
+        name: "infra-launch-orchestrator",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Coordinates dry-run-first domain, server, deploy, DNS, SSL, webmaster, security, and launch readiness specialists.",
+        risk: "Paid/destructive/production steps require explicit approval; it is not the central UI/UX chair."
+      },
+      {
+        name: "domain-name-generator",
+        status: "existing",
+        phase: "Domain",
+        priority: "medium",
+        role: "Generates and scores domain candidates from concept, semantic core, geography, and brand tone.",
+        risk: "Availability is unknown unless checked with evidence; final registration is separate and approved."
+      },
+      {
+        name: "domain-registrar-advisor",
+        status: "existing",
+        phase: "Domain",
+        priority: "high",
+        role: "Advises registrar choice, pricing/renewal/privacy risks, and registration checklist.",
+        risk: "Paid/irreversible registration and account actions require explicit user confirmation."
+      },
+      {
+        name: "server-selector",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Chooses hosting/server profile based on geo, stack, traffic, CMS, database, CDN, security, and budget.",
+        risk: "Provider recommendations need freshness labels; resource creation requires approval."
+      },
+      {
+        name: "server-provisioner",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Prepares server provisioning dry-runs, SSH/firewall hardening, backups, monitoring, and rollback.",
+        risk: "Paid external action; no resource mutation without approval, no secrets in logs."
+      },
+      {
+        name: "deploy-orchestrator",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Plans build/deploy pipeline, CI/CD, smoke tests, environment checks, deploy docs, and rollback.",
+        risk: "Production deploy, migrations, and secret changes require explicit approval."
+      },
+      {
+        name: "domain-dns-configurator",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Plans DNS/Cloudflare/registrar records, TTL, propagation checks, and rollback.",
+        risk: "DNS changes are externally visible and can break production; approval and rollback required."
+      },
+      {
+        name: "ssl-and-security-hardener",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Plans SSL/TLS, HTTPS, HSTS, security headers, CSP, cookie flags, monitoring, and hardening evidence.",
+        risk: "Live cert/server/header changes require approval; do not fake scan evidence."
+      },
+      {
+        name: "webmaster-registrar",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Plans GSC/Yandex/Bing verification, sitemap submission, ownership checks, and indexing monitoring.",
+        risk: "Account access, verification, sitemap submission, and tokens require approval/redaction."
+      },
+      {
+        name: "launch-readiness-auditor",
+        status: "existing",
+        phase: "Infra/Launch",
+        priority: "high",
+        role: "Final go/no-go gate across SEO, schema, analytics, performance, accessibility, security, DNS, SSL, monitoring, rollback.",
+        risk: "Should block release on critical issues; evidence must be mechanical or skipped with rationale."
+      },
+      {
+        name: "tech-stack-selector",
+        status: "existing",
+        phase: "Tech Stack",
+        priority: "high",
+        role: "Chooses stack from concept, semantic core, infra profile, content volume, CMS/admin/AI needs.",
+        risk: "Must notify user and log overrides; avoid trendy stack by default."
+      },
+      {
+        name: "existing-site-analyzer",
+        status: "existing",
+        phase: "Existing Site",
+        priority: "high",
+        role: "Audits current site evidence: pages, content, SEO/LLM surface, UX, tech constraints, and visual assets.",
+        risk: "Crawling public URLs, authenticated pages, private analytics, and screenshots require approval when applicable."
+      },
+      {
+        name: "rebuild-or-improve-advisor",
+        status: "existing",
+        phase: "Existing Site",
+        priority: "high",
+        role: "Compares improve in place, redesign current stack, partial rebuild, and full rebuild using audit evidence.",
+        risk: "Decision must preserve SEO equity, business-critical content, and migration feasibility."
+      },
+      {
+        name: "migration-planner",
+        status: "existing",
+        phase: "Existing Site",
+        priority: "medium",
+        role: "Plans URL maps, redirects, sitemap, robots, schema, GSC/webmaster, launch checks, rollback, and monitoring.",
+        risk: "Migration mistakes can destroy organic traffic; production changes require explicit approval."
+      }
+    ];
+
+    const journeys = [
+      {
+        id: "new-premium-site",
+        title: "Новый премиальный сайт с нуля",
+        meta: "Пример: коттеджный поселок, клиника, девелопер, B2B-услуга, продуктовая лендинговая система.",
+        steps: [
+          {
+            title: "Intake and scope",
+            skills: "senior-ui-ux-orchestrator, task-plan-v2-orchestrator, agent-progress-visualizer, project-wiki-manager",
+            detail: "Цель, аудитория, privacy mode, формат результата, уровень автоматизации, progress cockpit, wiki context."
+          },
+          {
+            title: "Search and semantic evidence",
+            skills: "serp-source-configurator, serp-keyword-harvester, semantic-core-builder, seo-llm-site-architect",
+            detail: "Выбор источников/прокси/лимитов, запросы, интенты, кластеры, структура страниц, SEO/LLM constraints."
+          },
+          {
+            title: "Concept prototype",
+            skills: "concept-prototyper, ui-ux-llm-product-architect",
+            detail: "Черновой clickable prototype, пользовательские пути, оффер, спорные бизнес-решения."
+          },
+          {
+            title: "Three design directions",
+            skills: "ui-ux-pro-max, senior-ui-ux-orchestrator, design-feedback-collector",
+            detail: "Три разных направления, style code, palette/type intent, content hierarchy, feedback."
+          },
+          {
+            title: "AI design exploration",
+            skills: "stitch-design-bridge, pencil-design-bridge, senior-figma-orchestrator",
+            detail: "Stitch prompts, Pencil/Figma/code handoff, review of generated candidates."
+          },
+          {
+            title: "Build and content assets",
+            skills: "marketing-site-skill, visual-content-director, figma-assets-manager",
+            detail: "Production HTML/React/site, real visual slots, placeholders gate, asset manifest."
+          },
+          {
+            title: "Measurement and assistant",
+            skills: "analytics-setup-architect, site-ai-assistant-builder, paid-traffic-architect",
+            detail: "Events, consent, UTM, RAG assistant, paid traffic landing requirements."
+          },
+          {
+            title: "Launch",
+            skills: "tech-stack-selector, infra-launch-orchestrator, launch-readiness-auditor",
+            detail: "Stack, hosting, DNS, SSL, webmaster tools, final evidence gate and wiki capture."
+          }
+        ]
+      },
+      {
+        id: "existing-site-upgrade",
+        title: "Редизайн или улучшение существующего сайта",
+        meta: "Пример: уже есть сайт, трафик, страницы, позиции, визуальные активы и риск потерять SEO.",
+        steps: [
+          {
+            title: "Existing site evidence",
+            skills: "existing-site-analyzer, ux-audit-skill, seo-llm-site-architect",
+            detail: "Crawl, screenshots, technical stack, SEO state, UX blockers, content inventory."
+          },
+          {
+            title: "Preserve or replace decision",
+            skills: "rebuild-or-improve-advisor, senior-ui-ux-orchestrator, senior council",
+            detail: "Improve current site, redesign on current base, or full rebuild with tradeoffs."
+          },
+          {
+            title: "Migration protection",
+            skills: "migration-planner, semantic-core-builder, project-wiki-manager",
+            detail: "URL map, 301 redirects, canonical strategy, sitemap coverage, saved context."
+          },
+          {
+            title: "Design refresh",
+            skills: "ui-ux-pro-max, stitch-design-bridge, design-critic-skill",
+            detail: "Style candidates, AI exploration, visual critique, preservation of brand assets."
+          },
+          {
+            title: "Implementation path",
+            skills: "marketing-site-skill, webapp-ui-skill, senior-figma-orchestrator",
+            detail: "Public pages, admin/app surfaces, Figma sync, component mapping."
+          },
+          {
+            title: "Admin and operations",
+            skills: "admin-ui-orchestrator, admin-ui-builder, omnichannel-comms-builder",
+            detail: "CMS, content roles, forms, chat, booking, inbox, operator workflow."
+          },
+          {
+            title: "Validation",
+            skills: "ux-audit-skill, launch-readiness-auditor, analytics-setup-architect",
+            detail: "Browser checks, SEO/schema, analytics events, accessibility, performance, placeholders."
+          },
+          {
+            title: "Launch and monitor",
+            skills: "deploy-orchestrator, webmaster-registrar, project-wiki-manager",
+            detail: "Deploy, webmaster verification, post-launch monitoring, wiki capture of final state."
+          }
+        ]
+      }
+    ];
+
+    const journeyProcessMap = {
+      "new-premium-site": [
+        [
+          { name: "Business Brief Intake", action: "Зафиксировать цель сайта, продукт, географию, аудиторию, цену/чек, сроки и главный коммерческий результат.", output: "docs/project-intake.md" },
+          { name: "Stakeholder And Constraint Capture", action: "Собрать ограничения по бренду, контенту, юридическим формулировкам, приватности, внешним сервисам и платным действиям.", output: "reports/project-constraints.md" },
+          { name: "Artifact Inventory", action: "Проверить, какие материалы уже есть: тексты, фото, логотип, Figma, старый сайт, презентации, таблицы, CRM/CMS.", output: "reports/source-materials-inventory.md" },
+          { name: "Scope And Gate Contract", action: "Разделить работу на discovery, semantic core, concept, design, implementation, validation и launch gates.", output: "TASK-PLAN.md" },
+          { name: "Project Memory Bootstrap", action: "Создать безопасную wiki-память проекта и правила, что туда можно/нельзя сохранять.", output: "wiki/index.md, wiki/llms-context.md" }
+        ],
+        [
+          { name: "External Research Approval", action: "Определить, можно ли использовать внешние SERP/API/поисковые сервисы или только локальные материалы.", output: "reports/research-approval.md" },
+          { name: "SERP And Suggest Harvest", action: "Собрать поисковые формулировки, подсказки, конкурентов, интенты и частотные сигналы.", output: "reports/keyword-harvest.json" },
+          { name: "Competitor And Offer Scan", action: "Выделить, какие офферы, доказательства, CTA и структуры используют конкуренты.", output: "reports/competitor-offer-scan.md" },
+          { name: "Intent Clustering", action: "Сгруппировать запросы по интентам: купить, сравнить, узнать, довериться, связаться, приехать, забронировать.", output: "reports/semantic-core.json" },
+          { name: "Information Architecture Draft", action: "Собрать будущие страницы, блоки, URL и переходы из семантического ядра и бизнес-цели.", output: "docs/site-structure.md" },
+          { name: "SEO/LLM Structure Gate", action: "Проверить, что структура понятна человеку, поисковику и AI-ассистенту, без скрытого важного контента.", output: "reports/seo-llm-structure-gate.md" }
+        ],
+        [
+          { name: "Entry Point Mapping", action: "Разложить входы пользователя: органика, реклама, рекомендация, соцсети, прямой заход, офлайн-контакт.", output: "docs/entry-points.md" },
+          { name: "Primary Journey Map", action: "Описать путь от первого экрана до заявки/звонка/бронирования с критичными trust points.", output: "docs/journey-map.md" },
+          { name: "Offer And Objection Model", action: "Сформулировать оффер, доказательства, возражения, ответы и причины оставить заявку.", output: "docs/offer-objection-model.md" },
+          { name: "Content Hierarchy Prototype", action: "Определить порядок блоков, CTA, доказательств, FAQ, карт/планов/галерей и контактов.", output: "docs/content-hierarchy.md" },
+          { name: "Disposable Clickable Prototype", action: "Собрать черновой HTML-прототип для обсуждения логики, не используя его как финальный production-код.", output: "prototype/index.html" },
+          { name: "Business Feedback Capture", action: "Собрать комментарии пользователя по концепции, конфликтам и недостающим фактам.", output: "reports/business-concept-feedback.json" }
+        ],
+        [
+          { name: "Design Intelligence Scan", action: "Подобрать релевантные стили, палитры, типографику, layout-паттерны и риски визуального направления.", output: "reports/design-intelligence.md" },
+          { name: "Brand Fit Filter", action: "Отсечь стили, которые красивы сами по себе, но не подходят продукту, аудитории, цене или географии.", output: "reports/brand-fit-filter.md" },
+          { name: "Direction Candidate Pool", action: "Собрать набор возможных направлений до выбора финальных трех.", output: "reports/design-direction-candidates.md" },
+          { name: "Three Direction Curation", action: "Выбрать ровно три осмысленно разные дизайн-версии, а не три вариации одной темы.", output: "reports/three-directions.md" },
+          { name: "Council Conflict Check", action: "Проверить UX/SEO/LLM/accessibility/implementation конфликты до передачи в Stitch/Figma/code.", output: "reports/design-council-check.md" },
+          { name: "Direction Feedback Loop", action: "Собрать комментарии пользователя по направлениям и отметить, что оставить, убрать, усилить или отложить.", output: "reports/design-feedback.json" }
+        ],
+        [
+          { name: "Approved Direction Packaging", action: "Упаковать каждое утвержденное направление в brief: цель, стиль, контент, ограничения, facts, validation criteria.", output: "design-briefs/*.md" },
+          { name: "Stitch Prompt Preparation", action: "Превратить direction briefs в Stitch-ready prompts без передачи лишних приватных данных.", output: "stitch-briefs/*.md" },
+          { name: "Stitch Exploration Review", action: "Оценить AI-варианты как кандидатов, а не финальный дизайн: факты, CTA, hierarchy, accessibility, SEO.", output: "reports/stitch-output-review.md" },
+          { name: "Pencil/Figma Handoff Decision", action: "Решить, нужен ли editable canvas, Figma MCP, Pencil workflow или сразу code implementation.", output: "reports/design-handoff-decision.md" },
+          { name: "Implementation Brief Freeze", action: "Зафиксировать выбранную дизайн-логику перед кодом, чтобы не менять основу на этапе верстки.", output: "docs/implementation-brief.md" }
+        ],
+        [
+          { name: "Production Structure Build", action: "Собрать страницы/секции с семантической HTML-структурой, понятными heading levels и CTA.", output: "site source files" },
+          { name: "Responsive Layout Pass", action: "Проверить, что hero, формы, карточки, галереи, таблицы и CTA не ломаются на основных viewport.", output: "reports/responsive-check.md" },
+          { name: "Content And Fact Integration", action: "Вставить утвержденные факты, цены/условия/локации/FAQ без выдуманных утверждений.", output: "reports/content-integration.md" },
+          { name: "Visual Asset Pipeline", action: "Подготовить реальные изображения, иллюстрации, exports, alt-тексты и placeholder audit.", output: "reports/visual-placeholders.json" },
+          { name: "Interaction And State Coverage", action: "Проверить формы, hover/focus, loading/error/success states, mobile menu и accessibility states.", output: "reports/state-coverage.md" },
+          { name: "Implementation Evidence", action: "Собрать evidence: browser checks, screenshots, metadata/schema checks и известные пропуски.", output: "reports/implementation-check.md" }
+        ],
+        [
+          { name: "Measurement Plan", action: "Определить цели измерения: лиды, звонки, формы, бронирования, route clicks, messenger clicks.", output: "reports/measurement-plan.md" },
+          { name: "Event Taxonomy", action: "Описать события: CTA clicks, form starts, submits, scroll depth, phone/email/messenger interactions.", output: "reports/analytics-setup.md" },
+          { name: "Consent And Privacy Gate", action: "Проверить cookie/analytics consent, privacy copy, retention и запрет лишнего сбора данных.", output: "reports/consent-gate.md" },
+          { name: "Public AI Assistant Scope", action: "Описать, что ассистент может отвечать, какие источники использует и где эскалирует к человеку.", output: "reports/site-ai-assistant-brief.md" },
+          { name: "RAG Source Pack", action: "Собрать разрешенные источники для AI-ассистента: страницы, FAQ, условия, контакты, policy.", output: "reports/rag-source-pack.md" },
+          { name: "Paid Traffic Readiness", action: "Согласовать UTM, landing requirements, campaign messages и SEO/ads conflicts.", output: "reports/paid-traffic-brief.md" }
+        ],
+        [
+          { name: "Tech Stack Decision", action: "Выбрать стек, CMS/static/dynamic подход, сборку, зависимости и причины отказа от альтернатив.", output: "docs/tech-stack.md" },
+          { name: "Domain And Hosting Route", action: "Подготовить домен, hosting profile, DNS strategy и список действий, требующих ручного подтверждения.", output: "reports/domain-hosting-route.md" },
+          { name: "Deploy Pipeline Setup", action: "Подготовить build/deploy, environment example, rollback route и production checklist.", output: "reports/deploy-setup.md" },
+          { name: "DNS And SSL Setup", action: "Проверить DNS records, SSL, HTTPS-only, security headers и propagation evidence.", output: "reports/dns-ssl-setup.md" },
+          { name: "Webmaster Registration", action: "Подготовить sitemap, robots, Search Console/Yandex Webmaster и verification steps.", output: "reports/webmaster-registration.md" },
+          { name: "Launch Readiness Gate", action: "Заблокировать релиз при критичных проблемах: SEO, analytics, placeholders, accessibility, security.", output: "reports/launch-readiness.md" },
+          { name: "Final Wiki Handoff", action: "Сохранить финальные решения, артефакты, риски и дальнейшие задачи в проектную wiki.", output: "wiki/launch-handoff.md" }
+        ]
+      ],
+      "existing-site-upgrade": [
+        [
+          { name: "Crawl Scope Approval", action: "Определить, что можно crawлить: публичные URL, приватные разделы, staging, лимиты запросов.", output: "reports/crawl-scope.md" },
+          { name: "Current Site Crawl", action: "Собрать страницы, URL, шаблоны, визуальные активы, технический стек и текущую структуру.", output: "reports/existing-site-audit.md" },
+          { name: "Page And Template Inventory", action: "Разделить страницы на шаблоны, типы контента, повторяющиеся блоки и уникальные landing pages.", output: "reports/page-template-inventory.md" },
+          { name: "SEO Equity Snapshot", action: "Зафиксировать страницы, которые нельзя потерять: трафик, индексация, canonical, sitemap, redirects.", output: "reports/seo-preservation-map.md" },
+          { name: "Visual Asset Inventory", action: "Собрать фото, видео, логотипы, иконки, документы и понять, что пригодно для нового дизайна.", output: "reports/existing-visual-assets.md" },
+          { name: "UX And Conversion Audit", action: "Найти блокеры доверия, навигации, формы, мобильного опыта и визуальной иерархии.", output: "reports/ux-audit.md" },
+          { name: "Technical Risk Snapshot", action: "Зафиксировать стек, CMS, performance issues, third-party scripts, forms, integrations.", output: "reports/technical-risk-snapshot.md" }
+        ],
+        [
+          { name: "Improve Path", action: "Оценить, можно ли решить задачу точечными правками без полной переработки.", output: "reports/option-a-improve.md" },
+          { name: "Redesign Path", action: "Оценить редизайн на текущей базе с сохранением URL, CMS и важных активов.", output: "reports/option-b-redesign.md" },
+          { name: "Full Rebuild Path", action: "Оценить полную переработку с миграцией, рисками, сроками и rollback-планом.", output: "reports/option-c-rebuild.md" },
+          { name: "Council Decision", action: "Свести UX, SEO, реализацию, бюджет, сроки и риски в одно решение chair.", output: "reports/rebuild-or-improve-decision.md" },
+          { name: "Decision Handoff", action: "Зафиксировать выбранный путь, что сохраняем, что меняем и какие проверки обязательны.", output: "docs/selected-upgrade-path.md" }
+        ],
+        [
+          { name: "URL Inventory", action: "Собрать текущие URL, целевые URL, статусы страниц и правила сохранения.", output: "reports/url-inventory.csv" },
+          { name: "Redirect Mapping", action: "Спланировать 301, canonical, noindex, sitemap coverage и change-of-address при необходимости.", output: "reports/redirect-map.csv" },
+          { name: "Metadata Preservation Map", action: "Сохранить title, description, H1, schema, внутренние ссылки и важные content blocks.", output: "reports/metadata-preservation-map.csv" },
+          { name: "Content Migration Rules", action: "Определить, какой контент переносится без изменений, какой переписывается, какой удаляется.", output: "reports/content-migration-rules.md" },
+          { name: "Migration Test Plan", action: "Подготовить тесты 301/404/sitemap/canonical/schema до production cutover.", output: "reports/migration-test-plan.md" },
+          { name: "Migration Context Capture", action: "Сохранить решения миграции в wiki, чтобы не потерять SEO-критичный контекст.", output: "wiki/seo-migration.md" }
+        ],
+        [
+          { name: "Brand Asset Preservation", action: "Определить, какие элементы старого сайта сохранить: фото, цвета, tone, proof, узнаваемость.", output: "reports/brand-preservation.md" },
+          { name: "Design Intelligence Refresh", action: "Подобрать новые стили и паттерны, которые улучшают сайт без разрушения доверия.", output: "reports/redesign-intelligence.md" },
+          { name: "Refresh Direction Set", action: "Подготовить визуальные направления: аккуратное улучшение, заметный редизайн, премиальный rebuild.", output: "reports/redesign-directions.md" },
+          { name: "Critique And Conflict Review", action: "Проверить направления на визуальную слабость, SEO-перегруз, accessibility и реалистичность.", output: "reports/design-critic-review.md" },
+          { name: "Selected Refresh Direction", action: "Зафиксировать выбранное направление и элементы, которые запрещено потерять.", output: "docs/selected-refresh-direction.md" }
+        ],
+        [
+          { name: "Surface Split", action: "Разделить публичные страницы, app/admin surfaces, CMS-части и Figma/code handoff.", output: "reports/implementation-scope.md" },
+          { name: "Component Mapping", action: "Связать старые блоки, новые компоненты, Figma context и кодовую реализацию.", output: "reports/component-map.md" },
+          { name: "CMS/Data Dependency Check", action: "Понять, какие блоки зависят от CMS, форм, интеграций, CRM, каталогов или внешних API.", output: "reports/data-dependency-check.md" },
+          { name: "Incremental Build Plan", action: "Определить порядок внедрения без остановки бизнеса и без SEO-регрессии.", output: "reports/incremental-build-plan.md" },
+          { name: "Figma/Code Sync Decision", action: "Решить, нужно ли синхронизировать live UI в Figma или вести реализацию напрямую в коде.", output: "reports/figma-code-sync-decision.md" },
+          { name: "Rollback Strategy", action: "Описать, как откатить релиз, если формы, SEO, performance или DNS сломаются.", output: "reports/rollback-strategy.md" }
+        ],
+        [
+          { name: "CMS Content Model", action: "Описать типы контента, поля, роли редакторов, workflow публикации и модерации.", output: "reports/admin-architecture.md" },
+          { name: "Access And Role Model", action: "Разделить права владельца, редактора, менеджера, оператора и администратора.", output: "reports/admin-roles.md" },
+          { name: "Operator Workflow", action: "Спроектировать обработку заявок, чатов, форм, бронирований и follow-up.", output: "reports/operator-workflow.md" },
+          { name: "Omnichannel Routing", action: "Связать формы, мессенджеры, чат, email, booking и CRM/inbox в понятный процесс.", output: "reports/omnichannel-routing.md" },
+          { name: "Admin Safety Rules", action: "Определить права, audit log, подтверждения destructive actions и AI-assistant boundary.", output: "reports/admin-safety.md" }
+        ],
+        [
+          { name: "Pre-launch Regression Checks", action: "Сравнить старую и новую версию по critical pages, URL, metadata, forms и CTA.", output: "reports/regression-check.md" },
+          { name: "SEO And Schema Validation", action: "Проверить title, descriptions, H1, canonical, sitemap, robots, schema and llms-readable structure.", output: "reports/seo-schema-validation.md" },
+          { name: "Accessibility And Mobile Pass", action: "Проверить keyboard/focus, contrast risks, mobile layout, tap targets and readable hierarchy.", output: "reports/accessibility-mobile-pass.md" },
+          { name: "Performance And Third-party Pass", action: "Проверить вес страниц, изображения, scripts, analytics tags и критичные third-party риски.", output: "reports/performance-third-party-pass.md" },
+          { name: "Analytics Verification", action: "Проверить события, цели, UTM, consent и отсутствие потери измеримости.", output: "reports/analytics-verification.md" },
+          { name: "Forms And Lead Flow Check", action: "Проверить заявки, сообщения, email, CRM/inbox, thank-you states and error states.", output: "reports/lead-flow-check.md" },
+          { name: "Launch Blockers Review", action: "Зафиксировать blockers и не выпускать сайт при критичных нарушениях.", output: "reports/launch-blockers.md" }
+        ],
+        [
+          { name: "Deployment Cutover", action: "Подготовить deploy, rollback, DNS/SSL, redirects и окно переключения.", output: "reports/deploy-cutover.md" },
+          { name: "Redirect And 404 Watch", action: "Проверить 301, 404, canonical, sitemap after release and redirect chains.", output: "reports/redirect-404-watch.md" },
+          { name: "Webmaster Resubmission", action: "Обновить sitemap, проверить индексацию, отправить ключевые страницы на переобход.", output: "reports/webmaster-resubmission.md" },
+          { name: "Post-launch Monitoring", action: "Следить за 404, индексацией, формами, скоростью, конверсиями и SEO-сигналами.", output: "reports/post-launch-monitoring.md" },
+          { name: "Hotfix Triage", action: "Разделить post-launch проблемы на critical, high, normal and backlog.", output: "reports/hotfix-triage.md" },
+          { name: "Final Context Capture", action: "Сохранить финальную карту сайта, решения, проверки, открытые риски и следующие задачи.", output: "wiki/post-launch-context.md" }
+        ]
+      ]
+    };
+
+    journeys.forEach((journey) => {
+      const processGroups = journeyProcessMap[journey.id] || [];
+      journey.steps.forEach((step, index) => {
+        step.subprocesses = processGroups[index] || [];
+      });
+    });
+
+    /* SKILL_PAGE_META_START */
+    const skillPageMeta = {
+          "senior-ui-ux-orchestrator": {
+                "detailUrl": "skill-pages/skills/senior-ui-ux-orchestrator.html",
+                "phaseUrl": "skill-pages/phases/core.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (11)",
+                      "detail": "11 file(s), 5 supporting folder(s).",
+                      "fileCount": 11,
+                      "folderCount": 5,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "task-plan-v2-orchestrator",
+                      "ui-ux-llm-product-architect",
+                      "seo-llm-site-architect",
+                      "ui-ux-pro-max",
+                      "stitch-design-bridge",
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor",
+                      "marketing-site-skill",
+                      "webapp-ui-skill",
+                      "ux-audit-skill",
+                      "design-critic-skill",
+                      "cursor-reveal-hero",
+                      "image-layer-alignment-validator",
+                      "serp-source-configurator",
+                      "serp-keyword-harvester",
+                      "semantic-core-builder",
+                      "concept-prototyper",
+                      "design-feedback-collector",
+                      "agent-progress-visualizer",
+                      "pencil-design-bridge",
+                      "project-wiki-manager",
+                      "paid-traffic-architect",
+                      "analytics-setup-architect",
+                      "admin-ui-orchestrator",
+                      "admin-ui-builder",
+                      "omnichannel-comms-builder",
+                      "site-ai-assistant-builder",
+                      "visual-content-director",
+                      "infra-launch-orchestrator",
+                      "domain-name-generator",
+                      "domain-registrar-advisor",
+                      "server-selector",
+                      "server-provisioner",
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "ssl-and-security-hardener",
+                      "webmaster-registrar",
+                      "launch-readiness-auditor",
+                      "tech-stack-selector",
+                      "existing-site-analyzer",
+                      "rebuild-or-improve-advisor",
+                      "migration-planner"
+                ],
+                "samePhase": [
+                      "agent-progress-visualizer"
+                ]
+          },
+          "task-plan-v2-orchestrator": {
+                "detailUrl": "skill-pages/skills/task-plan-v2-orchestrator.html",
+                "phaseUrl": "skill-pages/phases/planning.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (9)",
+                      "detail": "9 file(s), 3 supporting folder(s).",
+                      "fileCount": 9,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "agent-progress-visualizer",
+                      "deploy-orchestrator",
+                      "existing-site-analyzer",
+                      "migration-planner",
+                      "project-wiki-manager",
+                      "rebuild-or-improve-advisor",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect",
+                      "tech-stack-selector",
+                      "ux-audit-skill"
+                ],
+                "samePhase": []
+          },
+          "ui-ux-llm-product-architect": {
+                "detailUrl": "skill-pages/skills/ui-ux-llm-product-architect.html",
+                "phaseUrl": "skill-pages/phases/product-ux.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (12)",
+                      "detail": "12 file(s), 4 supporting folder(s).",
+                      "fileCount": 12,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "concept-prototyper",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect"
+                ],
+                "samePhase": []
+          },
+          "seo-llm-site-architect": {
+                "detailUrl": "skill-pages/skills/seo-llm-site-architect.html",
+                "phaseUrl": "skill-pages/phases/seo-llm.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (11)",
+                      "detail": "11 file(s), 4 supporting folder(s).",
+                      "fileCount": 11,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "existing-site-analyzer",
+                      "semantic-core-builder",
+                      "senior-ui-ux-orchestrator",
+                      "serp-keyword-harvester",
+                      "serp-source-configurator",
+                      "ui-ux-llm-product-architect",
+                      "ux-audit-skill"
+                ],
+                "samePhase": []
+          },
+          "ui-ux-pro-max": {
+                "detailUrl": "skill-pages/skills/ui-ux-pro-max.html",
+                "phaseUrl": "skill-pages/phases/design-intelligence.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (58)",
+                      "detail": "58 file(s), 3 supporting folder(s).",
+                      "fileCount": 58,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "design-critic-skill",
+                      "design-feedback-collector",
+                      "pencil-design-bridge",
+                      "senior-ui-ux-orchestrator",
+                      "stitch-design-bridge",
+                      "visual-content-director"
+                ],
+                "samePhase": []
+          },
+          "stitch-design-bridge": {
+                "detailUrl": "skill-pages/skills/stitch-design-bridge.html",
+                "phaseUrl": "skill-pages/phases/design-exploration.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (9)",
+                      "detail": "9 file(s), 5 supporting folder(s).",
+                      "fileCount": 9,
+                      "folderCount": 5,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "design-critic-skill",
+                      "design-feedback-collector",
+                      "pencil-design-bridge",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect",
+                      "task-plan-v2-orchestrator",
+                      "ui-ux-llm-product-architect",
+                      "ui-ux-pro-max",
+                      "visual-content-director"
+                ],
+                "samePhase": [
+                      "design-feedback-collector"
+                ]
+          },
+          "senior-figma-orchestrator": {
+                "detailUrl": "skill-pages/skills/senior-figma-orchestrator.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (7)",
+                      "detail": "7 file(s), 4 supporting folder(s).",
+                      "fileCount": 7,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "figma-apply-effects",
+                      "figma-assets-manager",
+                      "figma-canvas-editor",
+                      "figma-code-to-canvas",
+                      "figma-context-reader",
+                      "figma-design-system-sync",
+                      "figma-design-to-code-bridge",
+                      "figma-workflow-auditor",
+                      "marketing-site-skill",
+                      "pencil-design-bridge",
+                      "senior-ui-ux-orchestrator",
+                      "stitch-design-bridge",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": [
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-context-reader": {
+                "detailUrl": "skill-pages/skills/figma-context-reader.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "design-critic-skill",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "ux-audit-skill"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-design-to-code-bridge": {
+                "detailUrl": "skill-pages/skills/figma-design-to-code-bridge.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "figma-context-reader",
+                      "marketing-site-skill",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-code-to-canvas": {
+                "detailUrl": "skill-pages/skills/figma-code-to-canvas.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "figma-canvas-editor",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-canvas-editor": {
+                "detailUrl": "skill-pages/skills/figma-canvas-editor.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "figma-context-reader",
+                      "figma-design-system-sync",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-design-system-sync": {
+                "detailUrl": "skill-pages/skills/figma-design-system-sync.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "figma-apply-effects",
+                      "figma-canvas-editor",
+                      "figma-context-reader",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-assets-manager",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-assets-manager": {
+                "detailUrl": "skill-pages/skills/figma-assets-manager.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "marketing-site-skill",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "visual-content-director",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-apply-effects",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-apply-effects": {
+                "detailUrl": "skill-pages/skills/figma-apply-effects.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-workflow-auditor"
+                ]
+          },
+          "figma-workflow-auditor": {
+                "detailUrl": "skill-pages/skills/figma-workflow-auditor.html",
+                "phaseUrl": "skill-pages/phases/figma.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "senior-figma-orchestrator",
+                      "figma-context-reader",
+                      "figma-design-to-code-bridge",
+                      "figma-code-to-canvas",
+                      "figma-canvas-editor",
+                      "figma-design-system-sync",
+                      "figma-assets-manager",
+                      "figma-apply-effects"
+                ]
+          },
+          "marketing-site-skill": {
+                "detailUrl": "skill-pages/skills/marketing-site-skill.html",
+                "phaseUrl": "skill-pages/phases/implementation.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (13)",
+                      "detail": "13 file(s), 5 supporting folder(s).",
+                      "fileCount": 13,
+                      "folderCount": 5,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "figma-assets-manager",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "visual-content-director",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": [
+                      "webapp-ui-skill"
+                ]
+          },
+          "webapp-ui-skill": {
+                "detailUrl": "skill-pages/skills/webapp-ui-skill.html",
+                "phaseUrl": "skill-pages/phases/implementation.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (13)",
+                      "detail": "13 file(s), 5 supporting folder(s).",
+                      "fileCount": 13,
+                      "folderCount": 5,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "marketing-site-skill",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "marketing-site-skill"
+                ]
+          },
+          "ux-audit-skill": {
+                "detailUrl": "skill-pages/skills/ux-audit-skill.html",
+                "phaseUrl": "skill-pages/phases/quality.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (9)",
+                      "detail": "9 file(s), 4 supporting folder(s).",
+                      "fileCount": 9,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "analytics-setup-architect",
+                      "existing-site-analyzer",
+                      "launch-readiness-auditor",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect"
+                ],
+                "samePhase": [
+                      "design-critic-skill"
+                ]
+          },
+          "design-critic-skill": {
+                "detailUrl": "skill-pages/skills/design-critic-skill.html",
+                "phaseUrl": "skill-pages/phases/quality.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (8)",
+                      "detail": "8 file(s), 4 supporting folder(s).",
+                      "fileCount": 8,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-ui-ux-orchestrator",
+                      "stitch-design-bridge",
+                      "ui-ux-pro-max"
+                ],
+                "samePhase": [
+                      "ux-audit-skill"
+                ]
+          },
+          "cursor-reveal-hero": {
+                "detailUrl": "skill-pages/skills/cursor-reveal-hero.html",
+                "phaseUrl": "skill-pages/phases/visual-effects.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (9)",
+                      "detail": "9 file(s), 4 supporting folder(s).",
+                      "fileCount": 9,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "image-layer-alignment-validator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "image-layer-alignment-validator"
+                ]
+          },
+          "image-layer-alignment-validator": {
+                "detailUrl": "skill-pages/skills/image-layer-alignment-validator.html",
+                "phaseUrl": "skill-pages/phases/visual-effects.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 3 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "cursor-reveal-hero"
+                ]
+          },
+          "serp-source-configurator": {
+                "detailUrl": "skill-pages/skills/serp-source-configurator.html",
+                "phaseUrl": "skill-pages/phases/pre-design.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (7)",
+                      "detail": "7 file(s), 4 supporting folder(s).",
+                      "fileCount": 7,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "semantic-core-builder",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect",
+                      "serp-keyword-harvester"
+                ],
+                "samePhase": [
+                      "serp-keyword-harvester",
+                      "semantic-core-builder",
+                      "concept-prototyper"
+                ]
+          },
+          "serp-keyword-harvester": {
+                "detailUrl": "skill-pages/skills/serp-keyword-harvester.html",
+                "phaseUrl": "skill-pages/phases/pre-design.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (6)",
+                      "detail": "6 file(s), 3 supporting folder(s).",
+                      "fileCount": 6,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "semantic-core-builder",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect",
+                      "serp-source-configurator"
+                ],
+                "samePhase": [
+                      "serp-source-configurator",
+                      "semantic-core-builder",
+                      "concept-prototyper"
+                ]
+          },
+          "semantic-core-builder": {
+                "detailUrl": "skill-pages/skills/semantic-core-builder.html",
+                "phaseUrl": "skill-pages/phases/pre-design.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "concept-prototyper",
+                      "migration-planner",
+                      "paid-traffic-architect",
+                      "project-wiki-manager",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect",
+                      "serp-keyword-harvester",
+                      "serp-source-configurator"
+                ],
+                "samePhase": [
+                      "serp-source-configurator",
+                      "serp-keyword-harvester",
+                      "concept-prototyper"
+                ]
+          },
+          "concept-prototyper": {
+                "detailUrl": "skill-pages/skills/concept-prototyper.html",
+                "phaseUrl": "skill-pages/phases/pre-design.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "pencil-design-bridge",
+                      "senior-ui-ux-orchestrator",
+                      "stitch-design-bridge",
+                      "tech-stack-selector",
+                      "ui-ux-llm-product-architect"
+                ],
+                "samePhase": [
+                      "serp-source-configurator",
+                      "serp-keyword-harvester",
+                      "semantic-core-builder"
+                ]
+          },
+          "design-feedback-collector": {
+                "detailUrl": "skill-pages/skills/design-feedback-collector.html",
+                "phaseUrl": "skill-pages/phases/design-exploration.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-ui-ux-orchestrator",
+                      "ui-ux-pro-max"
+                ],
+                "samePhase": [
+                      "stitch-design-bridge"
+                ]
+          },
+          "agent-progress-visualizer": {
+                "detailUrl": "skill-pages/skills/agent-progress-visualizer.html",
+                "phaseUrl": "skill-pages/phases/core.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (6)",
+                      "detail": "6 file(s), 3 supporting folder(s).",
+                      "fileCount": 6,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "design-feedback-collector",
+                      "project-wiki-manager",
+                      "senior-ui-ux-orchestrator",
+                      "serp-keyword-harvester",
+                      "task-plan-v2-orchestrator"
+                ],
+                "samePhase": [
+                      "senior-ui-ux-orchestrator"
+                ]
+          },
+          "workflow-compliance-supervisor": {
+                "detailUrl": "skill-pages/skills/workflow-compliance-supervisor.html",
+                "phaseUrl": "skill-pages/phases/core.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (7)",
+                      "detail": "7 file(s), 4 supporting folder(s).",
+                      "fileCount": 7,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-ui-ux-orchestrator",
+                      "task-plan-v2-orchestrator",
+                      "agent-progress-visualizer",
+                      "project-wiki-manager",
+                      "design-feedback-collector"
+                ],
+                "samePhase": [
+                      "senior-ui-ux-orchestrator",
+                      "agent-progress-visualizer"
+                ]
+          },
+          "pencil-design-bridge": {
+                "detailUrl": "skill-pages/skills/pencil-design-bridge.html",
+                "phaseUrl": "skill-pages/phases/design-code-canvas.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "design-feedback-collector",
+                      "figma-design-to-code-bridge",
+                      "marketing-site-skill",
+                      "senior-figma-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "stitch-design-bridge",
+                      "ui-ux-pro-max",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": []
+          },
+          "project-wiki-manager": {
+                "detailUrl": "skill-pages/skills/project-wiki-manager.html",
+                "phaseUrl": "skill-pages/phases/project-memory.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 3 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "agent-progress-visualizer",
+                      "deploy-orchestrator",
+                      "existing-site-analyzer",
+                      "migration-planner",
+                      "rebuild-or-improve-advisor",
+                      "semantic-core-builder",
+                      "senior-ui-ux-orchestrator",
+                      "task-plan-v2-orchestrator",
+                      "webmaster-registrar"
+                ],
+                "samePhase": []
+          },
+          "paid-traffic-architect": {
+                "detailUrl": "skill-pages/skills/paid-traffic-architect.html",
+                "phaseUrl": "skill-pages/phases/seo-paid.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "analytics-setup-architect",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect",
+                      "site-ai-assistant-builder"
+                ],
+                "samePhase": []
+          },
+          "analytics-setup-architect": {
+                "detailUrl": "skill-pages/skills/analytics-setup-architect.html",
+                "phaseUrl": "skill-pages/phases/analytics.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "launch-readiness-auditor",
+                      "paid-traffic-architect",
+                      "senior-ui-ux-orchestrator",
+                      "site-ai-assistant-builder",
+                      "ux-audit-skill"
+                ],
+                "samePhase": []
+          },
+          "admin-ui-orchestrator": {
+                "detailUrl": "skill-pages/skills/admin-ui-orchestrator.html",
+                "phaseUrl": "skill-pages/phases/admin-cms.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "admin-ui-builder",
+                      "marketing-site-skill",
+                      "omnichannel-comms-builder",
+                      "senior-ui-ux-orchestrator",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": [
+                      "admin-ui-builder",
+                      "omnichannel-comms-builder"
+                ]
+          },
+          "admin-ui-builder": {
+                "detailUrl": "skill-pages/skills/admin-ui-builder.html",
+                "phaseUrl": "skill-pages/phases/admin-cms.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "admin-ui-orchestrator",
+                      "omnichannel-comms-builder",
+                      "senior-ui-ux-orchestrator",
+                      "site-ai-assistant-builder"
+                ],
+                "samePhase": [
+                      "admin-ui-orchestrator",
+                      "omnichannel-comms-builder"
+                ]
+          },
+          "omnichannel-comms-builder": {
+                "detailUrl": "skill-pages/skills/omnichannel-comms-builder.html",
+                "phaseUrl": "skill-pages/phases/admin-cms.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "admin-ui-builder",
+                      "admin-ui-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "site-ai-assistant-builder"
+                ],
+                "samePhase": [
+                      "admin-ui-orchestrator",
+                      "admin-ui-builder"
+                ]
+          },
+          "site-ai-assistant-builder": {
+                "detailUrl": "skill-pages/skills/site-ai-assistant-builder.html",
+                "phaseUrl": "skill-pages/phases/ai-assistant.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "analytics-setup-architect",
+                      "omnichannel-comms-builder",
+                      "paid-traffic-architect",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": []
+          },
+          "visual-content-director": {
+                "detailUrl": "skill-pages/skills/visual-content-director.html",
+                "phaseUrl": "skill-pages/phases/visual-content.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "design-critic-skill",
+                      "figma-assets-manager",
+                      "image-layer-alignment-validator",
+                      "marketing-site-skill",
+                      "senior-ui-ux-orchestrator",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": []
+          },
+          "infra-launch-orchestrator": {
+                "detailUrl": "skill-pages/skills/infra-launch-orchestrator.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "domain-name-generator",
+                      "domain-registrar-advisor",
+                      "launch-readiness-auditor",
+                      "senior-ui-ux-orchestrator",
+                      "server-provisioner",
+                      "server-selector",
+                      "ssl-and-security-hardener",
+                      "tech-stack-selector",
+                      "webmaster-registrar"
+                ],
+                "samePhase": [
+                      "server-selector",
+                      "server-provisioner",
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "ssl-and-security-hardener",
+                      "webmaster-registrar",
+                      "launch-readiness-auditor"
+                ]
+          },
+          "domain-name-generator": {
+                "detailUrl": "skill-pages/skills/domain-name-generator.html",
+                "phaseUrl": "skill-pages/phases/domain.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "domain-registrar-advisor",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "domain-registrar-advisor"
+                ]
+          },
+          "domain-registrar-advisor": {
+                "detailUrl": "skill-pages/skills/domain-registrar-advisor.html",
+                "phaseUrl": "skill-pages/phases/domain.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "domain-dns-configurator",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "domain-name-generator"
+                ]
+          },
+          "server-selector": {
+                "detailUrl": "skill-pages/skills/server-selector.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-ui-ux-orchestrator",
+                      "server-provisioner"
+                ],
+                "samePhase": [
+                      "infra-launch-orchestrator",
+                      "server-provisioner",
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "ssl-and-security-hardener",
+                      "webmaster-registrar",
+                      "launch-readiness-auditor"
+                ]
+          },
+          "server-provisioner": {
+                "detailUrl": "skill-pages/skills/server-provisioner.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "infra-launch-orchestrator",
+                      "server-selector",
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "ssl-and-security-hardener",
+                      "webmaster-registrar",
+                      "launch-readiness-auditor"
+                ]
+          },
+          "deploy-orchestrator": {
+                "detailUrl": "skill-pages/skills/deploy-orchestrator.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "launch-readiness-auditor",
+                      "project-wiki-manager",
+                      "senior-ui-ux-orchestrator",
+                      "webmaster-registrar"
+                ],
+                "samePhase": [
+                      "infra-launch-orchestrator",
+                      "server-selector",
+                      "server-provisioner",
+                      "domain-dns-configurator",
+                      "ssl-and-security-hardener",
+                      "webmaster-registrar",
+                      "launch-readiness-auditor"
+                ]
+          },
+          "domain-dns-configurator": {
+                "detailUrl": "skill-pages/skills/domain-dns-configurator.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "infra-launch-orchestrator",
+                      "server-selector",
+                      "server-provisioner",
+                      "deploy-orchestrator",
+                      "ssl-and-security-hardener",
+                      "webmaster-registrar",
+                      "launch-readiness-auditor"
+                ]
+          },
+          "ssl-and-security-hardener": {
+                "detailUrl": "skill-pages/skills/ssl-and-security-hardener.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "launch-readiness-auditor",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "infra-launch-orchestrator",
+                      "server-selector",
+                      "server-provisioner",
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "webmaster-registrar",
+                      "launch-readiness-auditor"
+                ]
+          },
+          "webmaster-registrar": {
+                "detailUrl": "skill-pages/skills/webmaster-registrar.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "deploy-orchestrator",
+                      "project-wiki-manager",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect"
+                ],
+                "samePhase": [
+                      "infra-launch-orchestrator",
+                      "server-selector",
+                      "server-provisioner",
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "ssl-and-security-hardener",
+                      "launch-readiness-auditor"
+                ]
+          },
+          "launch-readiness-auditor": {
+                "detailUrl": "skill-pages/skills/launch-readiness-auditor.html",
+                "phaseUrl": "skill-pages/phases/infra-launch.html",
+                "docStatus": {
+                      "state": "partial",
+                      "label": "Docs: partial (3)",
+                      "detail": "3 file(s), 2 supporting folder(s).",
+                      "fileCount": 3,
+                      "folderCount": 2,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "analytics-setup-architect",
+                      "infra-launch-orchestrator",
+                      "senior-ui-ux-orchestrator",
+                      "tech-stack-selector",
+                      "ux-audit-skill"
+                ],
+                "samePhase": [
+                      "infra-launch-orchestrator",
+                      "server-selector",
+                      "server-provisioner",
+                      "deploy-orchestrator",
+                      "domain-dns-configurator",
+                      "ssl-and-security-hardener",
+                      "webmaster-registrar"
+                ]
+          },
+          "tech-stack-selector": {
+                "detailUrl": "skill-pages/skills/tech-stack-selector.html",
+                "phaseUrl": "skill-pages/phases/tech-stack.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (4)",
+                      "detail": "4 file(s), 3 supporting folder(s).",
+                      "fileCount": 4,
+                      "folderCount": 3,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "concept-prototyper",
+                      "infra-launch-orchestrator",
+                      "launch-readiness-auditor",
+                      "marketing-site-skill",
+                      "pencil-design-bridge",
+                      "senior-ui-ux-orchestrator",
+                      "stitch-design-bridge",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": []
+          },
+          "existing-site-analyzer": {
+                "detailUrl": "skill-pages/skills/existing-site-analyzer.html",
+                "phaseUrl": "skill-pages/phases/existing-site.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "design-critic-skill",
+                      "migration-planner",
+                      "rebuild-or-improve-advisor",
+                      "senior-ui-ux-orchestrator",
+                      "seo-llm-site-architect",
+                      "ux-audit-skill"
+                ],
+                "samePhase": [
+                      "rebuild-or-improve-advisor",
+                      "migration-planner"
+                ]
+          },
+          "rebuild-or-improve-advisor": {
+                "detailUrl": "skill-pages/skills/rebuild-or-improve-advisor.html",
+                "phaseUrl": "skill-pages/phases/existing-site.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "existing-site-analyzer",
+                      "marketing-site-skill",
+                      "migration-planner",
+                      "senior-ui-ux-orchestrator",
+                      "webapp-ui-skill"
+                ],
+                "samePhase": [
+                      "existing-site-analyzer",
+                      "migration-planner"
+                ]
+          },
+          "migration-planner": {
+                "detailUrl": "skill-pages/skills/migration-planner.html",
+                "phaseUrl": "skill-pages/phases/existing-site.html",
+                "docStatus": {
+                      "state": "filled",
+                      "label": "Docs: filled (5)",
+                      "detail": "5 file(s), 4 supporting folder(s).",
+                      "fileCount": 5,
+                      "folderCount": 4,
+                      "hasSkillMd": true
+                },
+                "interactions": [
+                      "existing-site-analyzer",
+                      "project-wiki-manager",
+                      "rebuild-or-improve-advisor",
+                      "semantic-core-builder",
+                      "senior-ui-ux-orchestrator"
+                ],
+                "samePhase": [
+                      "existing-site-analyzer",
+                      "rebuild-or-improve-advisor"
+                ]
+          }
+    };
+    skills.forEach((skill) => Object.assign(skill, skillPageMeta[skill.name] || {}));
+    /* SKILL_PAGE_META_END */
+
+    const decisionOptions = [
+      ["", "Unset"],
+      ["keep", "Keep"],
+      ["revise", "Revise"],
+      ["later", "Later"],
+      ["remove", "Remove"],
+      ["discuss", "Discuss"]
+    ];
+
+    const priorityOptions = [
+      ["high", "High"],
+      ["medium", "Medium"],
+      ["low", "Low"]
+    ];
+
+    function storageKey(key) {
+      return STORAGE_PREFIX + key;
+    }
+
+    function readValue(key, fallback = "") {
+      return localStorage.getItem(storageKey(key)) ?? fallback;
+    }
+
+    function writeValue(key, value) {
+      localStorage.setItem(storageKey(key), value);
+      updateMetrics();
+    }
+
+    function agentReviewState(key) {
+      const comment = readValue(`${key}:agent-comment`, "").trim();
+      const status = readValue(`${key}:agent-status`, "");
+      const applied = readValue(`${key}:agent-applied`, "") === "true";
+
+      if (applied || status === "applied") return "green";
+      if (status === "partial") return "orange";
+      if (comment) return "red";
+      return "blue";
+    }
+
+    function agentReviewLabel(state) {
+      if (state === "green") return "Agent review: applied";
+      if (state === "orange") return "Agent review: partial";
+      if (state === "red") return "Agent review: open";
+      return "Agent review";
+    }
+
+    function renderAgentReview(key) {
+      return `
+        <div class="agent-review" data-agent-review-key="${key}">
+          <button class="agent-review-toggle blue" type="button" data-agent-toggle="${key}">Agent review</button>
+          <div class="agent-review-panel collapsed" data-agent-panel="${key}">
+            <label class="comment-label">Критика / обсуждение коллег-агентов</label>
+            <textarea data-agent-comment="${key}" placeholder="Критическое замечание, обсуждение, позиция агента, что принято или отклонено."></textarea>
+            <div class="agent-review-controls">
+              <select data-agent-status="${key}" aria-label="Agent review status">
+                <option value="">Open / not applied</option>
+                <option value="partial">Partially accepted / partially applied</option>
+                <option value="applied">Fully accepted / applied</option>
+              </select>
+              <label class="agent-applied-check">
+                <input type="checkbox" data-agent-applied="${key}">
+                Применено
+              </label>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function collectAgentReview(key) {
+      return {
+        comment: readValue(`${key}:agent-comment`, ""),
+        status: readValue(`${key}:agent-status`, ""),
+        applied: readValue(`${key}:agent-applied`, "") === "true",
+        state: agentReviewState(key)
+      };
+    }
+
+    function hydrateAgentReviews(root = document) {
+      root.querySelectorAll("[data-agent-review-key]").forEach((review) => {
+        if (review.dataset.agentHydrated === "true") return;
+        review.dataset.agentHydrated = "true";
+        const key = review.dataset.agentReviewKey;
+        const button = review.querySelector(`[data-agent-toggle="${key}"]`);
+        const panel = review.querySelector(`[data-agent-panel="${key}"]`);
+        const textarea = review.querySelector(`[data-agent-comment="${key}"]`);
+        const select = review.querySelector(`[data-agent-status="${key}"]`);
+        const checkbox = review.querySelector(`[data-agent-applied="${key}"]`);
+
+        function updateButton() {
+          const state = agentReviewState(key);
+          button.classList.remove("blue", "red", "green", "orange");
+          button.classList.add(state);
+          button.textContent = agentReviewLabel(state);
+        }
+
+        textarea.value = readValue(`${key}:agent-comment`, "");
+        select.value = readValue(`${key}:agent-status`, "");
+        checkbox.checked = readValue(`${key}:agent-applied`, "") === "true";
+        updateButton();
+
+        button.addEventListener("click", () => {
+          panel.classList.toggle("collapsed");
+        });
+
+        textarea.addEventListener("input", () => {
+          writeValue(`${key}:agent-comment`, textarea.value);
+          updateButton();
+        });
+
+        select.addEventListener("change", () => {
+          writeValue(`${key}:agent-status`, select.value);
+          checkbox.checked = select.value === "applied";
+          writeValue(`${key}:agent-applied`, checkbox.checked ? "true" : "");
+          updateButton();
+        });
+
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) {
+            select.value = "applied";
+            writeValue(`${key}:agent-status`, "applied");
+            writeValue(`${key}:agent-applied`, "true");
+          } else {
+            select.value = textarea.value.trim() ? "" : "";
+            writeValue(`${key}:agent-status`, "");
+            writeValue(`${key}:agent-applied`, "");
+          }
+          updateButton();
+        });
+      });
+    }
+
+    function statusLabel(skill) {
+      if (skill.status === "proposed-new") return "Proposed new";
+      if (proposedUpdates.has(skill.name)) return "Existing + update";
+      return "Existing";
+    }
+
+    function statusClass(skill) {
+      if (skill.status === "proposed-new") return "proposed";
+      if (proposedUpdates.has(skill.name)) return "update";
+      return "existing";
+    }
+
+    function renderSkillRows() {
+      const body = document.getElementById("skillsBody");
+      body.innerHTML = "";
+
+      skills.forEach((skill) => {
+        const row = document.createElement("tr");
+        row.dataset.name = skill.name.toLowerCase();
+        row.dataset.status = proposedUpdates.has(skill.name) ? "proposed-update" : skill.status;
+        row.dataset.phase = skill.phase;
+        row.dataset.priority = readValue(`${skill.name}:priority`, skill.priority);
+        row.dataset.search = [
+          skill.name,
+          skill.status,
+          statusLabel(skill),
+          skill.phase,
+          skill.priority,
+          skill.role,
+          skill.risk,
+          skill.docStatus?.label || "",
+          skill.docStatus?.state || ""
+        ].join(" ").toLowerCase();
+
+        const detailUrl = skill.detailUrl || "#";
+        const phaseUrl = skill.phaseUrl || "#";
+        const docState = skill.docStatus?.state || "planned";
+        const docLabel = skill.docStatus?.label || "Docs: planned";
+
+        row.innerHTML = `
+          <td>
+            <div class="skill-name"><a class="skill-link" href="${detailUrl}">${skill.name}</a></div>
+            <div class="skill-note">${skill.priority === "high" ? "High priority" : skill.priority === "medium" ? "Medium priority" : "Low priority"}</div>
+            <div class="skill-meta-links">
+              <a class="doc-badge ${docState}" href="${detailUrl}">${docLabel}</a>
+              <a class="doc-badge partial" href="${phaseUrl}">${skill.phase}</a>
+            </div>
+          </td>
+          <td><span class="pill ${statusClass(skill)}">${statusLabel(skill)}</span></td>
+          <td>${skill.phase}</td>
+          <td><div class="role">${skill.role}</div></td>
+          <td><div class="risk">${skill.risk}</div></td>
+          <td>
+            <div class="decision-grid">
+              <select data-skill-decision="${skill.name}" aria-label="Decision for ${skill.name}">
+                ${decisionOptions.map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}
+              </select>
+              <select data-skill-priority="${skill.name}" aria-label="Priority for ${skill.name}">
+                ${priorityOptions.map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}
+              </select>
+            </div>
+          </td>
+          <td>
+            <label class="comment-label">Комментарий пользователя</label>
+            <textarea class="comment" data-skill-comment="${skill.name}" placeholder="Комментарий, сомнение, решение, вопрос."></textarea>
+            ${renderAgentReview(`skill:${skill.name}`)}
+          </td>
+        `;
+
+        body.appendChild(row);
+
+        const decision = row.querySelector(`[data-skill-decision="${skill.name}"]`);
+        const priority = row.querySelector(`[data-skill-priority="${skill.name}"]`);
+        const comment = row.querySelector(`[data-skill-comment="${skill.name}"]`);
+
+        decision.value = readValue(`${skill.name}:decision`, "");
+        priority.value = readValue(`${skill.name}:priority`, skill.priority);
+        comment.value = readValue(`${skill.name}:comment`, "");
+
+        decision.addEventListener("change", () => {
+          writeValue(`${skill.name}:decision`, decision.value);
+          applyFilters();
+        });
+        priority.addEventListener("change", () => {
+          writeValue(`${skill.name}:priority`, priority.value);
+          row.dataset.priority = priority.value;
+          applyFilters();
+        });
+        comment.addEventListener("input", () => writeValue(`${skill.name}:comment`, comment.value));
+        hydrateAgentReviews(row);
+      });
+    }
+
+    function renderJourneys() {
+      const grid = document.getElementById("journeyGrid");
+      grid.innerHTML = "";
+
+      journeys.forEach((journey) => {
+        const card = document.createElement("article");
+        card.className = "journey panel";
+        card.innerHTML = `
+          <h3>${journey.title}</h3>
+          <div class="journey-meta">${journey.meta}</div>
+          <div class="steps"></div>
+        `;
+
+        const steps = card.querySelector(".steps");
+        journey.steps.forEach((step, index) => {
+          const key = `journey:${journey.id}:step:${index + 1}`;
+          const stepNode = document.createElement("div");
+          stepNode.className = "step";
+          stepNode.innerHTML = `
+            <div class="step-top">
+              <div class="step-number">${index + 1}</div>
+              <div>
+                <div class="step-title">${step.title}</div>
+                <div class="step-skills">${step.skills}</div>
+                <div class="skill-note">${step.detail}</div>
+              </div>
+            </div>
+            <div class="subprocesses">
+              ${(step.subprocesses || []).map((process, processIndex) => {
+                const processKey = `${key}:process:${processIndex + 1}`;
+                return `
+                <div class="subprocess">
+                  <div class="subprocess-name">${process.name}</div>
+                  <div class="subprocess-action">${process.action}</div>
+                  <div class="subprocess-output"><strong>Артефакт:</strong> ${process.output}</div>
+                  <label class="comment-label">Комментарий пользователя к подпроцессу</label>
+                  <textarea class="subprocess-comment" data-subprocess-comment="${processKey}" placeholder="Комментарий к подпроцессу: нужен, лишний, риск, другой порядок, ответственный."></textarea>
+                  ${renderAgentReview(`subprocess:${processKey}`)}
+                </div>
+              `;
+              }).join("")}
+            </div>
+            <label class="comment-label">Комментарий пользователя к этапу</label>
+            <textarea data-journey-comment="${key}" placeholder="Комментарий к шагу: нужен, лишний, другой порядок, риск, владелец."></textarea>
+            ${renderAgentReview(`journey:${key}`)}
+          `;
+          const textarea = stepNode.querySelector(`[data-journey-comment="${key}"]`);
+          textarea.value = readValue(`${key}:comment`, "");
+          textarea.addEventListener("input", () => writeValue(`${key}:comment`, textarea.value));
+          stepNode.querySelectorAll("[data-subprocess-comment]").forEach((processTextarea) => {
+            const processKey = processTextarea.dataset.subprocessComment;
+            processTextarea.value = readValue(`${processKey}:comment`, "");
+            processTextarea.addEventListener("input", () => writeValue(`${processKey}:comment`, processTextarea.value));
+          });
+          hydrateAgentReviews(stepNode);
+          steps.appendChild(stepNode);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    function renderPhaseFilter() {
+      const filter = document.getElementById("filterPhase");
+      const phases = Array.from(new Set(skills.map((skill) => skill.phase))).sort((a, b) => a.localeCompare(b));
+      phases.forEach((phase) => {
+        const option = document.createElement("option");
+        option.value = phase;
+        option.textContent = phase;
+        filter.appendChild(option);
+      });
+    }
+
+    function applyFilters() {
+      const search = document.getElementById("search").value.trim().toLowerCase();
+      const status = document.getElementById("filterStatus").value;
+      const phase = document.getElementById("filterPhase").value;
+      const decision = document.getElementById("filterDecision").value;
+      const priority = document.getElementById("filterPriority").value;
+
+      document.querySelectorAll("#skillsBody tr").forEach((row) => {
+        const skillName = row.dataset.name;
+        const rowDecision = readValue(`${skillName}:decision`, "");
+        const rowPriority = readValue(`${skillName}:priority`, row.dataset.priority);
+
+        const matchesSearch = !search || row.dataset.search.includes(search);
+        const matchesStatus = status === "all" || row.dataset.status === status;
+        const matchesPhase = phase === "all" || row.dataset.phase === phase;
+        const matchesDecision = decision === "all" || rowDecision === decision;
+        const matchesPriority = priority === "all" || rowPriority === priority;
+
+        row.classList.toggle("hidden", !(matchesSearch && matchesStatus && matchesPhase && matchesDecision && matchesPriority));
+      });
+    }
+
+    function updateMetrics() {
+      document.getElementById("existingCount").textContent = skills.filter((skill) => skill.status === "existing").length;
+      document.getElementById("proposedCount").textContent = skills.filter((skill) => skill.status === "proposed-new").length;
+      document.getElementById("updateCount").textContent = proposedUpdates.size;
+
+      const data = collectData();
+      const filledSkillComments = data.skills.filter((skill) => skill.comment.trim()).length;
+      const filledJourneyComments = data.journeys.flatMap((journey) => journey.steps).filter((step) => step.comment.trim()).length;
+      const filledSubprocessComments = data.journeys
+        .flatMap((journey) => journey.steps)
+        .flatMap((step) => step.subprocesses || [])
+        .filter((process) => process.comment.trim()).length;
+      const filledSystemNotes = [data.systemComments, data.openDecisions].filter((value) => value.trim()).length;
+      const agentReviews = [
+        ...data.skills.map((skill) => skill.agentReview),
+        ...data.journeys.flatMap((journey) => journey.steps).map((step) => step.agentReview),
+        ...data.journeys.flatMap((journey) => journey.steps).flatMap((step) => step.subprocesses || []).map((process) => process.agentReview),
+        data.systemAgentReview,
+        data.openDecisionsAgentReview
+      ];
+      const filledAgentReviews = agentReviews.filter((review) => review.comment.trim() || review.status || review.applied).length;
+      const openAgentReviews = agentReviews.filter((review) => review.state === "red" || review.state === "orange").length;
+      document.getElementById("commentCount").textContent = filledSkillComments + filledJourneyComments + filledSubprocessComments + filledSystemNotes + filledAgentReviews;
+      document.getElementById("discussCount").textContent = data.skills.filter((skill) => skill.decision === "discuss").length + openAgentReviews;
+    }
+
+    function collectData() {
+      return {
+        meta: {
+          title: "UI/UX Agent Skill System Review Board",
+          exportedAt: new Date().toISOString(),
+          source: "new-skills-integration-brief-v2.md + current core/skills"
+        },
+        skills: skills.map((skill) => ({
+          name: skill.name,
+          status: proposedUpdates.has(skill.name) ? "existing+proposed-update" : skill.status,
+          phase: skill.phase,
+          defaultPriority: skill.priority,
+          priority: readValue(`${skill.name}:priority`, skill.priority),
+          decision: readValue(`${skill.name}:decision`, ""),
+          comment: readValue(`${skill.name}:comment`, ""),
+          agentReview: collectAgentReview(`skill:${skill.name}`)
+        })),
+        journeys: journeys.map((journey) => ({
+          id: journey.id,
+          title: journey.title,
+          steps: journey.steps.map((step, index) => {
+            const key = `journey:${journey.id}:step:${index + 1}`;
+            return {
+              number: index + 1,
+              title: step.title,
+              skills: step.skills,
+              subprocesses: (step.subprocesses || []).map((process, processIndex) => {
+                const processKey = `${key}:process:${processIndex + 1}`;
+                return {
+                  ...process,
+                  number: processIndex + 1,
+                  comment: readValue(`${processKey}:comment`, ""),
+                  agentReview: collectAgentReview(`subprocess:${processKey}`)
+                };
+              }),
+              comment: readValue(`${key}:comment`, ""),
+              agentReview: collectAgentReview(`journey:${key}`)
+            };
+          })
+        })),
+        systemComments: readValue("system-comments", ""),
+        systemAgentReview: collectAgentReview("system-comments"),
+        openDecisions: readValue("open-decisions", ""),
+        openDecisionsAgentReview: collectAgentReview("open-decisions")
+      };
+    }
+
+    function toMarkdown(data) {
+      const lines = [];
+      lines.push("# UI/UX Agent Skill System Review");
+      lines.push("");
+      lines.push(`Exported: ${data.meta.exportedAt}`);
+      lines.push("");
+      lines.push("## Skill comments");
+      data.skills
+        .filter((skill) => skill.comment.trim() || skill.decision || skill.priority !== skill.defaultPriority)
+        .forEach((skill) => {
+          lines.push("");
+          lines.push(`### ${skill.name}`);
+          lines.push(`- Status: ${skill.status}`);
+          lines.push(`- Phase: ${skill.phase}`);
+          lines.push(`- Priority: ${skill.priority}`);
+          lines.push(`- Decision: ${skill.decision || "unset"}`);
+          if (skill.comment.trim()) lines.push(`- Comment: ${skill.comment.trim().replace(/\n/g, "\n  ")}`);
+          if (skill.agentReview.comment.trim() || skill.agentReview.status || skill.agentReview.applied) {
+            lines.push(`- Agent review: ${skill.agentReview.state}`);
+            if (skill.agentReview.status) lines.push(`- Agent status: ${skill.agentReview.status}`);
+            if (skill.agentReview.applied) lines.push("- Agent applied: true");
+            if (skill.agentReview.comment.trim()) lines.push(`- Agent comment: ${skill.agentReview.comment.trim().replace(/\n/g, "\n  ")}`);
+          }
+        });
+
+      lines.push("");
+      lines.push("## Journey comments");
+      data.journeys.forEach((journey) => {
+        lines.push("");
+        lines.push(`### ${journey.title}`);
+        journey.steps
+          .filter((step) => step.comment.trim())
+          .forEach((step) => {
+            lines.push(`- ${step.number}. ${step.title} (${step.skills}): ${step.comment.trim().replace(/\n/g, " ")}`);
+            if (step.agentReview.comment.trim() || step.agentReview.status || step.agentReview.applied) {
+              lines.push(`  - Agent review: ${step.agentReview.state}`);
+              if (step.agentReview.status) lines.push(`  - Agent status: ${step.agentReview.status}`);
+              if (step.agentReview.applied) lines.push("  - Agent applied: true");
+              if (step.agentReview.comment.trim()) lines.push(`  - Agent comment: ${step.agentReview.comment.trim().replace(/\n/g, " ")}`);
+            }
+          });
+        journey.steps
+          .filter((step) => step.subprocesses && step.subprocesses.length)
+          .forEach((step) => {
+            lines.push(`- ${step.number}. ${step.title} subprocesses:`);
+            step.subprocesses.forEach((process) => {
+              lines.push(`  - ${process.name}: ${process.action} Артефакт: ${process.output}`);
+              if (process.comment.trim()) lines.push(`    - User comment: ${process.comment.trim().replace(/\n/g, " ")}`);
+              if (process.agentReview.comment.trim() || process.agentReview.status || process.agentReview.applied) {
+                lines.push(`    - Agent review: ${process.agentReview.state}`);
+                if (process.agentReview.status) lines.push(`    - Agent status: ${process.agentReview.status}`);
+                if (process.agentReview.applied) lines.push("    - Agent applied: true");
+                if (process.agentReview.comment.trim()) lines.push(`    - Agent comment: ${process.agentReview.comment.trim().replace(/\n/g, " ")}`);
+              }
+            });
+          });
+      });
+
+      if (data.systemComments.trim()) {
+        lines.push("");
+        lines.push("## System-level comments");
+        lines.push(data.systemComments.trim());
+      }
+      if (data.systemAgentReview.comment.trim() || data.systemAgentReview.status || data.systemAgentReview.applied) {
+        lines.push("");
+        lines.push("## System-level agent review");
+        lines.push(`State: ${data.systemAgentReview.state}`);
+        if (data.systemAgentReview.status) lines.push(`Status: ${data.systemAgentReview.status}`);
+        if (data.systemAgentReview.applied) lines.push("Applied: true");
+        if (data.systemAgentReview.comment.trim()) lines.push(data.systemAgentReview.comment.trim());
+      }
+
+      if (data.openDecisions.trim()) {
+        lines.push("");
+        lines.push("## Open decisions");
+        lines.push(data.openDecisions.trim());
+      }
+      if (data.openDecisionsAgentReview.comment.trim() || data.openDecisionsAgentReview.status || data.openDecisionsAgentReview.applied) {
+        lines.push("");
+        lines.push("## Open decisions agent review");
+        lines.push(`State: ${data.openDecisionsAgentReview.state}`);
+        if (data.openDecisionsAgentReview.status) lines.push(`Status: ${data.openDecisionsAgentReview.status}`);
+        if (data.openDecisionsAgentReview.applied) lines.push("Applied: true");
+        if (data.openDecisionsAgentReview.comment.trim()) lines.push(data.openDecisionsAgentReview.comment.trim());
+      }
+
+      return lines.join("\n");
+    }
+
+    function download(filename, text, type) {
+      const blob = new Blob([text], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function writeAgentReview(key, review) {
+      if (!review || typeof review !== "object") return;
+      if (typeof review.comment === "string") writeValue(`${key}:agent-comment`, review.comment);
+      if (typeof review.status === "string") writeValue(`${key}:agent-status`, review.status);
+      if (typeof review.applied === "boolean") writeValue(`${key}:agent-applied`, review.applied ? "true" : "");
+    }
+
+    function importData(payload) {
+      if (payload.skills) {
+        payload.skills.forEach((skill) => {
+          if (!skill.name) return;
+          if (typeof skill.decision === "string") writeValue(`${skill.name}:decision`, skill.decision);
+          if (typeof skill.priority === "string") writeValue(`${skill.name}:priority`, skill.priority);
+          if (typeof skill.comment === "string") writeValue(`${skill.name}:comment`, skill.comment);
+          writeAgentReview(`skill:${skill.name}`, skill.agentReview);
+        });
+      }
+
+      if (payload.journeys) {
+        payload.journeys.forEach((journey) => {
+          if (!journey.id || !journey.steps) return;
+          journey.steps.forEach((step) => {
+            if (!step.number) return;
+            const stepKey = `journey:${journey.id}:step:${step.number}`;
+            if (typeof step.comment === "string") writeValue(`${stepKey}:comment`, step.comment);
+            writeAgentReview(`journey:${stepKey}`, step.agentReview);
+            if (step.subprocesses) {
+              step.subprocesses.forEach((process) => {
+                if (!process.number) return;
+                const processKey = `${stepKey}:process:${process.number}`;
+                if (typeof process.comment === "string") writeValue(`${processKey}:comment`, process.comment);
+                writeAgentReview(`subprocess:${processKey}`, process.agentReview);
+              });
+            }
+          });
+        });
+      }
+
+      if (typeof payload.systemComments === "string") writeValue("system-comments", payload.systemComments);
+      writeAgentReview("system-comments", payload.systemAgentReview);
+      if (typeof payload.openDecisions === "string") writeValue("open-decisions", payload.openDecisions);
+      writeAgentReview("open-decisions", payload.openDecisionsAgentReview);
+
+      renderSkillRows();
+      renderJourneys();
+      hydrateGeneralTextareas();
+      applyFilters();
+      updateMetrics();
+    }
+
+    function hydrateGeneralTextareas() {
+      document.querySelectorAll("textarea[data-storage-key]").forEach((textarea) => {
+        const key = textarea.dataset.storageKey;
+        textarea.value = readValue(key, "");
+        textarea.addEventListener("input", () => writeValue(key, textarea.value));
+      });
+      document.querySelectorAll("[data-static-agent-review]").forEach((slot) => {
+        const key = slot.dataset.staticAgentReview;
+        slot.innerHTML = renderAgentReview(key);
+      });
+      hydrateAgentReviews(document);
+    }
+
+    document.getElementById("exportJson").addEventListener("click", () => {
+      download("uiux-skill-review-comments.json", JSON.stringify(collectData(), null, 2), "application/json");
+    });
+
+    document.getElementById("copyMarkdown").addEventListener("click", async () => {
+      const markdown = toMarkdown(collectData());
+      try {
+        await navigator.clipboard.writeText(markdown);
+      } catch (error) {
+        download("uiux-skill-review-comments.md", markdown, "text/markdown");
+      }
+    });
+
+    document.getElementById("importJson").addEventListener("click", () => {
+      document.getElementById("importFile").click();
+    });
+
+    document.getElementById("importFile").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          importData(JSON.parse(reader.result));
+        } catch (error) {
+          alert("Import failed: invalid JSON");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    });
+
+    document.getElementById("printPage").addEventListener("click", () => window.print());
+
+    ["search", "filterStatus", "filterPhase", "filterDecision", "filterPriority"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", applyFilters);
+      document.getElementById(id).addEventListener("change", applyFilters);
+    });
+
+    renderPhaseFilter();
+    renderSkillRows();
+    renderJourneys();
+    hydrateGeneralTextareas();
+    applyFilters();
+    updateMetrics();
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+artifact_type: internal_link_graph
+generated_at: "2026-06-11T00:00:00Z"
+producer_skill: internal-link-graph-architect
+source_inputs:
+  - url-map.yaml
+privacy:
+  contains_secrets: false
+  contains_private_urls: false
+  contains_raw_ip_logs: false
+  contains_private_analytics: false
+  redaction_note: none
+links:
+  - id: "story-123-brief-to-longform"
+    source_url: "https://example.com/news/123-example-story/"
+    target_url: "https://example.com/articles/123-example-story/"
+    source_page_type: news_brief
+    target_page_type: longform_article
+    locale: en
+    link_type: brief_to_longform
+    anchor_intent: "Read longform"
+    user_reason: "Offers deeper explanation of the same story."
+    seo_reason: "Connects the sanctioned short and expanded story surfaces."
+    llm_reason: "Lets agents traverse from fast brief to durable context."
+    placement: body_or_card_action
+    required: true
+    risk: none
+    evidence: []
+  - id: "story-123-longform-to-brief"
+    source_url: "https://example.com/articles/123-example-story/"
+    target_url: "https://example.com/news/123-example-story/"
+    source_page_type: longform_article
+    target_page_type: news_brief
+    locale: en
+    link_type: longform_to_brief
+    anchor_intent: "Read brief"
+    user_reason: "Returns to the short news version of the story."
+    seo_reason: "Maintains the bidirectional pair without canonical replacement."
+    llm_reason: "Shows that brief and longform are related but separate roles."
+    placement: article_meta_or_sidebar
+    required: true
+    risk: none
+    evidence: []
+  - id: "topic-to-story-123"
+    source_url: "https://example.com/topics/ai-news-pipeline/"
+    target_url: "https://example.com/articles/123-example-story/"
+    source_page_type: topic
+    target_page_type: longform_article
+    locale: en
+    link_type: topic_to_page
+    anchor_intent: "Related explainer"
+    user_reason: "Connects the topic hub to a selected explanatory article."
+    seo_reason: "Supports topical clustering without duplicating article body."
+    llm_reason: "Helps agents connect the story to its topic."
+    placement: related_section
+    required: false
+    risk: none
+    evidence: []
+checks:
+  orphan_pages: []
+  overlinked_pages: []
+  duplicate_intent_risks: []
+  hidden_link_risks: []
+

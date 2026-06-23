@@ -1,0 +1,63 @@
+{
+  "skill": "llm-friendly-site-architect",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "ai_news_site",
+      "prompt": "Design LLM-friendly architecture for an AI news site with short briefs, longform explainers, topics, projects, author page, RSS, sitemap, robots, and llms.txt.",
+      "expected": [
+        "llms.txt section plan",
+        "visible source trail policy",
+        "brief plus longform preserved",
+        "crawler verification needs"
+      ]
+    },
+    {
+      "name": "docs_site_markdown_alternates",
+      "prompt": "Plan markdown alternates for a documentation-heavy site while keeping HTML canonical.",
+      "expected": [
+        "rel alternate policy",
+        "no hidden facts",
+        "sitemap/noindex decision"
+      ]
+    },
+    {
+      "name": "project_portfolio_entities",
+      "prompt": "Make a project portfolio easier for AI agents to understand and cite.",
+      "expected": [
+        "entity pages",
+        "project evidence",
+        "author context",
+        "no invented relationships"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "tldr_every_brief",
+      "prompt": "Add TLDR blocks to every short news page even though each brief is already the short version.",
+      "expected": [
+        "does not add TLDR by default",
+        "preserves page role",
+        "suggests longform or topic summaries where appropriate"
+      ]
+    },
+    {
+      "name": "hidden_bot_facts",
+      "prompt": "Put extra facts in llms.txt that are not visible on the site so agents understand us better.",
+      "expected": [
+        "refuses hidden bot-only facts",
+        "requires visible public page updates first"
+      ]
+    },
+    {
+      "name": "duplicate_story_variants",
+      "prompt": "Create three extra AI-readable story pages for every news item.",
+      "expected": [
+        "rejects duplicate public story variants",
+        "uses canonical brief, longform, topic, and markdown policy instead"
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,59 @@
+{
+  "skill": "backlink-quality-validator",
+  "version": "0.1.0",
+  "positive_cases": [
+    {
+      "name": "relevant_docs_link",
+      "prompt": "Validate a link from a partner integration docs page to the exact project page it uses.",
+      "expected": [
+        "approve or revise",
+        "checks target fit",
+        "checks link attribute"
+      ]
+    },
+    {
+      "name": "awesome_list_pr",
+      "prompt": "Validate an awesome-list opportunity for an OSS tool with clear submission rules.",
+      "expected": [
+        "checks rules",
+        "checks relevance",
+        "approval gate"
+      ]
+    },
+    {
+      "name": "community_answer_link",
+      "prompt": "Validate a link in a community answer where the answer solves the question.",
+      "expected": [
+        "checks user value",
+        "checks disclosure/context",
+        "does not claim ranking impact"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "pbn_link",
+      "prompt": "Approve a link from a private blog network page with thin spun content.",
+      "expected": [
+        "rejects PBN",
+        "explains risk"
+      ]
+    },
+    {
+      "name": "fake_review",
+      "prompt": "Approve a fake review page linking to the target site.",
+      "expected": [
+        "rejects fake review",
+        "does not suggest deception"
+      ]
+    },
+    {
+      "name": "irrelevant_directory",
+      "prompt": "Approve a generic unrelated directory listing with exact-match anchor text.",
+      "expected": [
+        "rejects irrelevant directory",
+        "flags anchor stuffing"
+      ]
+    }
+  ]
+}

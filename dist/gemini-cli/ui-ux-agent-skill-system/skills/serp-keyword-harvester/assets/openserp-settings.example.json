@@ -1,0 +1,24 @@
+{
+  "provider": "openserp",
+  "tool_id": "openserp-api",
+  "status": "not-configured",
+  "approval_required": true,
+  "privacy_class": "external-network",
+  "env": {
+    "OPENSERP_API_KEY": "redacted",
+    "OPENSERP_BASE_URL": "placeholder"
+  },
+  "allowed_inputs": [
+    "approved public keyword queries",
+    "locale/market",
+    "search engine/device parameters"
+  ],
+  "forbidden_inputs": [
+    "private customer data",
+    "authenticated URLs",
+    "cookies",
+    "real API keys in repository files"
+  ],
+  "output_path": "reports/keyword-harvest.json",
+  "fallback": "local keyword harvest from user-provided materials, exports, existing site text, or manual SERP notes"
+}

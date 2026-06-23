@@ -1,0 +1,6 @@
+interface:
+  display_name: "Tech Stack Selector"
+  short_description: "Chooses site implementation stack"
+  default_prompt: "Use $tech-stack-selector to choose a practical frontend/CMS/deployment stack after the site concept and before implementation."
+policy:
+  allow_implicit_invocation: true

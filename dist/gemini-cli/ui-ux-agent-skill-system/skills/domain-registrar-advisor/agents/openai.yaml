@@ -1,0 +1,6 @@
+interface:
+  display_name: "Domain Registrar Advisor"
+  short_description: "Compares registrars without purchasing"
+  default_prompt: "Use $domain-registrar-advisor to compare registrars and prepare a purchase checklist without account mutations."
+policy:
+  allow_implicit_invocation: true

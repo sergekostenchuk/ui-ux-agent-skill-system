@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI/UX Agent Progress Visualizer · Progress</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f0e7;
+      --paper: #fffdf8;
+      --ink: #182123;
+      --muted: #687276;
+      --line: #d9d1bf;
+      --done: #28765a;
+      --running: #0e7c86;
+      --waiting: #b7791f;
+      --blocked: #bd3b2e;
+      --planned: #7d8588;
+      --shadow: 0 20px 60px rgba(37, 34, 25, .12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--ink); }
+    main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 56px; }
+    .hero { display: grid; grid-template-columns: 1.45fr .85fr; gap: 18px; align-items: stretch; margin-bottom: 22px; }
+    .panel, .phase-card, .activity, .source-note { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+    .panel { padding: 24px; }
+    h1 { margin: 0 0 10px; font-size: clamp(30px, 4vw, 54px); line-height: 1; letter-spacing: 0; }
+    p { line-height: 1.55; }
+    .request { color: var(--muted); margin: 0; max-width: 75ch; }
+    .next { border-left: 5px solid var(--running); }
+    .next h2 { margin: 0 0 8px; font-size: 20px; }
+    .summary { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 16px 0 28px; }
+    .metric { background: rgba(255,255,255,.58); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .metric strong { display: block; font-size: 26px; }
+    .metric span { display: block; color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .source-note { padding: 14px 18px; margin-bottom: 24px; color: var(--muted); }
+    .timeline { position: relative; }
+    .phase { display: grid; grid-template-columns: 34px 1fr; gap: 14px; margin-bottom: 16px; }
+    .phase-marker { display: flex; justify-content: center; }
+    .phase-marker span { width: 18px; height: 18px; border-radius: 50%; margin-top: 22px; background: var(--planned); box-shadow: 0 0 0 6px rgba(125,133,136,.16); }
+    .phase.done .phase-marker span { background: var(--done); box-shadow: 0 0 0 6px rgba(40,118,90,.16); }
+    .phase.running .phase-marker span { background: var(--running); box-shadow: 0 0 0 6px rgba(14,124,134,.16); animation: pulse 1.4s infinite; }
+    .phase.waiting-user .phase-marker span { background: var(--waiting); box-shadow: 0 0 0 6px rgba(183,121,31,.18); animation: pulse 1.4s infinite; }
+    .phase.blocked .phase-marker span, .phase.failed .phase-marker span { background: var(--blocked); box-shadow: 0 0 0 6px rgba(189,59,46,.16); }
+    .phase-card { padding: 20px; }
+    .phase-card header { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .eyebrow { margin: 0 0 4px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .phase-card h2 { margin: 0; font-size: 23px; letter-spacing: 0; }
+    .badge { flex: 0 0 auto; border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; font-size: 13px; background: #fff; }
+    .desc { margin: 12px 0 0; color: var(--muted); }
+    .subprocess-list { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 8px; }
+    .subprocess { display: grid; grid-template-columns: 12px 1fr; gap: 10px; align-items: start; padding: 10px; background: #f8f5ed; border-radius: 10px; }
+    .subprocess > span { width: 9px; height: 9px; border-radius: 50%; background: var(--planned); margin-top: 7px; }
+    .subprocess.done > span { background: var(--done); }
+    .subprocess.running > span { background: var(--running); }
+    .subprocess.waiting-user > span { background: var(--waiting); }
+    .subprocess p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+    .gate { margin: 18px 0; padding: 16px; border: 1px solid rgba(183,121,31,.35); border-radius: 12px; background: #fff7e8; }
+    .gate-kicker { display: inline-block; color: var(--waiting); font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+    .gate h3 { margin: 0; }
+    .choices { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+    .choice { display: inline-flex; gap: 8px; align-items: center; border: 1px solid var(--line); border-radius: 999px; padding: 9px 12px; background: #fff; }
+    textarea { display: block; width: 100%; min-height: 88px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; padding: 12px; font: inherit; }
+    button { margin-top: 10px; border: 0; border-radius: 10px; padding: 11px 14px; background: #1c706c; color: #fff; font: inherit; cursor: pointer; }
+    .developer { margin: 14px 0; color: var(--muted); }
+    .developer dl { display: grid; grid-template-columns: 140px 1fr; gap: 8px 14px; }
+    .developer dt { font-weight: 700; color: var(--ink); }
+    .artifacts h3 { margin-bottom: 8px; font-size: 16px; }
+    .artifact-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+    .artifact-list li { display: flex; justify-content: space-between; gap: 14px; padding: 8px 0; border-top: 1px solid var(--line); }
+    a { color: #0b666a; }
+    .muted { color: var(--muted); }
+    .activity { padding: 18px; margin-top: 22px; }
+    .activity h2 { margin: 0 0 12px; }
+    .activity ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .activity li { display: grid; grid-template-columns: 72px 1fr; gap: 10px; color: var(--muted); }
+    .activity p { margin: 0; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; scroll-behavior: auto !important; } }
+    @media (max-width: 820px) {
+      main { width: min(100% - 20px, 720px); padding-top: 18px; }
+      .hero { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      .phase { grid-template-columns: 22px 1fr; gap: 10px; }
+      .phase-card header { flex-direction: column; }
+      .developer dl { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <div class="panel">
+      <p class="eyebrow">Экран прогресса</p>
+      <h1>UI/UX Agent Progress Visualizer</h1>
+      <p class="request">Сделать понятный пользовательский экран прогресса для работы senior-ui-ux-orchestrator.</p>
+    </div>
+    <aside class="panel next">
+      <p class="eyebrow">Что сейчас</p>
+      <h2>Действий от пользователя нет</h2>
+      <p>Все этапы в текущем наборе завершены.</p>
+    </aside>
+  </section>
+  <section class="summary" aria-label="Сводка статусов">
+    <div class="metric"><strong>9</strong><span>готово</span></div>
+    <div class="metric"><strong>0</strong><span>идет</span></div>
+    <div class="metric"><strong>0</strong><span>ждет вас</span></div>
+    <div class="metric"><strong>0</strong><span>блокеры</span></div>
+    <div class="metric"><strong>0</strong><span>впереди</span></div>
+    <div class="metric"><strong>9</strong><span>всего</span></div>
+  </section>
+  <div class="source-note">
+    Источник правды: <a href="$UIUX_SKILL_SYSTEM_ROOT/TASK-PLAN.md">TASK-PLAN.md</a>. TASK-PLAN.md is canonical; progress-state.json and agent-progress-screen.html are derived.
+  </div>
+  <section class="timeline" aria-label="Этапы работы">
+
+      <article class="phase done" id="phase-01">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-001</p>
+              <h2>Фиксируем правила экрана прогресса</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>source-of-truth rule</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>static-first update mode</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>optional live-refresh mode boundary</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>user-facing vs developer/debug copy boundary</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>relationship to `TASK-PLAN.md`, `progress-state.json`, reports, artifacts, feedback, and wiki</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Freeze progress screen contract and source-of-truth model</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>none</dd>
+              <dt>Routes</dt><dd>senior-ui-ux-orchestrator, task-plan-v2-orchestrator</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$UIUX_SKILL_SYSTEM_ROOT/TASK-PLAN.md">TASK-PLAN.md</a><span>Ran</span></li><li><a href="updated canonical TASK-PLAN addendum">updated canonical TASK-PLAN addendum</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-02">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-002</p>
+              <h2>Описываем данные для экрана прогресса</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>project request and normalized user brief</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>phase and subprocess model</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>statuses: `planned`, `running`, `waiting_user`, `blocked`, `done`, `failed`, `skipped</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>user gates: choice, approval, missing data, review, launch confirmation</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>artifact links and report links</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>activity log entries</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Define `progress-state.json` schema and status vocabulary</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-001</dd>
+              <dt>Routes</dt><dd>none</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$UIUX_SKILL_SYSTEM_ROOT/schemas">schemas</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/examples">examples</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/schemas/progress-state.schema.json">progress-state.schema.json</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/examples/progress-state.example.json">progress-state.example.json</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-03">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-003</p>
+              <h2>Добавляем скилл экрана прогресса</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>SKILL.md</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>agents/openai.yaml</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>references for data sources, statuses, human language rules, and privacy</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>assets/templates for progress-state and HTML</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>validation/eval prompts for routing</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Create `agent-progress-visualizer` skill package</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-001, UIUX-PROGRESS-002</dd>
+              <dt>Routes</dt><dd>agent-progress-visualizer, design-feedback-collector, project-wiki-manager, task-plan-v2-orchestrator</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$CODEX_HOME/skills/agent-progress-visualizer">agent-progress-visualizer</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-04">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-004</p>
+              <h2>Подключаем экран к главному оркестратору</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>new routing mode or default hook for progress visualization</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>trigger rules for large projects, multi-step site builds, three-variant design, Stitch/Pencil/Figma flows, and launch workflows</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>skip rules for tiny one-file edits</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>privacy and user-gate language</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Wire progress lifecycle into `senior-ui-ux-orchestrator`</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-003</dd>
+              <dt>Routes</dt><dd>agent-progress-visualizer, senior-ui-ux-orchestrator, task-plan-v2-orchestrator</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$CODEX_HOME/skills/senior-ui-ux-orchestrator">senior-ui-ux-orchestrator</a><span>Ran</span></li><li><a href="updated orchestrator routing files">updated orchestrator routing files</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-05">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-005</p>
+              <h2>Собираем состояние из task-plan</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>parse normalized task blocks or accepted metadata</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>map technical statuses to customer-facing statuses</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>attach artifact links and next user actions</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>record derived-state warnings when fields are missing</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Add task-plan to progress-state generator/updater</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-002, UIUX-PROGRESS-003</dd>
+              <dt>Routes</dt><dd>none</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$UIUX_SKILL_SYSTEM_ROOT/scripts">scripts</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/progress-state.json">progress-state.json</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/reports">reports</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/scripts/generate_progress_state.py">generate_progress_state.py</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/reports/progress-state-validation.txt">progress-state-validation.txt</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-06">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-006</p>
+              <h2>Превращаем прототип в рабочую страницу</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>customer-readable stage cards</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>status animation and accessible reduced-motion handling</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>user gates with choices, comments, and approval prompts</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>artifact links for design variants, HTML previews, reports, and screenshots</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>developer/debug section for technical mappings</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Convert prototype screen into generated user cockpit</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-002, UIUX-PROGRESS-005</dd>
+              <dt>Routes</dt><dd>none</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$UIUX_SKILL_SYSTEM_ROOT/agent-progress-screen.html">agent-progress-screen.html</a><span>Ran</span></li><li><a href="updated $UIUX_SKILL_SYSTEM_ROOT/agent-progress-screen.html">agent-progress-screen.html</a><span>Ran</span></li><li><a href="optional $UIUX_SKILL_SYSTEM_ROOT/scripts/render_progress_screen.py">render_progress_screen.py</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-07">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-007</p>
+              <h2>Подключаем комментарии и решения пользователя</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>design choice gates</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>content/facts approval gates</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>missing project data gates</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>final review/launch confirmation gates</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>accepted, partially accepted, rejected, applied states</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Integrate user gates with `design-feedback-collector`</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-003, UIUX-PROGRESS-006</dd>
+              <dt>Routes</dt><dd>design-feedback-collector</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$UIUX_SKILL_SYSTEM_ROOT/feedback">feedback</a><span>Ran</span></li><li><a href="$CODEX_HOME/skills/design-feedback-collector">design-feedback-collector</a><span>Ran</span></li><li><a href="feedback artifact contract">feedback artifact contract</a><span>Ran</span></li><li><a href="updated progress-state gate contract">updated progress-state gate contract</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-08">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-008</p>
+              <h2>Сохраняем важные решения в wiki</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>wiki capture after major decisions</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>artifact index updates</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>sanitized user choice summaries</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>no-secret memory policy</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Add wiki capture and artifact sync for progress decisions</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-004, UIUX-PROGRESS-007</dd>
+              <dt>Routes</dt><dd>none</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$UIUX_SKILL_SYSTEM_ROOT/wiki">wiki</a><span>Ran</span></li><li><a href="updated wiki pages">updated wiki pages</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="phase done" id="phase-09">
+        <div class="phase-marker"><span></span></div>
+        <div class="phase-card">
+          <header>
+            <div>
+              <p class="eyebrow">UIUX-PROGRESS-009</p>
+              <h2>Проверяем согласованность и безопасность</h2>
+            </div>
+            <span class="badge">Готово</span>
+          </header>
+          <p class="desc">Этот этап завершен и зафиксирован в артефактах проекта.</p>
+          <ul class="subprocess-list">
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>Markdown vs JSON vs HTML consistency check</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>no-secret scan for progress artifacts</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>waiting-user gate check</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>accessibility/manual layout checklist</strong>
+                <p></p>
+              </div>
+            </li>
+
+            <li class="subprocess done">
+              <span></span>
+              <div>
+                <strong>evidence report</strong>
+                <p></p>
+              </div>
+            </li>
+            </ul>
+
+          <details class="developer">
+            <summary>Технические детали</summary>
+            <dl>
+              <dt>Исходная задача</dt><dd>Validate progress dashboard consistency and no-secret gates</dd>
+              <dt>Owner</dt><dd>docs_sync</dd>
+              <dt>Dependencies</dt><dd>UIUX-PROGRESS-005, UIUX-PROGRESS-006, UIUX-PROGRESS-007, UIUX-PROGRESS-008</dd>
+              <dt>Routes</dt><dd>design-feedback-collector, pencil-design-bridge, project-wiki-manager, stitch-design-bridge, ui-ux-pro-max, visual-content-director</dd>
+            </dl>
+          </details>
+          <div class="artifacts">
+            <h3>Артефакты</h3>
+            <ul class="artifact-list"><li><a href="$UIUX_SKILL_SYSTEM_ROOT/scripts">scripts</a><span>Ran</span></li><li><a href="$UIUX_SKILL_SYSTEM_ROOT/reports">reports</a><span>Ran</span></li><li><a href="consistency checker">consistency checker</a><span>Ran</span></li><li><a href="validation summary report">validation summary report</a><span>Ran</span></li></ul>
+          </div>
+        </div>
+      </article>
+
+  </section>
+  <section class="activity">
+    <h2>Журнал действий</h2>
+    <ul><li class="done"><span>auto</span><p>Готово: Фиксируем правила экрана прогресса.</p></li>
+<li class="done"><span>auto</span><p>Готово: Описываем данные для экрана прогресса.</p></li>
+<li class="done"><span>auto</span><p>Готово: Добавляем скилл экрана прогресса.</p></li>
+<li class="done"><span>auto</span><p>Готово: Подключаем экран к главному оркестратору.</p></li>
+<li class="done"><span>auto</span><p>Готово: Собираем состояние из task-plan.</p></li>
+<li class="done"><span>auto</span><p>Готово: Превращаем прототип в рабочую страницу.</p></li>
+<li class="done"><span>auto</span><p>Готово: Подключаем комментарии и решения пользователя.</p></li>
+<li class="done"><span>auto</span><p>Готово: Сохраняем важные решения в wiki.</p></li>
+<li class="done"><span>auto</span><p>Готово: Проверяем согласованность и безопасность.</p></li></ul>
+  </section>
+</main>
+<script>
+const PROGRESS_STATE = JSON.parse("{&quot;schema_version&quot;: &quot;2026-06-22&quot;, &quot;generated_at&quot;: &quot;2026-06-22T14:36:58+00:00&quot;, &quot;source_of_truth&quot;: {&quot;kind&quot;: &quot;task-plan-v2&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/TASK-PLAN.md&quot;, &quot;policy&quot;: &quot;TASK-PLAN.md is canonical; progress-state.json and agent-progress-screen.html are derived.&quot;}, &quot;project&quot;: {&quot;title&quot;: &quot;UI/UX Agent Progress Visualizer&quot;, &quot;user_request&quot;: &quot;Сделать понятный пользовательский экран прогресса для работы senior-ui-ux-orchestrator.&quot;, &quot;audience_label&quot;: &quot;Пользователь без обязательной технической подготовки&quot;, &quot;privacy_mode&quot;: &quot;local-first&quot;}, &quot;summary&quot;: {&quot;done&quot;: 9, &quot;running&quot;: 0, &quot;waiting_user&quot;: 0, &quot;blocked&quot;: 0, &quot;planned&quot;: 0, &quot;failed&quot;: 0, &quot;total&quot;: 9}, &quot;phases&quot;: [{&quot;id&quot;: &quot;phase-01&quot;, &quot;title&quot;: &quot;Фиксируем правила экрана прогресса&quot;, &quot;technical_title&quot;: &quot;Freeze progress screen contract and source-of-truth model&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-001-sub-1&quot;, &quot;title&quot;: &quot;source-of-truth rule&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-001-sub-2&quot;, &quot;title&quot;: &quot;static-first update mode&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-001-sub-3&quot;, &quot;title&quot;: &quot;optional live-refresh mode boundary&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-001-sub-4&quot;, &quot;title&quot;: &quot;user-facing vs developer/debug copy boundary&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-001-sub-5&quot;, &quot;title&quot;: &quot;relationship to `TASK-PLAN.md`, `progress-state.json`, reports, artifacts, feedback, and wiki&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;TASK-PLAN.md&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/TASK-PLAN.md&quot;, &quot;kind&quot;: &quot;task-plan&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;updated canonical TASK-PLAN addendum&quot;, &quot;path&quot;: &quot;updated canonical TASK-PLAN addendum&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-001&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;architecture-review&quot;], &quot;skill_routes&quot;: [&quot;senior-ui-ux-orchestrator&quot;, &quot;task-plan-v2-orchestrator&quot;]}}, {&quot;id&quot;: &quot;phase-02&quot;, &quot;title&quot;: &quot;Описываем данные для экрана прогресса&quot;, &quot;technical_title&quot;: &quot;Define `progress-state.json` schema and status vocabulary&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-002-sub-1&quot;, &quot;title&quot;: &quot;project request and normalized user brief&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-002-sub-2&quot;, &quot;title&quot;: &quot;phase and subprocess model&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-002-sub-3&quot;, &quot;title&quot;: &quot;statuses: `planned`, `running`, `waiting_user`, `blocked`, `done`, `failed`, `skipped&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-002-sub-4&quot;, &quot;title&quot;: &quot;user gates: choice, approval, missing data, review, launch confirmation&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-002-sub-5&quot;, &quot;title&quot;: &quot;artifact links and report links&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-002-sub-6&quot;, &quot;title&quot;: &quot;activity log entries&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;schemas&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/schemas&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;examples&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/examples&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;progress-state.schema.json&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/schemas/progress-state.schema.json&quot;, &quot;kind&quot;: &quot;json&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;progress-state.example.json&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/examples/progress-state.example.json&quot;, &quot;kind&quot;: &quot;json&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-002&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-001&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;architecture-review&quot;, &quot;dashboard-review&quot;], &quot;skill_routes&quot;: []}}, {&quot;id&quot;: &quot;phase-03&quot;, &quot;title&quot;: &quot;Добавляем скилл экрана прогресса&quot;, &quot;technical_title&quot;: &quot;Create `agent-progress-visualizer` skill package&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-003-sub-1&quot;, &quot;title&quot;: &quot;SKILL.md&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-003-sub-2&quot;, &quot;title&quot;: &quot;agents/openai.yaml&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-003-sub-3&quot;, &quot;title&quot;: &quot;references for data sources, statuses, human language rules, and privacy&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-003-sub-4&quot;, &quot;title&quot;: &quot;assets/templates for progress-state and HTML&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-003-sub-5&quot;, &quot;title&quot;: &quot;validation/eval prompts for routing&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;agent-progress-visualizer&quot;, &quot;path&quot;: &quot;$CODEX_HOME/skills/agent-progress-visualizer&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-003&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-001&quot;, &quot;UIUX-PROGRESS-002&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;skill-architecture-review&quot;], &quot;skill_routes&quot;: [&quot;agent-progress-visualizer&quot;, &quot;design-feedback-collector&quot;, &quot;project-wiki-manager&quot;, &quot;task-plan-v2-orchestrator&quot;]}}, {&quot;id&quot;: &quot;phase-04&quot;, &quot;title&quot;: &quot;Подключаем экран к главному оркестратору&quot;, &quot;technical_title&quot;: &quot;Wire progress lifecycle into `senior-ui-ux-orchestrator`&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-004-sub-1&quot;, &quot;title&quot;: &quot;new routing mode or default hook for progress visualization&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-004-sub-2&quot;, &quot;title&quot;: &quot;trigger rules for large projects, multi-step site builds, three-variant design, Stitch/Pencil/Figma flows, and launch workflows&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-004-sub-3&quot;, &quot;title&quot;: &quot;skip rules for tiny one-file edits&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-004-sub-4&quot;, &quot;title&quot;: &quot;privacy and user-gate language&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;senior-ui-ux-orchestrator&quot;, &quot;path&quot;: &quot;$CODEX_HOME/skills/senior-ui-ux-orchestrator&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;updated orchestrator routing files&quot;, &quot;path&quot;: &quot;updated orchestrator routing files&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-004&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-003&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;architecture-review&quot;], &quot;skill_routes&quot;: [&quot;agent-progress-visualizer&quot;, &quot;senior-ui-ux-orchestrator&quot;, &quot;task-plan-v2-orchestrator&quot;]}}, {&quot;id&quot;: &quot;phase-05&quot;, &quot;title&quot;: &quot;Собираем состояние из task-plan&quot;, &quot;technical_title&quot;: &quot;Add task-plan to progress-state generator/updater&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-005-sub-1&quot;, &quot;title&quot;: &quot;parse normalized task blocks or accepted metadata&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-005-sub-2&quot;, &quot;title&quot;: &quot;map technical statuses to customer-facing statuses&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-005-sub-3&quot;, &quot;title&quot;: &quot;attach artifact links and next user actions&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-005-sub-4&quot;, &quot;title&quot;: &quot;record derived-state warnings when fields are missing&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;scripts&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/scripts&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;progress-state.json&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/progress-state.json&quot;, &quot;kind&quot;: &quot;json&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;reports&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/reports&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;generate_progress_state.py&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/scripts/generate_progress_state.py&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;progress-state-validation.txt&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/reports/progress-state-validation.txt&quot;, &quot;kind&quot;: &quot;report&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-005&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-002&quot;, &quot;UIUX-PROGRESS-003&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;dashboard-review&quot;, &quot;qa-review&quot;], &quot;skill_routes&quot;: []}}, {&quot;id&quot;: &quot;phase-06&quot;, &quot;title&quot;: &quot;Превращаем прототип в рабочую страницу&quot;, &quot;technical_title&quot;: &quot;Convert prototype screen into generated user cockpit&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-006-sub-1&quot;, &quot;title&quot;: &quot;customer-readable stage cards&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-006-sub-2&quot;, &quot;title&quot;: &quot;status animation and accessible reduced-motion handling&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-006-sub-3&quot;, &quot;title&quot;: &quot;user gates with choices, comments, and approval prompts&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-006-sub-4&quot;, &quot;title&quot;: &quot;artifact links for design variants, HTML previews, reports, and screenshots&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-006-sub-5&quot;, &quot;title&quot;: &quot;developer/debug section for technical mappings&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;agent-progress-screen.html&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/agent-progress-screen.html&quot;, &quot;kind&quot;: &quot;html&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;agent-progress-screen.html&quot;, &quot;path&quot;: &quot;updated $UIUX_SKILL_SYSTEM_ROOT/agent-progress-screen.html&quot;, &quot;kind&quot;: &quot;html&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;render_progress_screen.py&quot;, &quot;path&quot;: &quot;optional $UIUX_SKILL_SYSTEM_ROOT/scripts/render_progress_screen.py&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-006&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-002&quot;, &quot;UIUX-PROGRESS-005&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;ux-review&quot;, &quot;accessibility-review&quot;], &quot;skill_routes&quot;: []}}, {&quot;id&quot;: &quot;phase-07&quot;, &quot;title&quot;: &quot;Подключаем комментарии и решения пользователя&quot;, &quot;technical_title&quot;: &quot;Integrate user gates with `design-feedback-collector`&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-007-sub-1&quot;, &quot;title&quot;: &quot;design choice gates&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-007-sub-2&quot;, &quot;title&quot;: &quot;content/facts approval gates&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-007-sub-3&quot;, &quot;title&quot;: &quot;missing project data gates&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-007-sub-4&quot;, &quot;title&quot;: &quot;final review/launch confirmation gates&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-007-sub-5&quot;, &quot;title&quot;: &quot;accepted, partially accepted, rejected, applied states&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;feedback&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/feedback&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;design-feedback-collector&quot;, &quot;path&quot;: &quot;$CODEX_HOME/skills/design-feedback-collector&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;feedback artifact contract&quot;, &quot;path&quot;: &quot;feedback artifact contract&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;updated progress-state gate contract&quot;, &quot;path&quot;: &quot;updated progress-state gate contract&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-007&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-003&quot;, &quot;UIUX-PROGRESS-006&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;feedback-review&quot;], &quot;skill_routes&quot;: [&quot;design-feedback-collector&quot;]}}, {&quot;id&quot;: &quot;phase-08&quot;, &quot;title&quot;: &quot;Сохраняем важные решения в wiki&quot;, &quot;technical_title&quot;: &quot;Add wiki capture and artifact sync for progress decisions&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-008-sub-1&quot;, &quot;title&quot;: &quot;wiki capture after major decisions&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-008-sub-2&quot;, &quot;title&quot;: &quot;artifact index updates&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-008-sub-3&quot;, &quot;title&quot;: &quot;sanitized user choice summaries&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-008-sub-4&quot;, &quot;title&quot;: &quot;no-secret memory policy&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;wiki&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/wiki&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;updated wiki pages&quot;, &quot;path&quot;: &quot;updated wiki pages&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-008&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-004&quot;, &quot;UIUX-PROGRESS-007&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;docs-sync-review&quot;], &quot;skill_routes&quot;: []}}, {&quot;id&quot;: &quot;phase-09&quot;, &quot;title&quot;: &quot;Проверяем согласованность и безопасность&quot;, &quot;technical_title&quot;: &quot;Validate progress dashboard consistency and no-secret gates&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;Этот этап завершен и зафиксирован в артефактах проекта.&quot;, &quot;subprocesses&quot;: [{&quot;id&quot;: &quot;uiux-progress-009-sub-1&quot;, &quot;title&quot;: &quot;Markdown vs JSON vs HTML consistency check&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-009-sub-2&quot;, &quot;title&quot;: &quot;no-secret scan for progress artifacts&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-009-sub-3&quot;, &quot;title&quot;: &quot;waiting-user gate check&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-009-sub-4&quot;, &quot;title&quot;: &quot;accessibility/manual layout checklist&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}, {&quot;id&quot;: &quot;uiux-progress-009-sub-5&quot;, &quot;title&quot;: &quot;evidence report&quot;, &quot;status&quot;: &quot;done&quot;, &quot;description&quot;: &quot;&quot;}], &quot;artifacts&quot;: [{&quot;label&quot;: &quot;scripts&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/scripts&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;reports&quot;, &quot;path&quot;: &quot;$UIUX_SKILL_SYSTEM_ROOT/reports&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;consistency checker&quot;, &quot;path&quot;: &quot;consistency checker&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}, {&quot;label&quot;: &quot;validation summary report&quot;, &quot;path&quot;: &quot;validation summary report&quot;, &quot;kind&quot;: &quot;other&quot;, &quot;evidence_state&quot;: &quot;Ran&quot;}], &quot;technical&quot;: {&quot;task_id&quot;: &quot;UIUX-PROGRESS-009&quot;, &quot;owner_role&quot;: &quot;docs_sync&quot;, &quot;dependencies&quot;: [&quot;UIUX-PROGRESS-005&quot;, &quot;UIUX-PROGRESS-006&quot;, &quot;UIUX-PROGRESS-007&quot;, &quot;UIUX-PROGRESS-008&quot;], &quot;blocked_by&quot;: [], &quot;required_approvals&quot;: [&quot;qa-review&quot;, &quot;security-review&quot;], &quot;skill_routes&quot;: [&quot;design-feedback-collector&quot;, &quot;pencil-design-bridge&quot;, &quot;project-wiki-manager&quot;, &quot;stitch-design-bridge&quot;, &quot;ui-ux-pro-max&quot;, &quot;visual-content-director&quot;]}}], &quot;user_gates&quot;: [], &quot;activity_log&quot;: [{&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Фиксируем правила экрана прогресса.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-001&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Описываем данные для экрана прогресса.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-002&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Добавляем скилл экрана прогресса.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-003&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Подключаем экран к главному оркестратору.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-004&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Собираем состояние из task-plan.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-005&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Превращаем прототип в рабочую страницу.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-006&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Подключаем комментарии и решения пользователя.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-007&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Сохраняем важные решения в wiki.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-008&quot;}, {&quot;time&quot;: &quot;auto&quot;, &quot;status&quot;: &quot;done&quot;, &quot;message&quot;: &quot;Готово: Проверяем согласованность и безопасность.&quot;, &quot;technical_task_id&quot;: &quot;UIUX-PROGRESS-009&quot;}], &quot;next_user_action&quot;: {&quot;status&quot;: &quot;none&quot;, &quot;label&quot;: &quot;Действий от пользователя нет&quot;, &quot;description&quot;: &quot;Все этапы в текущем наборе завершены.&quot;}, &quot;developer&quot;: {&quot;enabled&quot;: false, &quot;technical_routes&quot;: [&quot;agent-progress-visualizer&quot;, &quot;design-feedback-collector&quot;, &quot;pencil-design-bridge&quot;, &quot;project-wiki-manager&quot;, &quot;senior-ui-ux-orchestrator&quot;, &quot;stitch-design-bridge&quot;, &quot;task-plan-v2-orchestrator&quot;, &quot;ui-ux-pro-max&quot;, &quot;visual-content-director&quot;], &quot;warnings&quot;: []}}");
+function copyGateFeedback(gateId) {
+  const gate = document.getElementById(gateId);
+  const checked = gate.querySelector('input[type="radio"]:checked');
+  const textarea = gate.querySelector('textarea');
+  const payload = {
+    gate_id: gateId,
+    selected_option: checked ? checked.value : "",
+    comment: textarea ? textarea.value : "",
+    target_artifact: PROGRESS_STATE.user_gates.find((item) => item.id === gateId)?.feedback_artifact || "",
+    source: "agent-progress-screen.html"
+  };
+  navigator.clipboard?.writeText(JSON.stringify(payload, null, 2));
+}
+</script>
+</body>
+</html>
